@@ -5,8 +5,7 @@ This repository is intended to supplement the red5 development series, web book 
 
 
 <br>
----
-<br>
+
 
 ## INTRODUCTION
 
@@ -17,5 +16,6 @@ The primary focus of this reference material is to go over the server side featu
 
 I hope that through this book i am able to make red5 development a simpler process for those who are new to it and at the same time online and highlight the unique capabilities of red5, which make it universal software for various applicable platforms and projects." - __Rajdeep Rath__
 
+<br>
 
 # [RED5 DEVELOPMENT SERIES - CONTENT INDEX](Red5-Development-Series)
