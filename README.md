@@ -18,4 +18,4 @@ I hope that through this book i am able to make red5 development a simpler proce
 
 <br>
 
-# [RED5 DEVELOPMENT SERIES - CONTENT INDEX](Red5-Development-Series)
+# [RED5 DEVELOPMENT SERIES - CONTENT INDEX](https://github.com/rajdeeprath/red5-development-series/wiki/Red5-Development-Series)
