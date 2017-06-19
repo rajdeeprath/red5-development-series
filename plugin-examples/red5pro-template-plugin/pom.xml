@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <groupId>org.red5</groupId>
-	<artifactId>red5-plugin-template</artifactId>
+    <groupId>com.red5pro</groupId>
+	<artifactId>red5pro-plugin-template</artifactId>
 	<version>1.0.0</version>
     <modelVersion>4.0.0</modelVersion>    
     <packaging>jar</packaging>
-    <name>red5-template-plugin</name>
+    <name>red5pro-template-plugin</name>
     <url></url>
-    <description>Red5 plugin template</description>
+    <description>Red5Pro plugin template</description>
     <developers>
         <!--  TO DO -->
     </developers>
@@ -32,6 +32,7 @@
         <junit.version>4.12</junit.version>
         <bc.version>1.55</bc.version>
         <jcodec.version>0.2</jcodec.version>
+        <red5pro.version>3.4.0.1</red5pro.version>
     </properties>
     <build>
         <defaultGoal>package</defaultGoal>
@@ -60,7 +61,7 @@
                             <Build-Java>Java ${java.version}</Build-Java>
                             <!-- Build number comes from git commit and is updated via profile -->
                             <Build-Number>${buildNumber}</Build-Number>
-                            <Red5-Plugin-Main-Class>org.red5.server.plugin.examples.Red5TemplatePlugin</Red5-Plugin-Main-Class>
+                            <Red5-Plugin-Main-Class>com.red5pro.server.plugin.examples.Red5ProTemplatePlugin</Red5-Plugin-Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -74,6 +75,13 @@
         </plugins>
     </build>
     <dependencies>
+        
+        <dependency>
+            <groupId>com.red5pro</groupId>
+            <artifactId>red5pro-mega</artifactId>
+            <version>${red5pro.version}</version>
+            <scope>provided</scope>
+        </dependency>
         
         <dependency>
             <groupId>org.red5</groupId>
