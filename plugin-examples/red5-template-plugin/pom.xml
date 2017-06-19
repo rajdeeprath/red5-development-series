@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <groupId>org.red5</groupId>
-	<artifactId>red5-plugin-sample</artifactId>
+	<artifactId>red5-plugin-template</artifactId>
 	<version>0.0.1</version>
     <modelVersion>4.0.0</modelVersion>    
     <packaging>jar</packaging>
-    <name>my-first-red5-plugin</name>
+    <name>red5-template-plugin</name>
     <url></url>
-    <description>Red5 plugin example</description>
+    <description>Red5 plugin template</description>
     <developers>
         <!--  TO DO -->
     </developers>
@@ -60,7 +60,7 @@
                             <Build-Java>Java ${java.version}</Build-Java>
                             <!-- Build number comes from git commit and is updated via profile -->
                             <Build-Number>${buildNumber}</Build-Number>
-                            <Red5-Plugin-Main-Class>org.red5.server.plugin.examples.MyFirstRed5Plugin</Red5-Plugin-Main-Class>
+                            <Red5-Plugin-Main-Class>org.red5.server.plugin.examples.Red5TemplatePlugin</Red5-Plugin-Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

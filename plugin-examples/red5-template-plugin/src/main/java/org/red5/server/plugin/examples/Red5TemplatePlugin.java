@@ -4,16 +4,16 @@ import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.plugin.Red5Plugin;
 import org.slf4j.Logger;
 
-public class MyFirstRed5Plugin extends Red5Plugin {
+public class Red5TemplatePlugin extends Red5Plugin {
 
-    private Logger log = Red5LoggerFactory.getLogger(MyFirstRed5Plugin.class);
+    private Logger log = Red5LoggerFactory.getLogger(Red5TemplatePlugin.class);
 
-    public static final String NAME = "MyFirst-Red5-Plugin";
+    public static final String NAME = "red5-template-plugin";
 
     
     @Override
     public String getName() {
-        return MyFirstRed5Plugin.NAME;
+        return Red5TemplatePlugin.NAME;
     }
     
     

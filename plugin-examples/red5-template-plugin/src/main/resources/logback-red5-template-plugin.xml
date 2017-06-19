@@ -1,6 +1,6 @@
 <configuration>
-    <appender name="my-first-red5-plugin" class="ch.qos.logback.core.FileAppender">
-        <File>log/simple-auth.log</File>
+    <appender name="template-plugin" class="ch.qos.logback.core.FileAppender">
+        <File>log/template-plugin.log</File>
         <Append>false</Append>
         <BufferedIO>false</BufferedIO>
         <ImmediateFlush>true</ImmediateFlush>
@@ -9,6 +9,6 @@
         </layout>
     </appender>
     <root level="DEBUG">
-        <appender-ref ref="my-first-red5-plugin" />
+        <appender-ref ref="template-plugin" />
     </root>
 </configuration>
