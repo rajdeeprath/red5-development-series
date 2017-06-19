@@ -1,0 +1,14 @@
+<configuration>
+    <appender name="my-first-red5-plugin" class="ch.qos.logback.core.FileAppender">
+        <File>log/simple-auth.log</File>
+        <Append>false</Append>
+        <BufferedIO>false</BufferedIO>
+        <ImmediateFlush>true</ImmediateFlush>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%-4relative %-5level %logger - %msg%n</Pattern>
+        </layout>
+    </appender>
+    <root level="DEBUG">
+        <appender-ref ref="my-first-red5-plugin" />
+    </root>
+</configuration>
