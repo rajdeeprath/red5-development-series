@@ -21,7 +21,6 @@ package org.red5.scopes.examples.appmonitor;
 
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
-import org.red5.server.api.IConnection;
 import org.red5.server.api.scope.IScope;
 //import org.slf4j.Logger;
 import org.slf4j.Logger;
