@@ -32,7 +32,7 @@
         <junit.version>4.12</junit.version>
         <bc.version>1.55</bc.version>
         <jcodec.version>0.2</jcodec.version>
-        <red5pro.version>3.4.0.1</red5pro.version>
+        <red5pro.version>3.4.4.1</red5pro.version>
     </properties>
     <build>
         <defaultGoal>package</defaultGoal>
