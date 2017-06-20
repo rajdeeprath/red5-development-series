@@ -6,6 +6,8 @@ public class Configuration {
 	
 	private boolean active;
 	
+	private String message;
+	
 	
 	public Configuration()
 	{
@@ -32,6 +34,20 @@ public class Configuration {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+
+
+
+	public String getMessage() {
+		return message;
+	}
+
+
+
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	
