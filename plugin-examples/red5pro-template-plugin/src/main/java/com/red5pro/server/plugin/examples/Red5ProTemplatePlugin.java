@@ -19,12 +19,6 @@ public class Red5ProTemplatePlugin extends Red5ProPlugin {
     public String getName() {
         return Red5ProTemplatePlugin.NAME;
     }
-    
-    
-    @Override
-	public void init() {
-    	log.info(NAME + "init called");
-	}
 
 
 	@Override
