@@ -1,4 +1,4 @@
-package org.red5.server.plugin.examples;
+package org.red5.server.plugin.examples.hellored5;
 
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.plugin.Red5Plugin;

@@ -1,4 +1,4 @@
-package org.red5.server.plugin.examples;
+package org.red5.server.plugin.examples.hellored5;
 
 
 public class Configuration {

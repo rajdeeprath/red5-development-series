@@ -60,7 +60,7 @@
                             <Build-Java>Java ${java.version}</Build-Java>
                             <!-- Build number comes from git commit and is updated via profile -->
                             <Build-Number>${buildNumber}</Build-Number>
-                            <Red5-Plugin-Main-Class>org.red5.server.plugin.examples.HelloRed5Plugin</Red5-Plugin-Main-Class>
+                            <Red5-Plugin-Main-Class>org.red5.server.plugin.examples.hellored5.HelloRed5Plugin</Red5-Plugin-Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
