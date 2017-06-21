@@ -20,6 +20,9 @@ import org.red5.server.api.scope.IGlobalScope;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.scope.ScopeType;
 import org.red5.server.plugin.Red5Plugin;
+import org.red5.server.plugin.examples.hellored5.listener.AppEventMonitor;
+import org.red5.server.plugin.examples.hellored5.security.PlaybackInterceptor;
+import org.red5.server.plugin.examples.hellored5.security.PublishInterceptor;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -166,6 +169,17 @@ public class HelloRed5Plugin extends Red5Plugin {
                    /******** Accessing the scope handler for application *******/
                    MultiThreadedApplicationAdapter adapter = (MultiThreadedApplicationAdapter) scope.getHandler();
                    log.info("Application handler found : {}", adapter);
+                   
+                   
+                   /******** Listening to application events *******/
+                   adapter.addListener(new AppEventMonitor());
+                   
+                   
+                   /******** Registering publish interceptor *******/
+                   adapter.registerStreamPublishSecurity(new PublishInterceptor());
+                   
+                   /******** Registering playback interceptor *******/
+                   adapter.registerStreamPlaybackSecurity(new PlaybackInterceptor());
                 }
             }
 
@@ -197,6 +211,17 @@ public class HelloRed5Plugin extends Red5Plugin {
                 /******** Accessing the scope handler for application *******/
                 MultiThreadedApplicationAdapter adapter = (MultiThreadedApplicationAdapter) issc.getHandler();
                 log.info("Application handler found : {}", adapter);
+                
+                
+                /******** Listening to application events *******/
+                adapter.addListener(new AppEventMonitor());
+                
+                
+                /******** Registering publish interceptor *******/
+                adapter.registerStreamPublishSecurity(new PublishInterceptor());
+                
+                /******** Registering playback interceptor *******/
+                adapter.registerStreamPlaybackSecurity(new PlaybackInterceptor());
                                 
             }
         }
