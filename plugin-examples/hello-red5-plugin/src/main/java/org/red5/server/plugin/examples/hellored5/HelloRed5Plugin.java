@@ -8,9 +8,16 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.red5.logging.Red5LoggerFactory;
+import org.red5.server.api.listeners.IScopeListener;
+import org.red5.server.api.scope.IBasicScope;
+import org.red5.server.api.scope.IGlobalScope;
+import org.red5.server.api.scope.IScope;
+import org.red5.server.api.scope.ScopeType;
 import org.red5.server.plugin.Red5Plugin;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -73,7 +80,6 @@ public class HelloRed5Plugin extends Red5Plugin {
         }
         
         
-        
         /******** Store configuration into local model *******/
         
         defaultConfiguration = new Configuration();
@@ -81,6 +87,9 @@ public class HelloRed5Plugin extends Red5Plugin {
         defaultConfiguration.setMessage(defaultMessage);
         
         
+        /******** Scan for applications *******/
+        
+        scanForApplications();
 	}
 
 
@@ -139,5 +148,50 @@ public class HelloRed5Plugin extends Red5Plugin {
         }
         return res;
     }
+    
+    
+    
+    /**
+     * Scans server for applications 
+     */
+    private void scanForApplications() 
+    {
+        IScopeListener scopeListener = new IScopeListener() {
+            @Override
+            public void notifyScopeCreated(IScope scope) {
+                if (scope.getType() == ScopeType.APPLICATION) {
+                   log.info("Application started : {}", scope);
+                }
+            }
+
+            @Override
+            public void notifyScopeRemoved(IScope scope) {
+                if (scope.getType() == ScopeType.APPLICATION) {
+                	log.info("Application stopped : {}", scope);
+                }
+            }
+        };
+
+        server.addListener(scopeListener);
+
+        /**********************************************************************/
+
+        log.debug("Setting handlers for apps that might have already started up");
+
+        Iterator<IGlobalScope> inter = server.getGlobalScopes();
+        while (inter.hasNext()) {
+            IGlobalScope gscope = inter.next();
+            Set<String> appSet = gscope.getBasicScopeNames(ScopeType.APPLICATION);
+            Iterator<String> setInter = appSet.iterator();
+            while (setInter.hasNext()) {
+                String sApp = setInter.next();
+                IBasicScope theApp = gscope.getBasicScope(ScopeType.APPLICATION, sApp);
+                IScope issc = (IScope) theApp;
+                
+                log.info("Application found : {}", issc);                
+            }
+        }
+    }
+
 
 }
