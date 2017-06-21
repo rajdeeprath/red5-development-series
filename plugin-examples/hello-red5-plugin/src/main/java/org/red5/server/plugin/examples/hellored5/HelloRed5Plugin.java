@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.red5.logging.Red5LoggerFactory;
+import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.listeners.IScopeListener;
 import org.red5.server.api.scope.IBasicScope;
 import org.red5.server.api.scope.IGlobalScope;
@@ -161,6 +162,10 @@ public class HelloRed5Plugin extends Red5Plugin {
             public void notifyScopeCreated(IScope scope) {
                 if (scope.getType() == ScopeType.APPLICATION) {
                    log.info("Application started : {}", scope);
+                   
+                   /******** Accessing the scope handler for application *******/
+                   MultiThreadedApplicationAdapter adapter = (MultiThreadedApplicationAdapter) scope.getHandler();
+                   log.info("Application handler found : {}", adapter);
                 }
             }
 
@@ -187,8 +192,12 @@ public class HelloRed5Plugin extends Red5Plugin {
                 String sApp = setInter.next();
                 IBasicScope theApp = gscope.getBasicScope(ScopeType.APPLICATION, sApp);
                 IScope issc = (IScope) theApp;
+                log.info("Application found : {}", issc);
                 
-                log.info("Application found : {}", issc);                
+                /******** Accessing the scope handler for application *******/
+                MultiThreadedApplicationAdapter adapter = (MultiThreadedApplicationAdapter) issc.getHandler();
+                log.info("Application handler found : {}", adapter);
+                                
             }
         }
     }
