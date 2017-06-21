@@ -172,14 +172,17 @@ public class HelloRed5Plugin extends Red5Plugin {
                    
                    
                    /******** Listening to application events *******/
-                   adapter.addListener(new AppEventMonitor());
+                   /* Uncomment to activate */
+                   //adapter.addListener(new AppEventMonitor());
                    
                    
                    /******** Registering publish interceptor *******/
-                   adapter.registerStreamPublishSecurity(new PublishInterceptor());
+                   /* Uncomment to activate */
+                   //adapter.registerStreamPublishSecurity(new PublishInterceptor());
                    
                    /******** Registering playback interceptor *******/
-                   adapter.registerStreamPlaybackSecurity(new PlaybackInterceptor());
+                   /* Uncomment to activate */
+                   //adapter.registerStreamPlaybackSecurity(new PlaybackInterceptor());
                 }
             }
 
@@ -214,14 +217,18 @@ public class HelloRed5Plugin extends Red5Plugin {
                 
                 
                 /******** Listening to application events *******/
-                adapter.addListener(new AppEventMonitor());
+                /* Uncomment to activate */
+                //adapter.addListener(new AppEventMonitor());
                 
                 
                 /******** Registering publish interceptor *******/
-                adapter.registerStreamPublishSecurity(new PublishInterceptor());
+                /* Uncomment to activate */
+                //adapter.registerStreamPublishSecurity(new PublishInterceptor());
+                
                 
                 /******** Registering playback interceptor *******/
-                adapter.registerStreamPlaybackSecurity(new PlaybackInterceptor());
+                /* Uncomment to activate */
+                //adapter.registerStreamPlaybackSecurity(new PlaybackInterceptor());
                                 
             }
         }
