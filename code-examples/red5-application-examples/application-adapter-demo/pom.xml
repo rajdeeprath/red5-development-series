@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>red5</groupId>
-  <artifactId>iapplication-demo</artifactId>
+  <groupId>org.red5</groupId>
+  <artifactId>application-adapter-demo</artifactId>
   <packaging>war</packaging>
   <version>1.0.0</version>
-  <name>iapplication-demo</name>
+  <name>application-adapter-demo</name>
   <url>http://maven.apache.org</url>
-  <description>Sample Red5 maven application</description>
+  <description>Sample Red5 application demonstrating the application adapter</description>
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -23,7 +23,7 @@
         </mailingList>
     </mailingLists>
     <properties>
-    	<finalName>iapplication-demo</finalName>
+    	<finalName>application-adapter-demo</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <red5-server.version>1.0.9-RELEASE</red5-server.version>
         <spring.version>4.3.5.RELEASE</spring.version>

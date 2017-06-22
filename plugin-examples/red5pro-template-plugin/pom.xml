@@ -19,7 +19,7 @@
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
         <cauldron.version>2.1.2</cauldron.version>
-        <red5.version>1.0.9-M10</red5.version>
+        <red5.version>1.0.9-RELEASE</red5.version>
         <red5-websocket.version>1.9</red5-websocket.version>
         <mina.version>2.0.16</mina.version>
         <spring.version>4.3.2.RELEASE</spring.version>
