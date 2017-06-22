@@ -57,8 +57,8 @@ public class HelloRed5Plugin extends Red5Plugin {
         	log.debug("Properties not found in conf, creating default configuration");
             
         	// Build default configuration
-            configuration.put("simpleauth.default.active", "true");
-            configuration.put("simpleauth.default.message", "Hello Red5");
+            configuration.put("hellored5.default.active", "true");
+            configuration.put("hellored5.default.message", "Hello Red5");
             addConfResource(configuration, configurationFile, "HelloRed5 Properties\n");
         }
         else
