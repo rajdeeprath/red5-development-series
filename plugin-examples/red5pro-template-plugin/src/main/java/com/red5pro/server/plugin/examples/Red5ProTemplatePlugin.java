@@ -2,15 +2,15 @@ package com.red5pro.server.plugin.examples;
 
 import java.io.IOException;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.red5pro.plugin.Red5ProPlugin;
 
 public class Red5ProTemplatePlugin extends Red5ProPlugin {
 
-    private Logger log = Red5LoggerFactory.getLogger(Red5ProTemplatePlugin.class);
+    private Logger log = LoggerFactory.getLogger(Red5ProTemplatePlugin.class);
 
     public static final String NAME = "red5pro-template-plugin";
 
