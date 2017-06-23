@@ -1,13 +1,13 @@
 package org.red5.server.plugin.examples.hellored5.security;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.stream.IStreamPublishSecurity;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PublishInterceptor implements IStreamPublishSecurity {
 
-    private Logger log = Red5LoggerFactory.getLogger(PublishInterceptor.class);
+    private Logger log = LoggerFactory.getLogger(PublishInterceptor.class);
 
 	
 	@Override

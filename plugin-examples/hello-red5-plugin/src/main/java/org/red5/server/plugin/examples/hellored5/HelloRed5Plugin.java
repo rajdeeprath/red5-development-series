@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.listeners.IScopeListener;
 import org.red5.server.api.scope.IBasicScope;
@@ -24,12 +23,13 @@ import org.red5.server.plugin.examples.hellored5.listener.AppEventMonitor;
 import org.red5.server.plugin.examples.hellored5.security.PlaybackInterceptor;
 import org.red5.server.plugin.examples.hellored5.security.PublishInterceptor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 public class HelloRed5Plugin extends Red5Plugin {
 
-    private Logger log = Red5LoggerFactory.getLogger(HelloRed5Plugin.class);
+    private Logger log = LoggerFactory.getLogger(HelloRed5Plugin.class);
 
     public static final String NAME = "hello-red5-plugin";
     

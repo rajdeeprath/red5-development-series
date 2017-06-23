@@ -1,17 +1,16 @@
 package org.red5.server.plugin.examples.hellored5.listener;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.IApplication;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.Red5;
 import org.red5.server.api.scope.IScope;
-import org.red5.server.plugin.examples.hellored5.HelloRed5Plugin;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AppEventMonitor implements IApplication {
 	
-    private Logger log = Red5LoggerFactory.getLogger(AppEventMonitor.class);
+    private Logger log = LoggerFactory.getLogger(AppEventMonitor.class);
 
 
 	@Override

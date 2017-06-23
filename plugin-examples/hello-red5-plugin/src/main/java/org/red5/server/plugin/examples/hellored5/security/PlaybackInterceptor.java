@@ -1,14 +1,13 @@
 package org.red5.server.plugin.examples.hellored5.security;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.stream.IStreamPlaybackSecurity;
-import org.red5.server.plugin.examples.hellored5.listener.AppEventMonitor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlaybackInterceptor implements IStreamPlaybackSecurity {
 
-    private Logger log = Red5LoggerFactory.getLogger(PlaybackInterceptor.class);
+    private Logger log = LoggerFactory.getLogger(PlaybackInterceptor.class);
 
     
 	@Override
