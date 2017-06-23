@@ -36,39 +36,4 @@ public class Application extends MultiThreadedApplicationAdapter {
 	public void appStop(IScope arg0) {
 		super.appStop(arg0);
 	}
-
-
-
-	@Override
-	public void streamBroadcastClose(IBroadcastStream arg0) {
-		IConnection broadcaster = Red5.getConnectionLocal();
-		log.info("Connection {}", broadcaster);
-	}
-
-
-
-	@Override
-	public void streamBroadcastStart(IBroadcastStream stream) {
-		IConnection broadcaster = Red5.getConnectionLocal();
-		log.info("Connection {}", broadcaster);
-	}
-
-
-
-	@Override
-	public void streamSubscriberClose(ISubscriberStream stream) {
-		// TODO Auto-generated method stub
-		super.streamSubscriberClose(stream);
-	}
-
-
-
-	@Override
-	public void streamSubscriberStart(ISubscriberStream stream) {
-		// TODO Auto-generated method stub
-		super.streamSubscriberStart(stream);
-	}
-	
-
-	
 }
