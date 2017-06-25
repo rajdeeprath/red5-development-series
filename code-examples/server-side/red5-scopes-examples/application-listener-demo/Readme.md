@@ -44,7 +44,18 @@ To deploy the war to red5 / red5 pro server :
 ## How To Use Example
 ---
 
-So use this example application you can use a RTMP or RTSP (Android/IOS) or WebRTC (Red5pro HTML5 SDK) client to connect to and disconenct from the application. You can connect at the application level or to a sub-scope level within the application. For each application event, you will observe that the `ApplicationMonitor.java` handles the various application callbacks such as appStart, appConenct, appDisconenct, roomStart, roomConenct etc.
+So use this example application you can use a RTMP or RTSP (Android/IOS) or WebRTC (Red5pro HTML5 SDK) client to connect to and disconenct from the application. You can connect at the application level or to a sub-scope level within the application. 
+
+For each application event, you will observe that the `ApplicationMonitor.java` handles and logs out the various application callbacks such as appStart, appConenct, appDisconenct, roomStart, roomConenct etc.
+
+
+The `ApplicationMonitor.java` class also demonstrates the use of the utility class `ScopeUtils` to resolve different scope references such as :
+
+1. Finding roto scope from any scope
+
+2. Finding application scope from any scope
+
+3. Resolving to a sub-scope reference from application scope when sub-scope path is known.
 
 
 ## Notes
