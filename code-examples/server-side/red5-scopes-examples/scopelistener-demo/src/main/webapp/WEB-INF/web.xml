@@ -10,7 +10,7 @@
 	is intended to be displayed by tools. The display 
 	name need not be unique.
 	-->
-	<display-name>iscopelistener-demo</display-name>
+	<display-name>scope-listener-demo</display-name>
 	
 	<!--
 	The context-param element contains the declaration of a web
@@ -18,7 +18,7 @@
 	-->	
 	<context-param>
 		<param-name>webAppRootKey</param-name>
-		<param-value>/iscopelistener-demo</param-value>
+		<param-value>/scope-listener-demo</param-value>
 	</context-param>
 	
 	<listener>

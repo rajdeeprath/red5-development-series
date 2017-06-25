@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>IScopeListener Demo Application!</h2>
+<h2>Scope listener Demo!</h2>
 </body>
 </html>
