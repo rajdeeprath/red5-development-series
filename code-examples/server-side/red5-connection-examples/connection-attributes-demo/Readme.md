@@ -1,4 +1,4 @@
-# Red5 Connection Attributes Example
+# Reading & Writing Connection Attributes
 ---
 
 ## About
