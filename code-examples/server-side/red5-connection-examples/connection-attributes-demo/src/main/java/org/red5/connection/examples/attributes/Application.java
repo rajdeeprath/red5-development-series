@@ -4,6 +4,7 @@ package org.red5.connection.examples.attributes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IConnection;
@@ -34,6 +35,8 @@ public class Application extends MultiThreadedApplicationAdapter {
 		
 		/* Comment out the above call and uncomment the the method call below to see alternate way of storing attributes */
 		//storeAttributes2(conn);
+		
+		logAttributeNames(conn);
 		
 		return super.appConnect(conn, params);
 	}
@@ -143,6 +146,18 @@ public class Application extends MultiThreadedApplicationAdapter {
 		
 		if(conn.hasAttribute("double_attribute")){
 			log.info("double_attribute = " + String.valueOf(conn.getAttribute("double_attribute"))); 
+		}
+	}
+	
+	
+	
+	
+	
+	private void logAttributeNames(IConnection conn){
+		
+		Set<String> attrs = conn.getAttributeNames();
+		for(String attr : attrs){
+			log.info("Attribute : {}", attr);
 		}
 	}
 	
