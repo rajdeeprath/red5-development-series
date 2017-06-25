@@ -107,11 +107,11 @@ public class Application extends MultiThreadedApplicationAdapter {
 		}			
 		
 		if(conn.hasAttribute("int_attribute")){
-			log.info("int_attribute = " + conn.getIntAttribute("string_attribute")); 
+			log.info("int_attribute = " + conn.getIntAttribute("int_attribute")); 
 		}
 		
 		if(conn.hasAttribute("long_attribute")){
-			log.info("long_attribute = " + conn.getLongAttribute("string_attribute")); 
+			log.info("long_attribute = " + conn.getLongAttribute("long_attribute")); 
 		}
 		
 		if(conn.hasAttribute("double_attribute")){
@@ -137,11 +137,11 @@ public class Application extends MultiThreadedApplicationAdapter {
 		}			
 		
 		if(conn.hasAttribute("int_attribute")){
-			log.info("int_attribute = " + String.valueOf(conn.getAttribute("string_attribute"))); 
+			log.info("int_attribute = " + String.valueOf(conn.getAttribute("int_attribute"))); 
 		}
 		
 		if(conn.hasAttribute("long_attribute")){
-			log.info("long_attribute = " + String.valueOf(conn.getAttribute("string_attribute"))); 
+			log.info("long_attribute = " + String.valueOf(conn.getAttribute("long_attribute"))); 
 		}
 		
 		if(conn.hasAttribute("double_attribute")){
