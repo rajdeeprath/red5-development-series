@@ -49,7 +49,7 @@ To deploy the war to red5 / red5 pro server :
 
 This example stores some arbitrary attributes on the connection object when the client connects to the application and then logs out the attribute names. Then again when the client disconencts it logs out the attributes that were stored.
 
-To see this example in action, you need to connct to this application - `connection-attributes-demo` using RTMP or RTSP or Red5 pro SDK based WebRTC client and then disconnect after a few seconds. you shoudl be able to see logging in console.
+To see this example in action, you need to connct to this application - `connection-attributes-demo` using RTMP or RTSP or Red5 pro SDK based WebRTC client and then disconnect after a few seconds. you shoudl  be able to see logging in console indicating attribute manipulations.
 
 
 
