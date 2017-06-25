@@ -1,4 +1,4 @@
-package org.red5.scopes.examples.appmonitor;
+package org.red5.scopes.examples.applistener;
 
 
 
