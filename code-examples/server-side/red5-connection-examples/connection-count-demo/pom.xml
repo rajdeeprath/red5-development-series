@@ -1,21 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>red5</groupId>
+  <groupId>com.red5pro</groupId>
   <artifactId>connection-count-demo</artifactId>
   <packaging>war</packaging>
   <version>1.0.0</version>
   <name>connection-count-demo</name>
   <url>http://maven.apache.org</url>
   <description>Red5 application showing how to count connections</description>
-    <licenses>
-        <license>
-            <name>Apache 2</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
-        </license>
-    </licenses>
     <mailingLists>
         <mailingList>
             <name>red5-interest</name>
@@ -30,6 +22,8 @@
         <mina.version>[2.0.12, 2.0.16)</mina.version>
         <slf4j.version>1.7.22</slf4j.version>
         <logback.version>1.1.7</logback.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <build>
         <defaultGoal>package</defaultGoal>
@@ -38,11 +32,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <compilerVersion>1.7</compilerVersion>
                     <fork>true</fork>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <executable>${maven.compiler.executable}</executable>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>

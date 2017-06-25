@@ -94,7 +94,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 			}
 		}
 		
-		log.info("Total connections currently in scope {} = ", scope.getPath(), total);
+		log.info("Total connections currently in scope {} = {}", scope.getPath(), total);
 	}
 	
 	
