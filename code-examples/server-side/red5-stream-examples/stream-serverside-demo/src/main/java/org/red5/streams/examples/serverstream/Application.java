@@ -29,7 +29,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 		               initServerSidePlaylist(app, streamName);
 		            }
 		        }, 
-		        15000 
+		        10000 
 		);
 		
 		return super.appStart(app);
