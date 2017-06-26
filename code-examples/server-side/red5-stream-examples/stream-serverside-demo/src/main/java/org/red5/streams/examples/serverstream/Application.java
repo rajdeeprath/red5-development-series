@@ -48,15 +48,9 @@ public class Application extends MultiThreadedApplicationAdapter {
 		
 		IServerStream serverStream = StreamUtils.createServerStream(scope, name);
 		
-		String filename = "test.flv"; // this should be in the streams directory
-		SimplePlayItem item1 = SimplePlayItem.build(filename);
-		serverStream.addItem(item1);
-		
-		
-		String filename2 = "BladeRunner2049.flv"; // this should be in the streams directory
-		SimplePlayItem item2 = SimplePlayItem.build(filename2);
-		serverStream.addItem(item2);
-
+		String filename = "BladeRunner2049.flv"; // this should be in the streams directory
+		SimplePlayItem item = SimplePlayItem.build(filename);
+		serverStream.addItem(item);
 		
 		serverStream.setRewind(false);
 		serverStream.start();	
