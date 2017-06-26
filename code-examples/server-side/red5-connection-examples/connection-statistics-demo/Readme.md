@@ -72,7 +72,7 @@ Given below is a sample output from the console when a RTMP client exits.
 ```
 
 
-You can connect to the application using a RTMP or RTSP (Android/IOS) or WebRTC (Red5Pro HTML5 SDK) type client. You can then broadcast / subscribe a stream for a few sconds and then close the client. The application will log out your conenctions details in the console.
+You can connect to the application using a RTMP or RTSP (Android/IOS) or WebRTC (Red5Pro HTML5 SDK) type client. You can then broadcast / subscribe a stream for a few sconds and then close the client. The application will log out your connection details in the console.
 
 
 
