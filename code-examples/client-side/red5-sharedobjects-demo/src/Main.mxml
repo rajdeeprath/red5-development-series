@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx" applicationComplete="init(event)">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.events.Event;
+			import flash.events.MouseEvent;
+			import flash.events.NetStatusEvent;
+			import flash.events.SyncEvent;
+			import flash.net.NetConnection;
+			import flash.net.SharedObject;
+			
+			private var nc:NetConnection;
+			
+			
+			[Bindable]
+			private var so:SharedObject;
+			
+			
+			[Bindable]
+			private var connected:Boolean;
+			
+			
+			[Bindable]
+			private var connectionURL:String = "rtmp://localhost:1935/sharedobject-creation-demo";
+			
+			
+			[Bindable]
+			private var soName:String = "bucket";
+			
+			
+			[Bindable]
+			private var testProperty:String = "my_property";
+			
+			
+			private function printToConsole(msg:String):void
+			{
+				txtConsole.text += msg;
+				txtConsole.text += "\n";
+			}
+			
+		
+			private function init(event:Event):void{
+				
+				btnConnect.addEventListener(MouseEvent.CLICK, onConnect);
+				btnAcquire.addEventListener(MouseEvent.CLICK, onAcquire);
+				btnUpdate.addEventListener(MouseEvent.CLICK, onUpdateProperty);
+				btnDeleteProperty.addEventListener(MouseEvent.CLICK, onDeleteProperty);
+				btnSend.addEventListener(MouseEvent.CLICK, onInvokeMethod);
+				btnClear.addEventListener(MouseEvent.CLICK, onClear);
+				btnCloseSo.addEventListener(MouseEvent.CLICK, onCloseSo);
+				
+			}
+		
+			
+			
+			/**
+			 * Connect to server
+			 * @param	e
+			 */
+			private function onConnect(e:Event):void
+			{
+				if (nc == null)
+				{
+					printToConsole("Connecting to server :" + txtConnectionUrl.text);
+					
+					nc = new NetConnection();
+					nc.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+					nc.connect(String(txtConnectionUrl.text));
+				}
+			}
+			
+			
+			
+			/**
+			 * Handling NetStatus events
+			 * 
+			 * @param	e
+			 */ 
+			private function onNetStatus(e:NetStatusEvent):void
+			{
+				printToConsole("onNetStatus status :" + e.info.code);
+				
+				switch(e.info.code)
+				{
+					case "NetConnection.Connect.Success":
+						connected = true;
+					break;
+					
+					case "NetConnection.Connect.Failed":
+					case "NetConnection.Connect.Rejected":
+					case "NetConnection.Connect.Closed":
+						connected = false;
+					break;
+				}
+			}
+			
+			
+			
+			/**
+			 * Change handler for shared object
+			 * @param	e
+			 */
+			private function syncHandler(e:SyncEvent):void
+			{
+				printToConsole("Shared object sync");
+				
+				for (var prop:* in so.data){
+					printToConsole("Property : " + prop + "Value :" + so.data[prop]);
+				}
+			}
+			
+			
+			
+			/**
+			 * Methoid called on client usign shared object -> send
+			 * @param	...args
+			 */
+			public function myMethod(...args):void
+			{
+				printToConsole("Receiving method call with params" + args);
+			}
+			
+			
+			
+			
+			/**
+			 * Initialize / acquire shared object
+			 */
+			private function initSharedObject():void
+			{
+				if (so == null)
+				{
+					printToConsole("Connecting to shared object :" + txtSoName.text);
+					
+					so = SharedObject.getRemote(txtSoName.text,nc.uri);
+					so.addEventListener(SyncEvent.SYNC, syncHandler);
+					so.client = this;
+					so.connect(nc);
+				}
+			}
+			
+			
+			
+			
+			private function onAcquire(e:Event):void
+			{
+				printToConsole("Acquiring shared object :" + txtSoName.text);
+				initSharedObject();
+			}
+			
+			
+			
+			/**
+			 * Update sample property on shared object
+			 * @param	e
+			 */
+			private function onUpdateProperty(e:Event):void
+			{
+				printToConsole("Updating property "+ lblMyProperty.text + " on shared object" + txtSoName.text);
+				
+				if(so != null){
+					so.setProperty(String(lblMyProperty.text), txtPropertyValue.text);
+				}
+			}
+			
+			
+			
+			
+			/**
+			 * Delete property from shared object
+			 * @param	e
+			 */
+			private function onDeleteProperty(e:Event):void
+			{
+				printToConsole("Deleting property " + lblMyProperty.text + " from shared object" + txtSoName.text);
+				
+				if(so != null){
+					so.setProperty(String(lblMyProperty.text), null);
+				}
+			}
+			
+			
+			
+			/**
+			 * Clear shared object of all properties
+			 * @param	e
+			 */
+			private function onClear(e:Event):void
+			{
+				printToConsole("Clearing shared object" + txtSoName.text);
+				
+				if(so != null){
+					so.clear();
+				}
+			}
+			
+			
+			
+			/**
+			 * Call method on client over shared object conenction
+			 * @param	e
+			 */
+			private function onInvokeMethod(e:Event):void
+			{
+				printToConsole("Invoking client method " + lblTargetMethod.text+ " on shared object" + txtSoName.text);
+				
+				if(so != null){
+					so.send(lblTargetMethod.text, txtMethodParams.text);
+				}
+			}
+			
+			
+			
+			
+			
+			/**
+			 * Close connection to shared object
+			 * @param	e
+			 */
+			private function onCloseSo(e:Event):void
+			{
+				printToConsole("Closing shared object " + txtSoName.text);
+				
+				if(so != null){
+					so.close();
+					so.removeEventListener(SyncEvent.SYNC, syncHandler);
+					so = null;
+				}
+			}
+		
+		]]>
+	</fx:Script>
+	
+	
+	<s:VGroup width="100%" height="100%" gap="10" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+		
+		
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{!connected}">
+			<s:Label width="220" text="STEP 1: CONNECT TO SERVER"/>
+			<s:TextInput width="300"  id="txtConnectionUrl" text="{connectionURL}" />
+			<s:Spacer width="100%"/>
+			<s:Button label="Connect" id="btnConnect" />
+		</s:HGroup>
+		
+		
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
+			<s:Label width="220" text="STEP 2: ACQUIRE SHARED OBJECT"/>
+			<s:TextInput width="300" text="{soName}" id="txtSoName" />
+			<s:Spacer width="100%"/>
+			<s:Button label="Acquire" id="btnAcquire"  enabled="{so == null}" />
+		</s:HGroup>
+		
+		
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
+			<s:Label width="220" text="STEP 3: SET / UPDATE PROPERTY"/>
+			<s:Label text="NAME"/>
+			<s:Label id="lblMyProperty" color="#FF0000" text="{testProperty}"/>
+			<s:Label text="VALUE"/>
+			<s:TextInput text="12345" id="txtPropertyValue" />
+			<s:Spacer width="100%"/>
+			<s:Button label="UPDATE" id="btnUpdate" enabled="{so != null}" />
+		</s:HGroup>
+		
+		
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
+			<s:Label width="220" text="STEP 4: DELETE PROPERTY"/>
+			<s:Label text="NAME"/>
+			<s:Label color="#FF0000" text="my_property"/>
+			<s:Spacer width="100%"/>
+			<s:Button label="DELETE" id="btnDeleteProperty" enabled="{so != null}"/>
+		</s:HGroup>
+		
+		
+		
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
+			<s:Label width="220" text="STEP 5: CLEAR SHAREDOBJECT"/>
+			<s:Spacer width="100%"/>
+			<s:Button label="CLEAR" id="btnClear" enabled="{so != null}"/>
+		</s:HGroup>
+		
+		
+
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
+			<s:Label width="220" text="STEP 6:  CALL METHOD"/>
+			<s:Label text="NAME"/>
+			<s:Label id="lblTargetMethod" color="#FF0000" text="myMethod"/>
+			<s:Label text="PARAMS"/>
+			<s:TextInput id="txtMethodParams" />
+			<s:Spacer width="100%"/>
+			<s:Button label="CALL" id="btnSend" enabled="{so != null}"/>
+		</s:HGroup>
+		
+		
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
+			<s:Label width="220" text="STEP 7:  CLOSE SHARED OBJECT"/>
+			<s:Spacer width="100%"/>
+			<s:Button label="CLOSE" id="btnCloseSo" enabled="{so != null}"/>
+		</s:HGroup>
+		
+		<s:Spacer  height="50"/>
+		
+		<s:Label text="Console" />
+		<s:TextArea width="100%" id="txtConsole" />
+		
+	</s:VGroup>
+	
+</s:Application>
