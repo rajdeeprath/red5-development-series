@@ -207,6 +207,7 @@
 				
 				if(so != null){
 					so.clear();
+					so.connect(nc); // cause shared object si in a disconencted state
 				}
 			}
 			
@@ -248,7 +249,11 @@
 	</fx:Script>
 	
 	
-	<s:VGroup width="100%" height="100%" gap="10" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" verticalAlign="middle" />
+	</s:layout>
+	
+	<s:VGroup width="700" height="500" gap="10" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
 		
 		
 		<s:HGroup width="100%" verticalAlign="middle" enabled="{!connected}">
@@ -286,18 +291,10 @@
 			<s:Button label="DELETE" id="btnDeleteProperty" enabled="{so != null}"/>
 		</s:HGroup>
 		
-		
-		
-		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
-			<s:Label width="220" text="STEP 5: CLEAR SHAREDOBJECT"/>
-			<s:Spacer width="100%"/>
-			<s:Button label="CLEAR" id="btnClear" enabled="{so != null}"/>
-		</s:HGroup>
-		
-		
+	
 
 		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
-			<s:Label width="220" text="STEP 6:  CALL METHOD"/>
+			<s:Label width="220" text="STEP 5:  CALL METHOD"/>
 			<s:Label text="NAME"/>
 			<s:Label id="lblTargetMethod" color="#FF0000" text="myMethod"/>
 			<s:Label text="PARAMS"/>
@@ -306,9 +303,19 @@
 			<s:Button label="CALL" id="btnSend" enabled="{so != null}"/>
 		</s:HGroup>
 		
+				
 		
 		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
-			<s:Label width="220" text="STEP 7:  CLOSE SHARED OBJECT"/>
+			<s:Label width="220" text="STEP 5(A): CLEAR SHAREDOBJECT"/>
+			<s:Spacer width="100%"/>
+			<s:Button label="CLEAR" id="btnClear" enabled="{so != null}"/>
+		</s:HGroup>
+		
+		<s:Label text="OR" />
+		
+		
+		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
+			<s:Label width="220" text="STEP 5(B):  CLOSE SHARED OBJECT"/>
 			<s:Spacer width="100%"/>
 			<s:Button label="CLOSE" id="btnCloseSo" enabled="{so != null}"/>
 		</s:HGroup>

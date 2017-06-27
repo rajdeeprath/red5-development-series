@@ -30,6 +30,6 @@
 	<!--
 	Defines the web handler which acts as an applications endpoint
 	-->
-	<bean id="web.handler" class="com.red5.sharedobjects.example.creation.Application" />
+	<bean id="web.handler" class="com.red5.sharedobjects.example.listenerdemo.Application" />
  
 </beans>
