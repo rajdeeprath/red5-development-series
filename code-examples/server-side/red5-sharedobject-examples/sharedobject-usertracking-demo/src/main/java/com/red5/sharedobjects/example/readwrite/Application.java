@@ -1,19 +1,15 @@
 package com.red5.sharedobjects.example.readwrite;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IAttributeStore;
 import org.red5.server.api.IConnection;
-import org.red5.server.api.IServer;
-import org.red5.server.api.listeners.IConnectionListener;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.so.ISharedObjectBase;
 import org.red5.server.api.so.ISharedObjectListener;
-import org.red5.server.scope.WebScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +19,8 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	private static Logger log = LoggerFactory.getLogger(Application.class);
 
-	private ISharedObject gameRoom = null;
+	ISharedObject lounge = null;
 	
-	private IScope appScope;
 	
 	
 	@Override
@@ -33,25 +28,8 @@ public class Application extends MultiThreadedApplicationAdapter {
 		log.info("Application started : {}", app);
 		try 
 		{
-			this.appScope = app;
-			
-			/* Add connection listener */
-			
-			WebScope scope = (WebScope) app;
-			IServer server = scope.getServer();
-			server.addListener(connectionListener);
-			
-			
-			/* Get shared object instance */
-			gameRoom = getGameRoomSharedObject(app, "gameroom", false);
-			
-			
-			/** Lock and unlock are needed only if you do not want any other thread to operate 
-			 * on the shared object while you are operating on it. Unlock the shared object after you are done. */
-			gameRoom.lock();
-			gameRoom.acquire();
-			gameRoom.addSharedObjectListener(roomListener);
-			gameRoom.unlock();
+			lounge = initSharedObject(app, "bucket", false);
+			lounge.addSharedObjectListener(bucketListener);
 		} 
 		catch (Exception e) 
 		{
@@ -60,65 +38,6 @@ public class Application extends MultiThreadedApplicationAdapter {
 		
 		return super.appStart(app);
 	}
-	
-	
-	
-	
-	/**
-	 * Listen for successful connection to the application
-	 */
-	private IConnectionListener connectionListener = new IConnectionListener(){
-
-		@Override
-		public void notifyConnected(IConnection conn) {
-			
-			/* Not our scope then NVM */
-			if(conn.getScope() != appScope){
-				return;
-			}
-			
-			String username = conn.getStringAttribute("username") + "-" + conn.getSessionId();
-			
-			if(username != null){
-			
-				List<String> users = (List<String>) gameRoom.getListAttribute("users");
-				if(users == null) {
-					users = new ArrayList<String>();
-				}
-				
-				users.add(username);
-				gameRoom.setAttribute("users", users);
-				gameRoom.setDirty(true);
-			}
-		}
-
-		
-		
-		@Override
-		public void notifyDisconnected(IConnection conn) {
-			
-			/* Not our scope then NVM */
-			if(conn.getScope() != appScope){
-				return;
-			}
-			
-			String username = conn.getStringAttribute("username") + "-" + conn.getSessionId();
-			
-			if(username != null){
-			
-				List<String> users = (List<String>) gameRoom.getListAttribute("users");
-				if(users == null) {
-					users = new ArrayList<String>();
-				}
-				
-				users.remove(username);
-				gameRoom.setAttribute("users", users);
-				gameRoom.setDirty(true);
-			}
-		}
-		
-		
-	};
 
 	
 	
@@ -132,7 +51,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 * @return
 	 * @throws Exception
 	 */
-	private ISharedObject getGameRoomSharedObject(IScope scope, String name, boolean persistent) throws Exception{
+	private ISharedObject initSharedObject(IScope scope, String name, boolean persistent) throws Exception{
 	
 		ISharedObject so = getSharedObject(scope, name, persistent);
 		
@@ -143,6 +62,9 @@ public class Application extends MultiThreadedApplicationAdapter {
 			so = getSharedObject(scope, name, persistent);
 			if(so == null) throw new Exception("Shared object was not created");
 		}
+		
+		if(!so.isAcquired())
+		so.acquire();
 		
 		return so;
 	}
@@ -160,13 +82,13 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 */
 	private void destroySharedObject(){
 	
-		if(gameRoom != null)
+		if(lounge != null)
 		{
-			gameRoom.removeSharedObjectListener(roomListener);
-			gameRoom.release();
+			lounge.removeSharedObjectListener(bucketListener);
+			lounge.release();
 		}
 		
-		gameRoom = null;
+		lounge = null;
 	}
 
 	
@@ -176,7 +98,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	/**
 	 * Shared Object listener object for monitoring shared object events
 	 */
-	private ISharedObjectListener roomListener  = new ISharedObjectListener(){
+	private ISharedObjectListener bucketListener  = new ISharedObjectListener(){
 
 		/*
 		 * (non-Javadoc)
