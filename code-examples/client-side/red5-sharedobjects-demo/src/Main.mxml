@@ -54,7 +54,6 @@
 				btnUpdate.addEventListener(MouseEvent.CLICK, onUpdateProperty);
 				btnDeleteProperty.addEventListener(MouseEvent.CLICK, onDeleteProperty);
 				btnSend.addEventListener(MouseEvent.CLICK, onInvokeMethod);
-				btnClear.addEventListener(MouseEvent.CLICK, onClear);
 				btnCloseSo.addEventListener(MouseEvent.CLICK, onCloseSo);
 				
 			}
@@ -96,8 +95,16 @@
 					
 					case "NetConnection.Connect.Failed":
 					case "NetConnection.Connect.Rejected":
+						connected = false;
+					break;
+					
 					case "NetConnection.Connect.Closed":
 						connected = false;
+						
+						if(nc != null){
+							nc.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+						}
+						nc = null;
 					break;
 				}
 			}
@@ -279,12 +286,13 @@
 		</s:HGroup>
 		
 		
-		
+		<!--
 		<s:HGroup width="100%" verticalAlign="middle" enabled="{connected}">
 			<s:Label width="220" text="STEP 5: CLEAR SHAREDOBJECT"/>
 			<s:Spacer width="100%"/>
 			<s:Button label="CLEAR" id="btnClear" enabled="{so != null}"/>
 		</s:HGroup>
+		-->
 		
 		
 
