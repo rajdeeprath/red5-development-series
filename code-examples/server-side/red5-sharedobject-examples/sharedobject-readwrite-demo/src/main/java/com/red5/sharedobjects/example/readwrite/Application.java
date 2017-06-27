@@ -1,4 +1,4 @@
-package com.red5.sharedobjects.example.creation;
+package com.red5.sharedobjects.example.readwrite;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	private static Logger log = LoggerFactory.getLogger(Application.class);
 
-	ISharedObject sharedBucket = null;
+	ISharedObject lounge = null;
 	
 	
 	
@@ -28,8 +28,8 @@ public class Application extends MultiThreadedApplicationAdapter {
 		log.info("Application started : {}", app);
 		try 
 		{
-			sharedBucket = initSharedObject(app, "bucket", false);
-			sharedBucket.addSharedObjectListener(bucketListener);
+			lounge = initSharedObject(app, "bucket", false);
+			lounge.addSharedObjectListener(bucketListener);
 		} 
 		catch (Exception e) 
 		{
@@ -82,13 +82,13 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 */
 	private void destroySharedObject(){
 	
-		if(sharedBucket != null)
+		if(lounge != null)
 		{
-			sharedBucket.removeSharedObjectListener(bucketListener);
-			sharedBucket.release();
+			lounge.removeSharedObjectListener(bucketListener);
+			lounge.release();
 		}
 		
-		sharedBucket = null;
+		lounge = null;
 	}
 
 	
@@ -226,7 +226,4 @@ public class Application extends MultiThreadedApplicationAdapter {
 		destroySharedObject();
 		super.appStop(arg0);
 	}
-	
-
-
 }
