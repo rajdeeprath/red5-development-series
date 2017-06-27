@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8"/>
-	<title>red5-sharedobjects-demo</title>
+	<title>Server side Shared Objects Creation & Listener Demo</title>
 	<meta name="description" content="" />
 	
 	<script src="js/swfobject.js"></script>
@@ -18,12 +18,12 @@
 			wmode: "direct" // can cause issues with FP settings & webcam
 		};
 		var attributes = {
-			id:"red5-sharedobjects-demo"
+			id:"sharedobject-listener-demo"
 		};
 		swfobject.embedSWF(
-			"red5-sharedobjects-demo.swf", 
+			"swf/sharedobject-listener-demo.swf", 
 			"altContent", "100%", "100%", "10.0.0", 
-			"expressInstall.swf", 
+			"swf/expressInstall.swf", 
 			flashvars, params, attributes);
 	</script>
 	<style>
@@ -33,8 +33,8 @@
 </head>
 <body>
 	<div id="altContent">
-		<h1>red5-sharedobjects-demo</h1>
-		<p><a href="http://www.adobe.com/go/getflashplayer">Get Adobe Flash player</a></p>
+			<h1>Red5 SharedObject listener Demo</h1>
+			<p><a href="http://www.adobe.com/go/getflashplayer">Get Adobe Flash player</a></p>
 	</div>
 </body>
 </html>
