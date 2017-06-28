@@ -51,7 +51,7 @@ You can observe the server side callbacks triggering as you interact with the cl
 ## Notes
 ---
 
-The source for the client side example can be found at [https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/client-side/red5-sharedobjects-demo/sharedobject-listener-demo](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/client-side/red5-sharedobjects-demo/sharedobject-listener-demo)
+The source for the client side example is available at [https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/client-side/red5-sharedobjects-demo/sharedobject-listener-demo](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/client-side/red5-sharedobjects-demo/sharedobject-listener-demo)
 
 
 
