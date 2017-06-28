@@ -43,9 +43,11 @@ To deploy the war to red5 / red5 pro server :
 ## How To Use Example
 ---
 
-Once the application has been deployed to the server, navigate to `http://{host}:5080/sharedobject-listener-demo` to launch the sample flash client. Interact with the client interface following the labeled `Steps`, while keeping the `console` running in another window.
+Once the application has been deployed to the server, navigate to `http://localhost:5080/sharedobject-listener-demo` to launch the sample flash client. Interact with the client interface following the labeled `Steps`, while keeping the `console` running in another window.
 You can observe the server side callbacks triggering as you interact with the client interface. Thsi wil help you better understand the flow of events and use of the [ISharedObjectListener](http://red5.org/javadoc/red5-server-common/org/red5/server/api/so/ISharedObjectListener.html) interface.
 
+
+![Client Interface](images/interface.png)
 
 
 ## Notes
