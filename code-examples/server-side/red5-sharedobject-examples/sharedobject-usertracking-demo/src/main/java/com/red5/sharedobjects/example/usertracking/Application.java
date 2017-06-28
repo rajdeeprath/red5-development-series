@@ -109,7 +109,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 				users.add(username);
 				chatRoom.setAttribute("users", users);
 				chatRoom.setAttribute("lastUserConnect", Instant.now().toEpochMilli());
-				chatRoom.setDirty(true);
+				//chatRoom.setDirty(true);
 			}
 		}
 
@@ -138,7 +138,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 				
 				users.remove(username);
 				chatRoom.setAttribute("users", users);
-				chatRoom.setDirty(true);
+				//chatRoom.setDirty(true);
 			}
 		}
 		
