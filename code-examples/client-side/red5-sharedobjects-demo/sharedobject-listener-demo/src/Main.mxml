@@ -29,7 +29,7 @@
 			
 			
 			[Bindable]
-			private var connectionURL:String = "rtmp://localhost:1935/sharedobject-creation-demo";
+			private var connectionURL:String = "rtmp://localhost:1935/sharedobject-listener-demo";
 			
 			
 			[Bindable]

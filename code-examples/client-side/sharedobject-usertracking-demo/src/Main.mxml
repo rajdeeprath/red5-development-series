@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx" applicationComplete="init(event)">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+		
+			import flash.events.Event;
+			import flash.events.MouseEvent;
+			import flash.events.NetStatusEvent;
+			import flash.events.SyncEvent;
+			import flash.net.NetConnection;
+			import flash.net.SharedObject;
+			
+			private var nc:NetConnection;
+			
+			
+			[Bindable]
+			private var so:SharedObject;
+			
+			
+			[Bindable]
+			private var connected:Boolean;
+			
+			
+			[Bindable]
+			private var connectionURL:String = "rtmp://localhost:1935/sharedobject-usertracking-demo";
+			
+			
+			[Bindable]
+			private var soName:String = "gameRoom";
+			
+			
+			private var messageHandler:String = "onChatMessage";
+			
+			
+			
+			private function printToConsole(msg:String):void
+			{
+				txtConsole.text += msg;
+				txtConsole.text += "\n";
+			}
+			
+			
+			
+			private function init(event:Event):void
+			{
+				btnConnect.addEventListener(MouseEvent.CLICK, onConnect);
+				btnSend.addEventListener(MouseEvent.CLICK, onSendMessage);				
+			}
+			
+			
+			
+			/**
+			 * Connect to server
+			 * @param	e
+			 */
+			private function onConnect(e:Event):void
+			{
+				if (nc == null)
+				{
+					printToConsole("Connecting to server :" + txtConnectionUrl.text);
+					
+					nc = new NetConnection();
+					nc.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+					nc.connect(String(txtConnectionUrl.text));
+				}
+			}
+			
+			
+			
+			
+			/**
+			 * Handling NetStatus events
+			 * 
+			 * @param	e
+			 */ 
+			private function onNetStatus(e:NetStatusEvent):void
+			{
+				printToConsole("onNetStatus status :" + e.info.code);
+				
+				switch(e.info.code)
+				{
+					case "NetConnection.Connect.Success":
+						connected = true;
+						initSharedObject();
+					break;
+					
+					case "NetConnection.Connect.Failed":
+					case "NetConnection.Connect.Rejected":
+						connected = false;
+					break;
+					
+					case "NetConnection.Connect.Closed":
+						connected = false;
+						
+						if (nc != null){
+							nc.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+						}
+						nc = null;
+					break;
+				}
+			}
+			
+			
+			
+			
+			
+			/**
+			 * Change handler for shared object
+			 * @param	e
+			 */
+			private function syncHandler(e:SyncEvent):void
+			{
+				printToConsole("Shared object sync");
+				
+				for (var prop:* in so.data){
+					printToConsole("Property : " + prop + "Value :" + so.data[prop]);
+				}
+			}
+			
+			
+			
+			/**
+			 * Initialize / acquire shared object
+			 */
+			private function initSharedObject():void
+			{
+				if (so == null)
+				{
+					printToConsole("Connecting to shared object :" + soName);
+					
+					so = SharedObject.getRemote(soName, nc.uri);
+					so.addEventListener(SyncEvent.SYNC, syncHandler);
+					so.client = this;
+					so.connect(nc);
+				}
+			}
+			
+			
+			
+			
+			/**
+			 * Sending message to conencted users
+			 * 
+			 * @param	e
+			 */
+			private function onSendMessage(e:Event):void
+			{
+				printToConsole("Sending message " + txtMessageBox.text + " to room " + soName);
+				
+				if(so != null){
+					so.send(messageHandler, txtMessageBox.text);
+				}
+			}
+		
+			
+			
+			/**
+			 * Receives messages over shared object
+			 * @param	msg
+			 */
+			public function onChatMessage(msg:*):void
+			{
+				txtMessages.text += msg;
+				txtMessages.text += "\n";
+			}
+		]]>
+	</fx:Script>
+	
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10" />
+	</s:layout>
+	
+	
+	<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+		
+		<s:VGroup width="100%" height="100%" gap="10">
+			
+			<s:HGroup width="100%">
+				
+				<s:TextInput id="txtConnectionUrl" width="100%" height="40" fontSize="18" text="{connectionURL}" />				
+				
+				<s:Button id="btnConnect" width="100" height="40" label="CONNECT" fontSize="14" fontWeight="bold"/>				
+				
+			</s:HGroup>
+			
+
+			
+			
+			<s:VGroup width="100%" height="100%" enabled="{connected}">
+				
+				<s:Label fontSize="14" fontWeight="bold" text="CHAT AREA"/>
+				
+				<s:TextArea id="txtMessages" width="100%" height="100%" editable="false"/>
+				
+			</s:VGroup>
+			
+			
+			<s:HGroup width="100%" enabled="{connected}">
+				
+				<s:TextInput id="txtMessageBox" width="100%" height="40" fontSize="18"/>
+				
+				<s:Button id="btnSend" width="100" height="40" label="Send" fontSize="14" fontWeight="bold" enabled="{so != null}" />
+				
+			</s:HGroup>
+			
+		</s:VGroup>	
+		
+		
+		<s:VGroup height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" enabled="{connected}">
+			
+			<s:Label width="100%" fontSize="14" fontWeight="bold" text="USERS" textAlign="center" verticalAlign="middle"/>			
+			
+			<s:List id="lstUsers" height="100%" minWidth="150" fontSize="14" enabled="{so != null}" />
+			
+		</s:VGroup>	
+		
+	</s:HGroup>
+	
+	
+	
+	<s:VGroup width="100%">
+		
+		<s:Label fontSize="14" fontWeight="bold" text="CONSOLE:"/>
+		<s:TextArea id="txtConsole" width="100%" height="100%" editable="false"/>
+		
+	</s:VGroup>
+	
+</s:Application>
