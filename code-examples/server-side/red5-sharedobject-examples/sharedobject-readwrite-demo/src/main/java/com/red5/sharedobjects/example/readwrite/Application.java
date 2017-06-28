@@ -1,13 +1,17 @@
 package com.red5.sharedobjects.example.readwrite;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.red5.server.Server;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IAttributeStore;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IServer;
+import org.red5.server.api.Red5;
 import org.red5.server.api.listeners.IConnectionListener;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.so.ISharedObject;
@@ -23,7 +27,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	private static Logger log = LoggerFactory.getLogger(Application.class);
 
-	private ISharedObject gameRoom = null;
+	private ISharedObject so = null;
 	
 	private IScope appScope;
 	
@@ -31,27 +35,28 @@ public class Application extends MultiThreadedApplicationAdapter {
 	@Override
 	public boolean appStart(IScope app) {
 		log.info("Application started : {}", app);
+		
 		try 
 		{
 			this.appScope = app;
 			
-			/* Add connection listener */
-			
-			WebScope scope = (WebScope) app;
-			IServer server = scope.getServer();
-			server.addListener(connectionListener);
-			
-			
-			/* Get shared object instance */
-			gameRoom = getGameRoomSharedObject(app, "gameroom", false);
-			
-			
-			/** Lock and unlock are needed only if you do not want any other thread to operate 
-			 * on the shared object while you are operating on it. Unlock the shared object after you are done. */
-			gameRoom.lock();
-			gameRoom.acquire();
-			gameRoom.addSharedObjectListener(roomListener);
-			gameRoom.unlock();
+			new java.util.Timer().schedule( 
+			        new java.util.TimerTask() {
+			            @Override
+			            public void run() {
+			            	
+			            	try 
+			            	{
+								runSharedObjectReadWriteTest();
+							} 
+			            	catch (Exception e) 
+			            	{
+								e.printStackTrace();
+							}
+			            }
+			        }, 
+			        15000 
+			);
 		} 
 		catch (Exception e) 
 		{
@@ -64,67 +69,62 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	
 	
+	
 	/**
-	 * Listen for successful connection to the application
+	 * Main method which runs the read / write methods
+	 * @throws Exception 
 	 */
-	private IConnectionListener connectionListener = new IConnectionListener(){
-
-		@Override
-		public void notifyConnected(IConnection conn) {
-			
-			
-			log.info("notifyConnected {}", conn);
-			
-			/* Not our scope then NVM */
-			if(conn.getScope() != appScope){
-				return;
-			}
-			
-			String username = conn.getStringAttribute("username");
-			
-			if(username != null){
-			
-				List<String> users = (List<String>) gameRoom.getListAttribute("users");
-				if(users == null) {
-					users = new ArrayList<String>();
-				}
-				
-				users.add(username);
-				gameRoom.setAttribute("users", users);
-				gameRoom.setDirty(true);
-			}
-		}
-
+	private void runSharedObjectReadWriteTest() throws Exception
+	{
+		
+		/* Get shared object instance */
+		so = getGameRoomSharedObject(appScope, "mysharedobject", false);
 		
 		
-		@Override
-		public void notifyDisconnected(IConnection conn) {
-			
-			log.info("notifyDisconnected {}", conn);
-			
-			/* Not our scope then NVM */
-			if(conn.getScope() != appScope){
-				return;
-			}
-			
-			String username = conn.getStringAttribute("username");
-			
-			if(username != null){
-			
-				List<String> users = (List<String>) gameRoom.getListAttribute("users");
-				if(users == null) {
-					users = new ArrayList<String>();
-				}
-				
-				users.remove(username);
-				gameRoom.setAttribute("users", users);
-				gameRoom.setDirty(true);
-			}
-		}
+		/** Lock and unlock are needed only if you do not want any other thread to operate 
+		 * on the shared object while you are operating on it. Unlock the shared object after you are done. */
+		so.lock();
+		so.acquire();
+		so.addSharedObjectListener(soListener);
+		so.unlock();
 		
 		
-	};
-
+		Thread.sleep(2000);
+		
+		/*  Write test #1 */
+		writeSharedObjectData();
+		
+		
+		Thread.sleep(2000);
+		
+		/*  Write test #2 */
+		writeSharedObjectData2();
+		
+		
+		Thread.sleep(2000);
+		
+		/* Read test #1 */
+		readSharedObjectAttributes();
+		
+		
+		Thread.sleep(2000);
+		
+		/* Read test #2 */
+		readAllSharedObjectAttributes();
+		
+		
+		Thread.sleep(2000);
+		
+		/* Clear sharedObject */
+		clearSharedObjectData();
+		
+		
+		Thread.sleep(2000);
+		
+		/* destroy sharedObject */
+		destroySharedObject();
+	}
+	
 	
 	
 	
@@ -151,6 +151,111 @@ public class Application extends MultiThreadedApplicationAdapter {
 		
 		return so;
 	}
+	
+	
+	
+	
+	
+	/**
+	 * Triggers sync for each attribute write
+	 */
+	private void writeSharedObjectData(){
+		
+		ISharedObject so = this.getSharedObject(appScope, "mysharedobject");
+		
+		so.setAttribute("time", Instant.now().toEpochMilli());
+		so.setAttribute("servername", "red5pro");
+		so.setAttribute("capabilities", Red5.CAPABILITIES);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Triggers sync only once for all writes
+	 */
+	private void writeSharedObjectData2(){
+		
+		ISharedObject so = this.getSharedObject(appScope, "mysharedobject");
+		
+		so.beginUpdate();
+		so.setAttribute("time", Instant.now().toEpochMilli());
+		so.removeAttribute("servername");
+		so.setAttribute("capabilities", Red5.CAPABILITIES);
+		so.endUpdate();
+		
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Force an update notification dispatch
+	 */
+	private void forceDataSync(){
+		
+		ISharedObject so = this.getSharedObject(appScope, "mysharedobject");
+		so.setDirty(true);
+		
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * Reads attributes from SharedObject that we might have stored earlier
+	 */
+	private void readSharedObjectAttributes(){
+		
+		ISharedObject so = this.getSharedObject(appScope, "mysharedobject");
+		
+		if(so.hasAttribute("time")){
+			log.info("Attr time  :  Value {}", so.getAttribute("time"));
+		}
+		
+		if(so.hasAttribute("servername")){
+			log.info("Attr servername  :  Value {}", so.getAttribute("servername"));
+		}
+		
+		if(so.hasAttribute("capabilities")){
+			log.info("Attr capabilities  :  Value {}", so.getAttribute("capabilities"));
+		}
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Reads all attributes from SharedObject
+	 */
+	private void readAllSharedObjectAttributes(){
+		
+		ISharedObject so = this.getSharedObject(appScope, "mysharedobject");
+		Set<String> attrs = so.getAttributeNames();
+		
+		for(String attr : attrs){
+			log.info("Attr {}  : value {}", attr, so.getAttribute(attr));
+		}
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * Clears the ISharedObject of all its data
+	 */
+	private void clearSharedObjectData(){
+		
+		ISharedObject so = this.getSharedObject(appScope, "mysharedobject");
+		so.clear();
+	}
 
 	
 	
@@ -165,13 +270,15 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 */
 	private void destroySharedObject(){
 	
-		if(gameRoom != null)
+		ISharedObject so = this.getSharedObject(appScope, "mysharedobject");
+		
+		if(so != null)
 		{
-			gameRoom.removeSharedObjectListener(roomListener);
-			gameRoom.release();
+			so.removeSharedObjectListener(soListener);
+			so.close();
 		}
 		
-		gameRoom = null;
+		so = null;
 	}
 
 	
@@ -181,7 +288,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	/**
 	 * Shared Object listener object for monitoring shared object events
 	 */
-	private ISharedObjectListener roomListener  = new ISharedObjectListener(){
+	private ISharedObjectListener soListener  = new ISharedObjectListener(){
 
 		/*
 		 * (non-Javadoc)
