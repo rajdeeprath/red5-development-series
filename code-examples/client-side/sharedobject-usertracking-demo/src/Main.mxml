@@ -207,6 +207,7 @@
 					var msg:String = encoder.getString();
 					
 					so.send("onChatMessage", msg);
+					txtMessageBox.text = "";
 				}
 
 			}
