@@ -11,12 +11,17 @@
 	<fx:Script>
 		<![CDATA[
 		
+			import com.adobe.serialization.json.JSONDecoder;
+			import com.adobe.serialization.json.JSONEncoder;
 			import flash.events.Event;
 			import flash.events.MouseEvent;
 			import flash.events.NetStatusEvent;
 			import flash.events.SyncEvent;
 			import flash.net.NetConnection;
 			import flash.net.SharedObject;
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.utils.UIDUtil;
 			
 			private var nc:NetConnection;
 			
@@ -34,10 +39,17 @@
 			
 			
 			[Bindable]
-			private var soName:String = "gameRoom";
+			private var soName:String = "gameroom";
 			
 			
 			private var messageHandler:String = "onChatMessage";
+			
+			
+			private var username:String;
+			
+			
+			[Bindable]
+			private var userList:ArrayList;
 			
 			
 			
@@ -51,8 +63,26 @@
 			
 			private function init(event:Event):void
 			{
+				username = generateUsername();
+				
+				userList = new ArrayList();
 				btnConnect.addEventListener(MouseEvent.CLICK, onConnect);
 				btnSend.addEventListener(MouseEvent.CLICK, onSendMessage);				
+			}
+			
+			
+			
+			
+			/**
+			 * 
+			 * @return
+			 */
+			private function generateUsername():String
+			{
+				var uuid:String = UIDUtil.createUID(); 
+				var user:String = "user-" + uuid;
+				
+				return user.substring(0, 12);
 			}
 			
 			
@@ -69,7 +99,7 @@
 					
 					nc = new NetConnection();
 					nc.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-					nc.connect(String(txtConnectionUrl.text));
+					nc.connect(String(txtConnectionUrl.text), username); //pass username here
 				}
 			}
 			
@@ -104,6 +134,11 @@
 							nc.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 						}
 						nc = null;
+						
+						if (so != null){
+							so.removeEventListener(SyncEvent.SYNC, syncHandler);
+							so = null;
+						}
 					break;
 				}
 			}
@@ -123,6 +158,13 @@
 				for (var prop:* in so.data){
 					printToConsole("Property : " + prop + "Value :" + so.data[prop]);
 				}
+				
+				if (so.data.users != null){
+					var users:Array = so.data.users as Array;	
+					userList.source = users;
+				}
+				
+				
 			}
 			
 			
@@ -153,13 +195,24 @@
 			 */
 			private function onSendMessage(e:Event):void
 			{
-				printToConsole("Sending message " + txtMessageBox.text + " to room " + soName);
+				printToConsole("Sending message " + txtMessageBox.text);
 				
-				if(so != null){
-					so.send(messageHandler, txtMessageBox.text);
+				if (so != null) {
+					
+					var obj:* = new Object();
+					obj.sender = username;
+					obj.message = txtMessageBox.text;
+					
+					var encoder:JSONEncoder = new JSONEncoder(obj);
+					var msg:String = encoder.getString();
+					
+					so.send("onChatMessage", msg);
 				}
+
 			}
 		
+			
+			
 			
 			
 			/**
@@ -168,8 +221,16 @@
 			 */
 			public function onChatMessage(msg:*):void
 			{
-				txtMessages.text += msg;
-				txtMessages.text += "\n";
+				printToConsole("Message received " + msg);
+				
+				
+				var decoder:JSONDecoder = new JSONDecoder(msg.toString(), true);
+				var obj:Object = decoder.getValue();
+				
+				if(obj.sender != null){
+					txtMessages.text += obj.sender + " : " + obj.message;
+					txtMessages.text += "\n";
+				}
 			}
 		]]>
 	</fx:Script>
@@ -184,11 +245,11 @@
 		
 		<s:VGroup width="100%" height="100%" gap="10">
 			
-			<s:HGroup width="100%">
+			<s:HGroup width="100%" enabled="{!connected}">
 				
 				<s:TextInput id="txtConnectionUrl" width="100%" height="40" fontSize="18" text="{connectionURL}" />				
 				
-				<s:Button id="btnConnect" width="100" height="40" label="CONNECT" fontSize="14" fontWeight="bold"/>				
+				<s:Button id="btnConnect" width="120" height="40" label="{(!connected)?'CONNECT':'CONNECTED'}" fontSize="14" fontWeight="bold"/>				
 				
 			</s:HGroup>
 			
@@ -219,7 +280,7 @@
 			
 			<s:Label width="100%" fontSize="14" fontWeight="bold" text="USERS" textAlign="center" verticalAlign="middle"/>			
 			
-			<s:List id="lstUsers" height="100%" minWidth="150" fontSize="14" enabled="{so != null}" />
+			<s:List id="lstUsers" dataProvider="{userList}" height="100%" minWidth="200" fontSize="14" enabled="{so != null}" />
 			
 		</s:VGroup>	
 		

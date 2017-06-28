@@ -72,12 +72,15 @@ public class Application extends MultiThreadedApplicationAdapter {
 		@Override
 		public void notifyConnected(IConnection conn) {
 			
+			
+			log.info("notifyConnected {}", conn);
+			
 			/* Not our scope then NVM */
 			if(conn.getScope() != appScope){
 				return;
 			}
 			
-			String username = conn.getStringAttribute("username") + "-" + conn.getSessionId();
+			String username = conn.getStringAttribute("username");
 			
 			if(username != null){
 			
@@ -97,12 +100,14 @@ public class Application extends MultiThreadedApplicationAdapter {
 		@Override
 		public void notifyDisconnected(IConnection conn) {
 			
+			log.info("notifyDisconnected {}", conn);
+			
 			/* Not our scope then NVM */
 			if(conn.getScope() != appScope){
 				return;
 			}
 			
-			String username = conn.getStringAttribute("username") + "-" + conn.getSessionId();
+			String username = conn.getStringAttribute("username");
 			
 			if(username != null){
 			
@@ -277,6 +282,9 @@ public class Application extends MultiThreadedApplicationAdapter {
 	@Override
 	public boolean appConnect(IConnection conn, Object[] params) {
 		log.info("Client connect : {}",  conn);
+		
+		conn.setAttribute("username", "guest-"+conn.getSessionId());
+		
 		return super.appConnect(conn, params);
 	}
 

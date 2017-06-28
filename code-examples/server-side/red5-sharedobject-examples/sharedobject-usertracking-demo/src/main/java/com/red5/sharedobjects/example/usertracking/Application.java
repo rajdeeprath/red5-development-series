@@ -1,17 +1,25 @@
-package com.red5.sharedobjects.example.readwrite;
+package com.red5.sharedobjects.example.usertracking;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IAttributeStore;
 import org.red5.server.api.IConnection;
+import org.red5.server.api.IServer;
+import org.red5.server.api.Red5;
+import org.red5.server.api.listeners.IConnectionListener;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.so.ISharedObjectBase;
 import org.red5.server.api.so.ISharedObjectListener;
+import org.red5.server.scope.WebScope;
+import org.red5.server.util.ScopeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
 
 
 public class Application extends MultiThreadedApplicationAdapter {
@@ -19,8 +27,9 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	private static Logger log = LoggerFactory.getLogger(Application.class);
 
-	ISharedObject lounge = null;
+	private ISharedObject chatRoom = null;
 	
+	private IScope appScope;
 	
 	
 	@Override
@@ -28,8 +37,25 @@ public class Application extends MultiThreadedApplicationAdapter {
 		log.info("Application started : {}", app);
 		try 
 		{
-			lounge = initSharedObject(app, "bucket", false);
-			lounge.addSharedObjectListener(bucketListener);
+			this.appScope = app;
+			
+			/* Add connection listener */
+			
+			WebScope scope = (WebScope) app;
+			IServer server = scope.getServer();
+			server.addListener(connectionListener);
+			
+			
+			/* Get shared object instance */
+			chatRoom = getGameRoomSharedObject(app, "gameroom", false);
+			
+			
+			/** Lock and unlock are needed only if you do not want any other thread to operate 
+			 * on the shared object while you are operating on it. Unlock the shared object after you are done. */
+			chatRoom.lock();
+			chatRoom.acquire();
+			chatRoom.addSharedObjectListener(roomListener);
+			chatRoom.unlock();
 		} 
 		catch (Exception e) 
 		{
@@ -37,6 +63,103 @@ public class Application extends MultiThreadedApplicationAdapter {
 		}
 		
 		return super.appStart(app);
+	}
+	
+	
+	
+	
+	/**
+	 * Listen for successful connection to the application
+	 */
+	private IConnectionListener connectionListener = new IConnectionListener(){
+
+		@Override
+		public void notifyConnected(IConnection conn) {
+			
+			
+			log.info("notifyConnected {}", conn);
+			
+			/* Not our scope then NVM */
+			if(!isConnectionForScope(conn, appScope)){
+				return;
+			}
+			
+			String username = conn.getStringAttribute("username");
+			
+			if(username != null){
+			
+				List<String> users = (List<String>) chatRoom.getListAttribute("users");
+				if(users == null) {
+					users = new ArrayList<String>();
+				}
+				
+				users.add(username);
+				chatRoom.setAttribute("users", users);
+				chatRoom.setDirty(true);
+			}
+		}
+
+		
+		
+		@Override
+		public void notifyDisconnected(IConnection conn) {
+			
+			log.info("notifyDisconnected {}", conn);
+			
+			/* Not our scope then NVM */
+			if(!isConnectionForScope(conn, appScope)){
+				return;
+			}
+			
+			String username = conn.getStringAttribute("username");
+			
+			if(username != null){
+			
+				List<String> users = (List<String>) chatRoom.getListAttribute("users");
+				if(users == null) {
+					users = new ArrayList<String>();
+				}
+				
+				users.remove(username);
+				chatRoom.setAttribute("users", users);
+				chatRoom.setDirty(true);
+			}
+		}
+		
+		
+	};
+	
+	
+	
+	
+	
+	/**
+	 * Checks to see if a connection is for a given scope
+	 * 
+	 * @param conn IConnection connection to test
+	 * @param scope IScope scope to check for
+	 * @return
+	 */
+	private boolean isConnectionForScope(IConnection conn, IScope scope){
+		
+		// While disconnecting scope may be null
+		if(conn.getScope() != null)
+		{
+			return conn.getScope() == scope;
+		}
+		else
+		{
+			String rootPath = ScopeUtils.findApplication(scope).getPath();
+			String scopeName = scope.getName();
+			String scopePath = scope.getPath(); // /default/sharedobject-usertracking-demo
+			String connectionPath = conn.getPath(); // sharedobject-usertracking-demo
+			
+			if((rootPath + "/" + connectionPath).equalsIgnoreCase(scopePath + "/" + scopeName)){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	
@@ -51,7 +174,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 * @return
 	 * @throws Exception
 	 */
-	private ISharedObject initSharedObject(IScope scope, String name, boolean persistent) throws Exception{
+	private ISharedObject getGameRoomSharedObject(IScope scope, String name, boolean persistent) throws Exception{
 	
 		ISharedObject so = getSharedObject(scope, name, persistent);
 		
@@ -62,9 +185,6 @@ public class Application extends MultiThreadedApplicationAdapter {
 			so = getSharedObject(scope, name, persistent);
 			if(so == null) throw new Exception("Shared object was not created");
 		}
-		
-		if(!so.isAcquired())
-		so.acquire();
 		
 		return so;
 	}
@@ -82,13 +202,13 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 */
 	private void destroySharedObject(){
 	
-		if(lounge != null)
+		if(chatRoom != null)
 		{
-			lounge.removeSharedObjectListener(bucketListener);
-			lounge.release();
+			chatRoom.removeSharedObjectListener(roomListener);
+			chatRoom.release();
 		}
 		
-		lounge = null;
+		chatRoom = null;
 	}
 
 	
@@ -98,7 +218,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	/**
 	 * Shared Object listener object for monitoring shared object events
 	 */
-	private ISharedObjectListener bucketListener  = new ISharedObjectListener(){
+	private ISharedObjectListener roomListener  = new ISharedObjectListener(){
 
 		/*
 		 * (non-Javadoc)
@@ -106,7 +226,24 @@ public class Application extends MultiThreadedApplicationAdapter {
 		 */
 		@Override
 		public void onSharedObjectConnect(ISharedObjectBase so) {
-			log.info("Client connected to the shared object");			
+			log.info("Client connected to the shared object");
+			
+			IConnection conn = Red5.getConnectionLocal();
+			
+			if(conn.hasAttribute("username"))
+			{
+				String username = conn.getStringAttribute("username");
+				
+				Message notice = new Message();
+				notice.sender = "Red5Server";
+				notice.message = "Welcome to gameroom " + username;
+				
+				List<Object> args = new ArrayList<Object>();
+				args.add(new Gson().toJson(notice));
+				so.sendMessage("onChatMessage", args);
+			}
+			
+			
 		}
 
 		
@@ -117,6 +254,22 @@ public class Application extends MultiThreadedApplicationAdapter {
 		@Override
 		public void onSharedObjectDisconnect(ISharedObjectBase so) {
 			log.info("Client disconnected from the shared object");
+			
+			
+			IConnection conn = Red5.getConnectionLocal();
+			
+			if(conn.hasAttribute("username"))
+			{
+				String username = conn.getStringAttribute("username");
+				
+				Message notice = new Message();
+				notice.sender = "Red5Server";
+				notice.message = username + " has left gameroom " + username;
+				
+				List<Object> args = new ArrayList<Object>();
+				args.add(new Gson().toJson(notice));
+				so.sendMessage("onChatMessage", args);
+			}
 		}
 
 		
@@ -199,6 +352,9 @@ public class Application extends MultiThreadedApplicationAdapter {
 	@Override
 	public boolean appConnect(IConnection conn, Object[] params) {
 		log.info("Client connect : {}",  conn);
+		
+		conn.setAttribute("username", "guest-"+conn.getSessionId());
+		
 		return super.appConnect(conn, params);
 	}
 
