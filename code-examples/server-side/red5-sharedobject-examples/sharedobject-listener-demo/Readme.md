@@ -1,4 +1,4 @@
-# SharedObject event listner demo
+# SharedObject event listener demo
 ---
 
 ## About
@@ -44,7 +44,7 @@ To deploy the war to red5 / red5 pro server :
 ---
 
 Once the application has been deployed to the server, navigate to `http://{host}:5080/sharedobject-listener-demo` to launch the sample flash client. Interact with the client interface following the labeled `Steps`, while keeping the `console` running in another window.
-You can observe the server side callbacks trigerring as you interact with the client interface. Thsi wil help you better understand the flow of events and use of the [ISharedObjectListener](http://red5.org/javadoc/red5-server-common/org/red5/server/api/so/ISharedObjectListener.html) interface.
+You can observe the server side callbacks triggering as you interact with the client interface. Thsi wil help you better understand the flow of events and use of the [ISharedObjectListener](http://red5.org/javadoc/red5-server-common/org/red5/server/api/so/ISharedObjectListener.html) interface.
 
 
 
@@ -52,3 +52,6 @@ You can observe the server side callbacks trigerring as you interact with the cl
 ---
 
 The source for the client side example can be found at [https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/client-side/red5-sharedobjects-demo/sharedobject-listener-demo](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/client-side/red5-sharedobjects-demo/sharedobject-listener-demo)
+
+
+
