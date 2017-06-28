@@ -228,7 +228,7 @@
 				var obj:Object = decoder.getValue();
 				
 				if(obj.sender != null){
-					txtMessages.text += obj.sender + " : " + obj.message;
+					txtMessages.text += obj.sender + "    : " + obj.message;
 					txtMessages.text += "\n";
 				}
 			}
@@ -247,7 +247,7 @@
 			
 			<s:HGroup width="100%" enabled="{!connected}">
 				
-				<s:TextInput id="txtConnectionUrl" width="100%" height="40" fontSize="18" text="{connectionURL}" />				
+				<s:TextInput id="txtConnectionUrl" width="100%" height="40" fontSize="16" text="{connectionURL}" />				
 				
 				<s:Button id="btnConnect" width="120" height="40" label="{(!connected)?'CONNECT':'CONNECTED'}" fontSize="14" fontWeight="bold"/>				
 				

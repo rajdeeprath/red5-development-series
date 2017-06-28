@@ -1,5 +1,6 @@
 package com.red5.sharedobjects.example.usertracking;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.red5.server.api.scope.IScope;
 import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.so.ISharedObjectBase;
 import org.red5.server.api.so.ISharedObjectListener;
+import org.red5.server.exception.ClientRejectedException;
 import org.red5.server.scope.WebScope;
 import org.red5.server.util.ScopeUtils;
 import org.slf4j.Logger;
@@ -89,12 +91,24 @@ public class Application extends MultiThreadedApplicationAdapter {
 			if(username != null){
 			
 				List<String> users = (List<String>) chatRoom.getListAttribute("users");
-				if(users == null) {
+				if(users == null) 
+				{
 					users = new ArrayList<String>();
 				}
+				else
+				{
+					if(users.contains(username))
+					{
+						log.warn(username + " already exists in the room");
+						conn.close();
+						return;
+					}
+				}
+				
 				
 				users.add(username);
 				chatRoom.setAttribute("users", users);
+				chatRoom.setAttribute("lastUserConnect", Instant.now().toEpochMilli());
 				chatRoom.setDirty(true);
 			}
 		}
@@ -116,9 +130,11 @@ public class Application extends MultiThreadedApplicationAdapter {
 			if(username != null){
 			
 				List<String> users = (List<String>) chatRoom.getListAttribute("users");
-				if(users == null) {
+				if(users == null) 
+				{
 					users = new ArrayList<String>();
 				}
+				
 				
 				users.remove(username);
 				chatRoom.setAttribute("users", users);
@@ -236,7 +252,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 				
 				Message notice = new Message();
 				notice.sender = "Red5Server";
-				notice.message = "Welcome to gameroom " + username;
+				notice.message = username + " : Joined the room";
 				
 				List<Object> args = new ArrayList<Object>();
 				args.add(new Gson().toJson(notice));
@@ -264,7 +280,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 				
 				Message notice = new Message();
 				notice.sender = "Red5Server";
-				notice.message = username + " has left gameroom " + username;
+				notice.message = username + " : has left gameroom " + username;
 				
 				List<Object> args = new ArrayList<Object>();
 				args.add(new Gson().toJson(notice));
@@ -353,7 +369,16 @@ public class Application extends MultiThreadedApplicationAdapter {
 	public boolean appConnect(IConnection conn, Object[] params) {
 		log.info("Client connect : {}",  conn);
 		
-		conn.setAttribute("username", "guest-"+conn.getSessionId());
+		try 
+		{
+			String username = Utils.getUsernameParameter(conn, params);
+			conn.setAttribute("username", username);
+		} 
+		catch (Exception e) 
+		{
+			throw new ClientRejectedException(e);
+		}
+		
 		
 		return super.appConnect(conn, params);
 	}
