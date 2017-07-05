@@ -7,7 +7,7 @@
   <version>1.0.0</version>
   <name>connection-messaging-demo</name>
   <url>http://maven.apache.org</url>
-  <description>Red5 application showing how to fetch important information about the client connection </description>
+  <description>Red5 application showing messaging between client and server </description>
     <mailingLists>
         <mailingList>
             <name>red5-interest</name>
