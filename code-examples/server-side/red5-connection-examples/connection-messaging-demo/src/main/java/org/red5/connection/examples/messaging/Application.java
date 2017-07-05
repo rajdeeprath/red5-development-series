@@ -154,8 +154,8 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 * 
 	 * @param args
 	 */
-	public void clientToServer(Object[] args){
-		log.info("Invoked from client at {} with params {}", Instant.now().toEpochMilli(), args);
+	public void clientToServer(){
+		log.info("Invoked from client at {} with params {}", Instant.now().toEpochMilli());
 	}
 	
 	
