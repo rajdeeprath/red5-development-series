@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx" applicationComplete="init(event)">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+		
+			import flash.events.Event;
+			import flash.events.MouseEvent;
+			import flash.events.NetStatusEvent;
+			import flash.net.NetConnection;
+			import flash.net.Responder;
+			
+			
+			private var nc:NetConnection;
+			
+			
+			[Bindable]
+			private var connected:Boolean;
+			
+			
+			[Bindable]
+			private var connectionURL:String = "rtmp://localhost:1935/connection-messaging-demo";
+			
+			
+			
+			
+			private function printToConsole(msg:String):void
+			{
+				txtConsole.text += msg;
+				txtConsole.text += "\n";
+			}
+			
+			
+			
+			private function init(event:Event):void
+			{
+				btnConnect.addEventListener(MouseEvent.CLICK, onConnect);
+				btnClientToServerTest.addEventListener(MouseEvent.CLICK, onClientToServerCall);
+				btnRequestServerForClientCall1.addEventListener(MouseEvent.CLICK, onRequestServerForClientCall);
+				btnRequestServerForClientCall2.addEventListener(MouseEvent.CLICK, onRequestServerForClientCallWithParams);
+				btnRequestServerForClientCall3.addEventListener(MouseEvent.CLICK, onRequestServerForClientCallWithParamsForResult);
+			}
+			
+			
+			
+			
+			/**
+			 * Connect to server
+			 * @param	e
+			 */
+			private function onConnect(e:Event):void
+			{
+				if (nc == null)
+				{
+					printToConsole("Connecting to server :" + txtConnectionUrl.text);
+					
+					nc = new NetConnection();
+					nc.client = this;
+					nc.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+					nc.connect(String(txtConnectionUrl.text));
+				}
+			}			
+			
+			
+			
+			
+			
+			
+			/**
+			 * Handling NetStatus events
+			 * 
+			 * @param	e
+			 */ 
+			private function onNetStatus(e:NetStatusEvent):void
+			{
+				printToConsole("onNetStatus status :" + e.info.code);
+				
+				switch(e.info.code)
+				{
+					case "NetConnection.Connect.Success":
+						connected = true;
+					break;
+					
+					case "NetConnection.Connect.Failed":
+					case "NetConnection.Connect.Rejected":
+					case "NetConnection.Connect.Closed":
+						connected = false;
+						
+						if (nc != null){
+							nc.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+						}
+						nc = null;
+					break;
+				}
+			}
+			
+			
+			
+			
+			
+			
+			/**
+			 * Make a call to server
+			 * @param	e
+			 */
+			private function onClientToServerCall(e:Event):void
+			{
+				if (nc != null)
+				{
+					printToConsole("Calling method 'clientToServer' on server :" + txtConnectionUrl.text);
+					
+					nc.call("clientToServer", new Responder(function(result:*):void{
+						
+						printToConsole("Client to server call successful");
+						
+					}, function(err:Object):void{
+						
+						printToConsole("Client to server call failed");
+						
+					}));
+				}
+			}
+			
+			
+			
+			
+			private function onRequestServerForClientCall(e:Event):void
+			{
+				if (nc != null)
+				{
+					printToConsole("Requesting server to call method 'clientMethod1' on client");
+					
+					nc.call("callClientMethodWithoutParams", new Responder(function(result:*):void{
+						
+						printToConsole("Request to server successful");
+						
+					}, function(err:Object):void{
+						
+						printToConsole("Request to server failed");
+						
+					}));
+				}
+			}
+			
+			
+			
+			
+			private function onRequestServerForClientCallWithParams(e:Event):void
+			{
+				if (nc != null)
+				{
+					printToConsole("Requesting server to call method 'clientMethod2' on client");
+					
+					nc.call("callClientMethodWithParams", new Responder(function(result:*):void{
+						
+						printToConsole("Request to server successful");
+						
+					}, function(err:Object):void{
+						
+						printToConsole("Request to server failed");
+						
+					}));
+				}
+			}
+			
+			
+			
+			
+			private function onRequestServerForClientCallWithParamsForResult(e:Event):void
+			{
+				if (nc != null)
+				{
+					printToConsole("Requesting server to call method 'clientMethod3' on client");
+					
+					nc.call("callClientMethodWithParamsForResult", new Responder(function(result:*):void{
+						
+						printToConsole("Request to server successful");
+						
+					}, function(err:Object):void{
+						
+						printToConsole("Request to server failed");
+						
+					}));
+				}
+			}
+			
+			
+			
+			
+			
+			/* Client methods called by server */
+			
+			
+			
+			/**
+			 * Method without parameters
+			 */
+			public function clientMethod1():void
+			{
+				printToConsole("Method 'clientMethod1' called from server");
+			}
+			
+			
+			
+			
+			
+			/**
+			 * * Method with parameters
+			 * @param	...args
+			 */
+			public function clientMethod2(...args):void
+			{
+				printToConsole("Method 'clientMethod2' called from server with arguments " + args.toString());
+			}
+			
+			
+			
+			
+			/**
+			 * Method with parameters that returns result
+			 * 
+			 * @param	...args
+			 * @return
+			 */
+			public function clientMethod3(...args):Object
+			{
+				printToConsole("Method 'clientMethod3' called from server with arguments for result " + args.toString());
+				
+				if (args.length > 1){
+					
+					var result:Object = args[0] + args[1];
+					printToConsole("Sending result back to server " + result.toString());
+					return result;
+				}
+				
+				return null;
+			}
+		
+		
+		]]>
+	</fx:Script>
+	
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10" />
+	</s:layout>
+	
+	
+	<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+		
+		<s:VGroup width="100%" height="100%" gap="10">
+			
+			<s:HGroup width="100%" enabled="{!connected}">
+				
+				<s:TextInput id="txtConnectionUrl" width="100%" height="40" fontSize="16" text="{connectionURL}" />				
+				
+				<s:Button id="btnConnect" width="120" height="40" label="{(!connected)?'CONNECT':'CONNECTED'}" fontSize="14" fontWeight="bold"/>				
+				
+			</s:HGroup>
+			<s:Spacer width="10" height="50"/>
+			
+			
+			<s:HGroup width="100%" enabled="{connected}">
+				<s:Label width="100%" height="40" fontSize="18" text="Client 2 Server"
+						 verticalAlign="middle"/>
+				
+				<s:Button id="btnClientToServerTest" width="100" height="40" label="INVOKE" fontSize="14" fontWeight="bold" />
+				
+			</s:HGroup>
+			<s:HGroup width="100%" enabled="{connected}">
+				
+				<s:Label width="100%" height="40" fontSize="18" text="Server 2 Client Without Params"
+						 verticalAlign="middle"/>
+				
+				<s:Button id="btnRequestServerForClientCall1" width="100" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
+				
+			</s:HGroup>
+			<s:HGroup width="100%" enabled="{connected}">
+				
+				<s:Label width="100%" height="40" fontSize="18" text="Server 2 Client With Params"
+						 verticalAlign="middle"/>
+				
+				<s:Button id="btnRequestServerForClientCall2" width="100" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
+				
+			</s:HGroup>
+			<s:HGroup width="100%" enabled="{connected}">
+				
+				<s:Label width="100%" height="40" fontSize="18" text="Server 2 Client With Params For Result"
+						 verticalAlign="middle"/>
+				
+				<s:Button id="btnRequestServerForClientCall3" width="100" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
+				
+			</s:HGroup>
+			
+		</s:VGroup>	
+		
+	</s:HGroup>
+	
+	
+	
+	<s:VGroup width="100%">
+		
+		<s:Label fontSize="14" fontWeight="bold" text="CONSOLE:"/>
+		<s:TextArea id="txtConsole" width="100%" height="100%" editable="false"/>
+		
+	</s:VGroup>
+	
+</s:Application>
