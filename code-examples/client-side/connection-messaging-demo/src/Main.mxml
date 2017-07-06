@@ -116,13 +116,13 @@
 				{
 					printToConsole("Calling method 'clientToServer' on server :" + txtConnectionUrl.text);
 					
-					nc.call("clientToServer", new Responder(function(result:*):void{
+					nc.call("clientServices.clientToServer", new Responder(function(result:*):void{
 						
 						printToConsole("Client to server call successful");
 						
 					}, function(err:Object):void{
 						
-						printToConsole("Client to server call failed");
+						printToConsole("Client to server call failed ");
 						
 					}));
 				}
@@ -137,7 +137,7 @@
 				{
 					printToConsole("Requesting server to call method 'clientMethod1' on client");
 					
-					nc.call("callClientMethodWithoutParams", new Responder(function(result:*):void{
+					nc.call("clientServices.callClientMethodWithoutParams", new Responder(function(result:*):void{
 						
 						printToConsole("Request to server successful");
 						
@@ -158,7 +158,7 @@
 				{
 					printToConsole("Requesting server to call method 'clientMethod2' on client");
 					
-					nc.call("callClientMethodWithParams", new Responder(function(result:*):void{
+					nc.call("clientServices.callClientMethodWithParams", new Responder(function(result:*):void{
 						
 						printToConsole("Request to server successful");
 						
@@ -179,7 +179,7 @@
 				{
 					printToConsole("Requesting server to call method 'clientMethod3' on client");
 					
-					nc.call("callClientMethodWithParamsForResult", new Responder(function(result:*):void{
+					nc.call("clientServices.callClientMethodWithParamsForResult", new Responder(function(result:*):void{
 						
 						printToConsole("Request to server successful");
 						

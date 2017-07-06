@@ -86,7 +86,6 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 * 
 	 * @param conn
 	 */
-	@SuppressWarnings("unused")
 	private void serverToClient(IConnection conn, String method){
 		
 		try{
@@ -106,7 +105,6 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 * 
 	 * @param conn
 	 */
-	@SuppressWarnings("unused")
 	private void serverToClient2(IConnection conn, String method, Object[] args){
 		
 		try{
@@ -125,7 +123,6 @@ public class Application extends MultiThreadedApplicationAdapter {
 	 * 
 	 * @param conn
 	 */
-	@SuppressWarnings("unused")
 	private void serverToClient3(IConnection conn, String method, Object[] args){
 		
 		try
@@ -149,24 +146,24 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	
 	
+
 	/**
-	 * Invoked by client
-	 * 
-	 * @param args
+	 * Method Invoked from client
 	 */
-	public void clientToServer(){
-		log.info("Invoked from client at {} with params {}", Instant.now().toEpochMilli());
+	protected void clientToServer(){
+		log.info("Invoked from client at {}", Instant.now().toEpochMilli());
 	}
 	
 	
 	
 	
 	
-	
 	/**
-	 * Call a method named 'clientMethod1' on client without params. The client method signature should match appropriately
+	 * Method invoked from client requesting a callback on 'clientMethod1'
 	 */
-	public void callClientMethodWithoutParams(){
+	protected void callClientMethodWithoutParams(){
+		
+		log.info("Client request for method call without params");
 		
 		IConnection connection = Red5.getConnectionLocal();
 		
@@ -183,11 +180,12 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	
 	
-	
 	/**
-	 * Call a method named 'clientMethod2' on client with params. The client method signature should match appropriately
+	 * Method invoked from client requesting a callback on 'clientMethod2'
 	 */
-	public void callClientMethodWithParams(){
+	protected void callClientMethodWithParams(){
+		
+		log.info("Client request for method call with params");
 		
 		IConnection connection = Red5.getConnectionLocal();
 		
@@ -207,9 +205,11 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	
 	/**
-	 * Call a method named 'clientMethod3' on client with params and get result. The client method signature should match appropriately
+	 * Method invoked from client requesting a callback on 'clientMethod3'
 	 */
-	public void callClientMethodWithParamsForResult(){
+	protected void callClientMethodWithParamsForResult(){
+		
+		log.info("Client request for method call with params for result");
 		
 		IConnection connection = Red5.getConnectionLocal();
 		

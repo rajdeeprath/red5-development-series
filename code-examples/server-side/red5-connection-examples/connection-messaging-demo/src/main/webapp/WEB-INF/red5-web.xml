@@ -31,5 +31,11 @@
 	Defines the web handler which acts as an applications endpoint
 	-->
 	<bean id="web.handler" class="org.red5.connection.examples.messaging.Application" />
+	
+	
+	<!--  Client services exposed for callback -->
+	<bean id="clientServices.service" class="org.red5.connection.examples.messaging.ClientServices" >
+		<constructor-arg ref="web.handler"/>
+	</bean>
  
 </beans>
