@@ -3,6 +3,7 @@ package org.red5.connection.examples.messaging;
 
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,6 +32,9 @@ public class Application extends MultiThreadedApplicationAdapter {
 	public boolean appStart(IScope arg0) {
 		
 		log.info("Application start {}", arg0);
+		
+		Object handler = new ClientServices(this);
+		arg0.registerServiceHandler("clientServices", handler);
 		
 		threadPoolExecutor = Executors.newCachedThreadPool();
 		
@@ -82,7 +86,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	
 	/**
-	 * Invokes a client side method withotu arguments
+	 * Invokes a client side method without arguments
 	 * 
 	 * @param conn
 	 */
@@ -157,6 +161,31 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	
 	
+	/**
+	 * Method Invoked from client with params
+	 */
+	protected void clientToServerWithParams(Object[] args){
+		log.info("Invoked from client at {} with params {}", Instant.now().toEpochMilli(), args);
+	}
+	
+	
+	
+	
+
+
+
+	/**
+	 * Method Invoked from client with params : Mobile SDK
+	 */
+	public void clientToServerWithParamsForMobileSDK(String data) {
+		
+		Map<String, Object> map = Red5ProUtils.fromString(data);
+		log.info("Invoked from client at {} with params {}", Instant.now().toEpochMilli(), map);
+	}
+	
+	
+	
+	
 	
 	/**
 	 * Method invoked from client requesting a callback on 'clientMethod1'
@@ -221,5 +250,6 @@ public class Application extends MultiThreadedApplicationAdapter {
 			}			
 		});		
 	}
+
 	
 }

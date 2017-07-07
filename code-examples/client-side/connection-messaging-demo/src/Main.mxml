@@ -43,6 +43,7 @@
 			{
 				btnConnect.addEventListener(MouseEvent.CLICK, onConnect);
 				btnClientToServerTest.addEventListener(MouseEvent.CLICK, onClientToServerCall);
+				btnClientToServerTestWithParams.addEventListener(MouseEvent.CLICK, onClientToServerCallWithParams);
 				btnRequestServerForClientCall1.addEventListener(MouseEvent.CLICK, onRequestServerForClientCall);
 				btnRequestServerForClientCall2.addEventListener(MouseEvent.CLICK, onRequestServerForClientCallWithParams);
 				btnRequestServerForClientCall3.addEventListener(MouseEvent.CLICK, onRequestServerForClientCallWithParamsForResult);
@@ -127,6 +128,30 @@
 					}));
 				}
 			}
+			
+			
+			
+			
+			
+			private function onClientToServerCallWithParams(e:Event):void
+			{
+				if (nc != null)
+				{
+					printToConsole("Calling method 'clientToServerWithParams' on server :" + txtConnectionUrl.text);
+					
+					nc.call("clientServices.clientToServerWithParams", new Responder(function(result:*):void{
+						
+						printToConsole("Client to server call successful");
+						
+					}, function(err:Object):void{
+						
+						printToConsole("Client to server call failed ");
+						
+					}), 1, 2);
+				}
+			}
+			
+			
 			
 			
 			
@@ -261,7 +286,7 @@
 				
 				<s:TextInput id="txtConnectionUrl" width="100%" height="40" fontSize="16" text="{connectionURL}" />				
 				
-				<s:Button id="btnConnect" width="120" height="40" label="{(!connected)?'CONNECT':'CONNECTED'}" fontSize="14" fontWeight="bold"/>				
+				<s:Button id="btnConnect" width="200" height="40" label="{(!connected)?'CONNECT':'CONNECTED'}" fontSize="14" fontWeight="bold"/>				
 				
 			</s:HGroup>
 			<s:Spacer width="10" height="50"/>
@@ -271,7 +296,14 @@
 				<s:Label width="100%" height="40" fontSize="18" text="Client 2 Server"
 						 verticalAlign="middle"/>
 				
-				<s:Button id="btnClientToServerTest" width="100" height="40" label="INVOKE" fontSize="14" fontWeight="bold" />
+				<s:Button id="btnClientToServerTest" width="200" height="40" label="INVOKE" fontSize="14" fontWeight="bold" />
+				
+			</s:HGroup>
+			<s:HGroup width="100%" enabled="{connected}">
+				<s:Label width="100%" height="40" fontSize="18" text="Client 2 Server"
+						 verticalAlign="middle"/>
+				
+				<s:Button id="btnClientToServerTestWithParams" width="200" height="40" label="INVOKE WITH PARAMS" fontSize="14" fontWeight="bold" />
 				
 			</s:HGroup>
 			<s:HGroup width="100%" enabled="{connected}">
@@ -279,7 +311,7 @@
 				<s:Label width="100%" height="40" fontSize="18" text="Server 2 Client Without Params"
 						 verticalAlign="middle"/>
 				
-				<s:Button id="btnRequestServerForClientCall1" width="100" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
+				<s:Button id="btnRequestServerForClientCall1" width="200" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
 				
 			</s:HGroup>
 			<s:HGroup width="100%" enabled="{connected}">
@@ -287,7 +319,7 @@
 				<s:Label width="100%" height="40" fontSize="18" text="Server 2 Client With Params"
 						 verticalAlign="middle"/>
 				
-				<s:Button id="btnRequestServerForClientCall2" width="100" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
+				<s:Button id="btnRequestServerForClientCall2" width="200" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
 				
 			</s:HGroup>
 			<s:HGroup width="100%" enabled="{connected}">
@@ -295,7 +327,7 @@
 				<s:Label width="100%" height="40" fontSize="18" text="Server 2 Client With Params For Result"
 						 verticalAlign="middle"/>
 				
-				<s:Button id="btnRequestServerForClientCall3" width="100" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
+				<s:Button id="btnRequestServerForClientCall3" width="200" height="40" label="REQUEST" fontSize="14" fontWeight="bold" />
 				
 			</s:HGroup>
 			

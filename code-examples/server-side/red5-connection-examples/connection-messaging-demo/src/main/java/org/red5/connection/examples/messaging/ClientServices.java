@@ -37,8 +37,25 @@ public class ClientServices implements IClientServices, IServiceHandlerProvider 
 	public void clientToServer() {
 		application.clientToServer();
 	}
+	
+	
+	
+	
+	@Override
+	public void clientToServerWithParams(Object[] args) {
+		application.clientToServerWithParams(args);
+	}
+	
+	
+	
+	
+	@Override
+	public void clientToServerWithParamsForMobileSDK(String map) {
+		application.clientToServerWithParamsForMobileSDK(map);
+	}
 
 
+	
 	@Override
 	public void callClientMethodWithoutParams() {
 		application.callClientMethodWithoutParams();

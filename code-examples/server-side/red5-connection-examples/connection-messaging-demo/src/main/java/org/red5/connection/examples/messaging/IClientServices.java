@@ -24,4 +24,19 @@ public interface IClientServices {
 	 */
 	public abstract void callClientMethodWithParamsForResult();
 
+	
+	/**
+	 * 
+	 * @param args
+	 */
+	public void clientToServerWithParams(Object[] args);
+
+	
+	
+	/**
+	 * 
+	 * @param map
+	 */
+	public void clientToServerWithParamsForMobileSDK(String map);
+
 }
