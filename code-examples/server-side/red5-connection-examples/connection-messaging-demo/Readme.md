@@ -49,7 +49,7 @@ To deploy the war to red5 / red5 pro server :
 Once the server app is deployed, navigate to `http://localhost:5080/connection-messaging-demo` in the browser and you will see a flash client interface.  
 
 * Press `CONNECT` to establish connection with server.
-* Press a Button in the interface to run that test.
+* Press the Buttons provided in the interface to run that test.
 * Observe logging on server side as well as the console on the client side for more information on flow of events
 
 
