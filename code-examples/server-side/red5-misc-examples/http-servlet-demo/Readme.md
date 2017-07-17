@@ -1,4 +1,4 @@
-# Exposing Red5 api to http clients - HTTP Sevlet Example
+# Exposing Red5 api to http clients - HTTP Servlet Example
 ---
 
 
@@ -11,7 +11,7 @@ Thsi example demonstrates hwo you can open a HTTP channel between a red5 server 
 
 The servlet exposes & activates itself through the `web.xml` file which is located at `RED5_HOME/webapps/{appname}/WEB-INF/web.xml`. If you take a look at the servlet class `SampleHttpSevlet.java`, you will see how the red5 application object is injected into it using `@Autowired` annotation.
 
-We can then invoke custom application methods and standard [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html) methods from the servlet itself. The sevlet itself is capable to handling web requests from Http clients. Thus we can connect http clienst to application adapter easily.
+We can then invoke custom application methods and standard [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html) methods from the servlet itself. The servlet itself is capable to handling web requests from Http clients. Thus we can connect http client to application adapter easily.
 
 
 
@@ -70,7 +70,23 @@ Application context path = /default
 ```
 
 
-## Notes
+
+## Eclipse
+---
+
+You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Neon etc. To import the code into your IDE:
+
+1. Navigate to the repository folder
+2. Execute maven command `mvn eclipse:eclipse`. This will generate files necessary for eclipse to read the maven project properly.
+3. In eclipse go to `File -> Import -> Existing Maven Projects` and click `Next`.
+4. Browse and select `the project root` and Click `Finish` to import the project.
+
+
+
+## Additional Notes
 ---
 
 NA
+
+
+
