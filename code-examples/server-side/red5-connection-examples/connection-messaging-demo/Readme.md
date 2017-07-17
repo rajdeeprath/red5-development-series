@@ -50,7 +50,7 @@ Once the server app is deployed, navigate to `http://localhost:5080/connection-m
 
 * Press `CONNECT` to establish connection with server.
 * Press the Buttons provided in the interface to run that test.
-* Observe logging on server side as well as the console on the client side for more information on flow of events
+* Observe logging on server side as well as the console on the client side for more information on flow of `calls` and `events`.
 
 
 ## Eclipse
