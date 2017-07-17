@@ -1,4 +1,4 @@
-# Exposing Red5 api to http clients - HTTP Servlet Example
+# Exposing Red5 Pro to http clients - HTTP Servlet Example
 ---
 
 
