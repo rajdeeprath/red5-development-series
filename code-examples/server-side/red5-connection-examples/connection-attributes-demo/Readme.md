@@ -59,7 +59,7 @@ To see this example in action, you need to connect to the server side applicatio
 You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Neon etc. To import the code into your IDE:
 
 1. Navigate to the repository folder
-2. Execute maven comman `mvn eclipse:eclipse`. This will generate files necessary for eclipse to read the maven project properly.
+2. Execute maven command `mvn eclipse:eclipse`. This will generate files necessary for eclipse to read the maven project properly.
 3. In eclipse go to `File -> Import -> Existing Maven Projects` and click `Next`.
 4. Browse and select `the project root` and Click `Finish` to import the project.
 
