@@ -5,7 +5,7 @@
 ## About
 ---
 
-This example demonstrates how to count the total number of connections in a Red5 Pro application. Red5 pro supports `RTMP`, `RTSP` (Android/IOS sdk) and `WebRTC` (Red5pro HTML5 SDK) type connections. All of these connection types are counted when you use the [getClientConnections](http://red5.org/javadoc/red5-server-common/org/red5/server/api/scope/IScope.html#getClientConnections--) method of the [IScope](http://red5.org/javadoc/red5-server-common/org/red5/server/api/scope/IScope.html#getClientConnections--) interface. This gives you total connections in that `scope`
+This example demonstrates how to count the total number of connections in a Red5 Pro application. Red5 pro supports `RTMP`, `RTSP` ([Android](https://www.red5pro.com/docs/streaming/android.html)/[IOS](https://www.red5pro.com/docs/streaming/ios.html) sdk) and `WebRTC` ([Red5pro HTML5 SDK](https://www.red5pro.com/docs/streaming/web.html)) type connections. All of these connection types are counted when you use the [getClientConnections](http://red5.org/javadoc/red5-server-common/org/red5/server/api/scope/IScope.html#getClientConnections--) method of the [IScope](http://red5.org/javadoc/red5-server-common/org/red5/server/api/scope/IScope.html#getClientConnections--) interface. This gives you total connections in that `scope`
 
 Similarly to look up connectiosn in a room (sub-scope) you can use the [getClientConnections](http://red5.org/javadoc/red5-server-common/org/red5/server/api/scope/IScope.html#getClientConnections--) method on the `ROOM` type scope.
 
