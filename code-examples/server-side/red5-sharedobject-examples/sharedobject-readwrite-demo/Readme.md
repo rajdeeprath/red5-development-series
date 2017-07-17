@@ -7,6 +7,9 @@
 This server side example webapp demonstrates how to read and write SharedObject data on server side. The Red5 SharedObject manages data in a AttributeStore. We can use the [IAttributeStore](http://red5.org/javadoc/red5-server-common/org/red5/server/api/IAttributeStore.html) methods to read and write data as name-value paired attribute for a SharedObject. In the example web application's source code you can see different ways to read/write/update & even remove attributes. Each time the AttributeStore is updated, the connected clients receive a `SYNC` event depending on the client type and its capabilities.
 
 
+> A SharedObject created by the server side code can be acquired & used by the client application but wont be destroyed once all clients have disconnected from it.
+
+
 ## Build & Deploy
 ---
 
