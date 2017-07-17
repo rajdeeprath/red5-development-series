@@ -5,7 +5,7 @@
 ## About
 ---
 
-This example demonstrates communication between server side code and client side. You can see hwo to cal lsever methods from client with/without parameters and how to call a client side method from server code.
+This example demonstrates communication between server side code and client side. You can see hwo to call server methods from client with/without parameters and how to call a client side method from server code.
 
 
 
@@ -53,7 +53,22 @@ Once the server app is deployed, navigate to `http://localhost:5080/connection-m
 * Observe logging on server side as well as the console on the client side for more information on flow of events
 
 
-## Notes
+## Eclipse
+---
+
+You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Neon etc. To import the code into your IDE:
+
+1. Navigate to the repository folder
+2. Execute maven command `mvn eclipse:eclipse`. This will generate files necessary for eclipse to read the maven project properly.
+3. In eclipse go to `File -> Import -> Existing Maven Projects` and click `Next`.
+4. Browse and select `the project root` and Click `Finish` to import the project.
+
+
+
+## Additional Notes
 ---
 
 NA
+
+
+
