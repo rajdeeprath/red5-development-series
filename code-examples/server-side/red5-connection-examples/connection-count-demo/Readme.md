@@ -13,8 +13,23 @@ Similarly to look up connectiosn in a room (sub-scope) you can use the [getClien
 ## Build & Deploy
 ---
 
+### Build
+---
 
-To deploy the war to red5 / red5 pro server :
+To build this application : open a shell prompt in the application's project directory (where the pom.xml file resides). run the following maven command in your shell -> 
+
+``` 
+mvn clean package 
+
+```
+
+The above command will generate a `war` file in the `target` directory inside the project directory. 
+
+
+### Deploy
+---
+
+To deploy the war to red5 pro server :
 
 1. Stop server if it is running.
 
