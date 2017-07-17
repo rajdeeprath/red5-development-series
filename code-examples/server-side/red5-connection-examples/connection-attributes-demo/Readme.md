@@ -5,9 +5,9 @@
 ---
 
 
-This example demonstrates how to store and retrieve arbitrary attributes on the connection object in Red5 / Red5 Pro. Attributes are stored as `key-value` pairs. Attributes live in the object as long as the connection is alive. Red5 supports storing basic data types etc as `Integer`, `Boolean`, `Double`  as well as complex data types such as `Arrays`, `Maps`, `Custom objects` and more.
+This example demonstrates how to store and retrieve arbitrary attributes on the connection object in Red5 Pro. Attributes are stored as `key-value` pairs. Attributes live in the object as long as the connection is alive. Red5 supports storing basic data types etc as `Integer`, `Boolean`, `Double`  as well as complex data types such as `Arrays`, `Maps`, `Custom objects` and more.
 
-Every Red5 / Red5 Pro connection is represented by the [IConnection](http://red5.org/javadoc/red5-server-common/index.html?org/red5/server/api/class-use/IConnection.html) interface. The IConnection interface inherits attribute store/read capabilities from the [IAttributeStore](#http://red5.org/javadoc/red5-server-common/org/red5/server/api/IAttributeStore.html#getAttribute-java.lang.String-) interface. Check out the [IAttributeStore](#http://red5.org/javadoc/red5-server-common/org/red5/server/api/IAttributeStore.html#getAttribute-java.lang.String-) interface for detailed api on working with attributes.
+Every Red5 Pro connection is represented by the [IConnection](http://red5.org/javadoc/red5-server-common/index.html?org/red5/server/api/class-use/IConnection.html) interface. The IConnection interface inherits attribute store/read capabilities from the [IAttributeStore](#http://red5.org/javadoc/red5-server-common/org/red5/server/api/IAttributeStore.html#getAttribute-java.lang.String-) interface. Check out the [IAttributeStore](#http://red5.org/javadoc/red5-server-common/org/red5/server/api/IAttributeStore.html#getAttribute-java.lang.String-) interface for detailed api on working with attributes.
 
 
 ## Build & Deploy
@@ -29,7 +29,7 @@ The above command will generate a `war` file in the `target` directory inside th
 ### Deploy
 ---
 
-To deploy the war to red5 / red5 pro server :
+To deploy the war to red5 pro server :
 
 1. Stop server if it is running.
 
@@ -49,7 +49,19 @@ To deploy the war to red5 / red5 pro server :
 
 This example stores some arbitrary attributes on the connection object when the client connects to the application and then logs out the attribute names. Then again when the client disconencts it logs out the attributes that were stored.
 
-To see this example in action, you need to connct to this application - `connection-attributes-demo` using RTMP or RTSP or Red5 pro SDK based WebRTC client and then disconnect after a few seconds. you shoudl  be able to see logging in console indicating attribute manipulations.
+To see this example in action, you need to connect to the server side application - `connection-attributes-demo` after using RTMP or Red5 Pro Mobile SDK or Red5 pro SDK based WebRTC based client and then disconnect after a few seconds. You should be able to see logging in console / log file indicating trhe various attribute operations that were performed on the server side on the [IConnection](http://red5.org/javadoc/red5-server-common/index.html?org/red5/server/api/class-use/IConnection.html) object. Check out the server side code in eclipse to see how it all happens!.
+
+
+
+## Eclipse
+---
+
+You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Neon etc. To import the code into your IDE:
+
+1. Navigate to the repository folder
+2. Execute maven comman `mvn eclipse:eclipse`. This will generate files necessary for eclipse to read the maven project properly.
+3. In eclipse go to `File -> Import -> Existing Maven Projects` and click `Next`.
+4. Browse and select `the project root` and Click `Finish` to import the project.
 
 
 
