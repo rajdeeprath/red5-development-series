@@ -1,11 +1,11 @@
-# Serverside stream recording example
+# Server Side stream recording example
 ---
 
 
 ## About
 ---
 
-This server side application demonstrates server side recording feature in Red5. Using server side recording, you can save a live stream to a file for later vieweing as a VOD etc:. In Red5 publishsing streams are [ClientBroadcastStream](http://red5.org/javadoc/red5-server-common/org/red5/server/stream/ClientBroadcastStream.html) objects.Therefore we can cast any BroadcastStream to a [ClientBroadcastStream](http://red5.org/javadoc/red5-server-common/org/red5/server/stream/ClientBroadcastStream.html) and invoke the recording methods on it.
+This server side application demonstrates server side recording feature in Red5. Using server side recording, you can save a live stream to a file for later viewing as a VOD etc:. In Red5 publishsing streams are [ClientBroadcastStream](http://red5.org/javadoc/red5-server-common/org/red5/server/stream/ClientBroadcastStream.html) objects.Therefore we can cast any BroadcastStream to a [ClientBroadcastStream](http://red5.org/javadoc/red5-server-common/org/red5/server/stream/ClientBroadcastStream.html) and invoke the recording methods on it.
 
 A logical place to start recording is the `streamBroadcastStart` callback provided by the [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html).
 
@@ -69,3 +69,6 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 
 
 Although the recording stops automatically when you unpublish the stream, you can also make use of a RMI call or a HTTP servlet based call to the application and program it to stop recording on demand. For more information on these subjects take a look at the [connection-messaging-demo](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-connection-examples/connection-messaging-demo) and [http-servlet-demo](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-misc-examples/http-servlet-demo) examples.
+
+
+
