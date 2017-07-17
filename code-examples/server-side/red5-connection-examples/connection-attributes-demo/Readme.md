@@ -65,7 +65,7 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 
 
 
-## Notes
+## Additional Notes
 ---
 
 NA
