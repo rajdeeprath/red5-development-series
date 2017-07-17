@@ -1,10 +1,15 @@
-# Red5 ScopeListener
+# Red5 Scope Listener
 ---
 
 
 ## About
 ---
 
+This example demonstrates the use of the Red5 [IScopeListener interface](http://red5.org/javadoc/red5-server-common/org/red5/server/api/listeners/IScopeListener.html). This interface is used to monitor the server for creation / removal of Scopes.
+
+Similar to the IConnectionListener, the [IScopeListener](http://red5.org/javadoc/red5-server-common/org/red5/server/api/listeners/IScopeListener.html) can only be attached to the core `server` object and not to individual applications. This sample application demonstrates how to implement a scope listener using this interface and to attach it to the server object from within an application. 
+
+If you wish to track creation/removal of ROOM scopes in a specific application only then checkout the [IConnectionListener example](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-connection-examples/connection-listener-demo) to see how to filter-out events/notifications specific to an application.
 
 
 
@@ -62,6 +67,8 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 
 ## Additional Notes
 ---
+
+
 
 
 
