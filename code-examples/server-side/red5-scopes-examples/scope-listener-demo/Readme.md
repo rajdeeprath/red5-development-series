@@ -69,6 +69,5 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 ---
 
 
-
-
+the IScopeListener interface is more useful in the context of a Red5 Pro plugin than an application. From a plugin you can use this interface to listen for application startups (`APPLICATION` scopes) when the server boots up and attach custom logic to them etc.
 
