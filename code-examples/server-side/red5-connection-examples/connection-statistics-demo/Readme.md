@@ -5,7 +5,7 @@
 ## About
 ---
 
-This example demonstrates how to read important connection information. Connection information may include thinsg liek usage statistics, client remote address, client protocol information etc. This can be particularly useful if you are interested in measuring usage by clients or where the clients are coming from etc.
+This example demonstrates how to read important connection information. Connection information may include things like usage statistics, client remote address, client protocol information etc. This can be particularly useful if you are interested in measuring usage by clients or where the clients are coming from etc.
 
 For more information you can browse through the [IConnection](#http://red5.org/javadoc/red5-server-common/index.html?org/red5/server/api/class-use/IConnection.html) javaDocs.
 
@@ -48,7 +48,7 @@ To deploy the war to red5 / red5 pro server :
 ## How To Use Example
 ---
 
-In this example we call the method `logConnectionStatistics` whenever a client disconnects from the application. The method logs out necessary information such as data usage, client remote address , server host used to conenct, protocol used, connection parameters used while connecting etc:
+In this example we call the method `logConnectionStatistics` whenever a client disconnects from the application. The method logs out necessary information such as data usage, client remote address , server host used to connect, protocol used, connection parameters used while connecting etc:
 
 
 Given below is a sample output from the console when a RTMP client exits.
@@ -72,11 +72,26 @@ Given below is a sample output from the console when a RTMP client exits.
 ```
 
 
-You can connect to the application using a RTMP or RTSP (Android/IOS) or WebRTC (Red5Pro HTML5 SDK) type client. You can then broadcast / subscribe a stream for a few sconds and then close the client. The application will log out your connection details in the console.
+You can connect to the application using a RTMP or RTSP (Android/IOS) or WebRTC (Red5Pro HTML5 SDK) type client. You can then broadcast / subscribe a stream for a few seconds and then close the client. The application will log out your connection details in the console.
 
 
 
-## Notes
+## Eclipse
+---
+
+You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Neon etc. To import the code into your IDE:
+
+1. Navigate to the repository folder
+2. Execute maven command `mvn eclipse:eclipse`. This will generate files necessary for eclipse to read the maven project properly.
+3. In eclipse go to `File -> Import -> Existing Maven Projects` and click `Next`.
+4. Browse and select `the project root` and Click `Finish` to import the project.
+
+
+
+## Additional Notes
 ---
 
 NA
+
+
+
