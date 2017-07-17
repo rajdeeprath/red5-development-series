@@ -52,6 +52,8 @@ The `appConnect` is a callback indicating a client is attempting to connect. Whe
 
 ```
 
+If you wish to get a count as soon as a client connects, recommended that you use  a [IConnectionListener](http://red5.org/javadoc/red5-server-common/org/red5/server/api/listeners/IConnectionListener.html) instead fo the appConnect handler to ensure that a accurate value counting the current connection as well. A detailed example on IConnectionListener is [published here](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-connection-examples/connection-listener-demo).
+
 
 
 ## Eclipse
