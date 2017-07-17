@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx" applicationComplete="init(event)">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+		
+		import flash.events.Event;
+		import flash.events.MouseEvent;
+		import flash.events.NetStatusEvent;
+		import flash.net.NetConnection;
+		import flash.net.Responder;
+		
+		
+		private var nc:NetConnection;
+		
+		
+		[Bindable]
+		private var connected:Boolean;
+		
+		
+		[Bindable]
+		private var connectionURL:String = "rtmp://localhost:1935/scope-listener-demo/myScope";
+		
+		
+		private function printToConsole(msg:String):void
+		{
+			txtConsole.text += msg;
+			txtConsole.text += "\n";
+		}
+		
+		
+		
+		private function init(event:Event):void
+		{
+			btnConnect.addEventListener(MouseEvent.CLICK, onConnect);
+		}
+		
+		
+		/**
+		 * Connect to server
+		 * @param	e
+		 */
+		private function onConnect(e:Event):void
+		{
+			if (!connected)
+			{
+				printToConsole("Connecting to :" + txtConnectionUrl.text);
+				
+				if(nc == null){
+					nc = new NetConnection();
+				}
+				
+				nc.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+				nc.connect(String(txtConnectionUrl.text));
+			}
+			else
+			{
+				printToConsole("DisConnecting from :" + txtConnectionUrl.text);
+				
+				if(nc != null){
+					nc.close();
+				}
+			}
+		}			
+			
+			
+			
+			
+			
+			
+			/**
+			 * Handling NetStatus events
+			 * 
+			 * @param	e
+			 */ 
+			private function onNetStatus(e:NetStatusEvent):void
+			{
+				printToConsole("onNetStatus status :" + e.info.code);
+				
+				switch(e.info.code)
+				{
+					case "NetConnection.Connect.Success":
+						connected = true;
+					break;
+					
+					case "NetConnection.Connect.Failed":
+					case "NetConnection.Connect.Rejected":
+					case "NetConnection.Connect.Closed":
+						connected = false;
+						
+						if (nc != null){
+							nc.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+						}
+						nc = null;
+					break;
+				}
+			}
+		
+		
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10" />
+	</s:layout>
+	
+	
+	<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+		
+		<s:VGroup width="100%" height="100%" gap="10">
+			
+			<s:HGroup width="100%" enabled="{!connected}">
+				
+				<s:TextInput enabled="{!connected}" id="txtConnectionUrl" width="100%" height="40" fontSize="16" text="{connectionURL}" />				
+				
+				<s:Button id="btnConnect" width="200" height="40" label="{(!connected)?'CONNECT':'DISCONNECT'}" fontSize="14" fontWeight="bold"/>				
+				
+			</s:HGroup>
+			<s:Spacer width="10" height="50"/>
+			
+		</s:VGroup>	
+		
+	</s:HGroup>
+	
+	
+	
+	<s:VGroup width="100%">
+		
+		<s:Label fontSize="14" fontWeight="bold" text="CONSOLE:"/>
+		<s:TextArea id="txtConsole" width="100%" height="100%" editable="false"/>
+		
+	</s:VGroup>
+	
+</s:Application>
