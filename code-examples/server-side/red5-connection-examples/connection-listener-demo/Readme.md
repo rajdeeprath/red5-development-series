@@ -5,6 +5,9 @@
 ## About
 ---
 
+Thsi server side example demonstrates the use of the Red5 [IConnectionListener interface](http://red5.org/javadoc/red5-server-common/org/red5/server/api/listeners/class-use/IConnectionListener.html) to track connections made to the server. This includes only those connections that have successfully connected to the server (not pending ones).
+
+A [IConnectionListener](http://red5.org/javadoc/red5-server-common/org/red5/server/api/listeners/class-use/IConnectionListener.html) object normally listens to connectiosn made to the server itself and not per `APPLICATION` / `ROOM` scope. This example also demosntrates how to use the [IConnectionListener interface](http://red5.org/javadoc/red5-server-common/org/red5/server/api/listeners/class-use/IConnectionListener.html) to track connectiosn made at `APPLICATION` / `ROOM` scope level.
 
 
 
@@ -44,6 +47,9 @@ To deploy the war to red5 pro server :
 ## How To Use Example
 ---
 
+This server side example simply listens for connections made to the server and logs out information if the connection was made to the example application and again logs out information when the connection disconnects from the example application. 
+
+To get the example to work you need to deploy the application to server and connect to the server side application `connection-listener-demo` using RTMP or Red5 Pro Mobile SDK or Red5 pro HTML5 SDK based client and then disconnect after a few seconds. You should be able to see logging in console / log file indicating  successful connection and disconnection of the client from the server side application.
 
 
 
@@ -62,6 +68,7 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 
 ## Additional Notes
 ---
+
 
 
 
