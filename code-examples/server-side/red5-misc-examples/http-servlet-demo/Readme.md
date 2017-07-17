@@ -2,13 +2,6 @@
 ---
 
 
-## About
----
-
-
-
-T# Exposing Red5 Pro to http clients - HTTP Servlet Example
----
 
 
 ## About
