@@ -1,4 +1,4 @@
-# Websocket listener example (also usable as a template)
+# Websocket listener example (also usable as a websocket application template)
 ---
 
 
