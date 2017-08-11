@@ -1,0 +1,80 @@
+{
+	"brew": {
+		"version": "1",
+		"name": "Simple-To-Complex",
+		"description": "Do the magic",
+		"recipe": {
+			"id": "Simple-To-Complex-Recipe",
+			"name": "Simple-To-Complex-Recipe",
+			"description": "Some description",
+			"author": "Dominick",
+			"ingredients": {
+				"mix": [
+				{
+					"id": "Layer1",
+					"name": "Layer1",
+					"description": "First layer",
+					"potion": [
+					{
+						"alias": "facedetection",
+						"id": "Face-Detect-potion",
+						"name": "Face-Detect-potion",
+						"description": "Face Detect potion description",
+						"parameters": {
+							"parameter": [{
+								"key": "test",
+								"value": "test"
+							}]
+						},
+						"properties": {
+							"property": [
+								"test"
+							]
+						}
+					},
+					{
+						"alias": "mask",
+						"id": "mask-potion",
+						"name": "mask-potion",
+						"description": "mask potion description",
+						"parameters": {
+							"parameter": [{
+								"key": "test",
+								"value": "test"
+							}]
+						},
+						"properties": {
+							"property": [
+								"test"
+							]
+						}
+					}
+					]
+				},
+				{
+					"id": "Layer2",
+					"name": "Layer2",
+					"description": "Second layer",
+					"potion": [{
+						"alias": "mask",
+						"id": "mask-potion",
+						"name": "mask-potion",
+						"description": "mask potion description",
+						"parameters": {
+							"parameter": [{
+								"key": "test",
+								"value": "test"
+							}]
+						},
+						"properties": {
+							"property": [
+								"test"
+							]
+						}
+					}]
+				}
+				]
+			}
+		}
+	}
+}

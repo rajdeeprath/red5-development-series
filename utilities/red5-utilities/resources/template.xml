@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<brew version="1">
+
+	<!-- Title of th brew -->
+	<name>Simple-To-Complex</name>
+	
+	<!-- description -->
+	<description>Do the magic</description>	
+	
+	
+	<recipe>
+	
+		<id>Simple-To-Complex-Recipe</id>
+	
+		<!-- Title of the recipe -->
+		<name>Simple-To-Complex-Recipe</name>
+		
+		<!-- description -->
+		<description>Some description</description>
+		
+		<!-- description -->
+		<author>Dominick</author>	
+	
+		<ingredients>
+		
+			<mix>
+			
+				<id>Layer1</id>
+	
+				<name>Layer1</name>
+				
+				<description>First layer</description>	
+			
+				<potion alias="mask">
+				
+					<id>Masker-potion</id>
+	
+					<name>Masker-potion</name>
+				
+					<description>Masker potion description</description>
+					
+					<!-- Arbitrary key-value params -->
+					<parameters> 
+						<parameter>
+							<key>a</key>
+							<value>b</value>
+						</parameter>
+					</parameters>
+					
+					
+					<!-- Arbitrary properties -->
+					<properties>
+						<property>a</property>
+					</properties>
+				
+				</potion>
+				
+				<potion alias="facedetection">
+					
+					<id>Face-Detect-Potion</id>
+		
+					<name>Face-Detect-Potion</name>
+					
+					<description>Face detect potion description</description>
+					
+					<!-- Arbitrary key-value params -->
+					<parameters> 
+						<parameter>
+							<key>a</key>
+							<value>b</value>
+						</parameter>
+					</parameters>
+					
+					
+					<!-- Arbitrary properties -->
+					<properties>
+						<property>a</property>
+					</properties>
+						
+				</potion>
+		
+			</mix>
+			
+			
+			
+			
+			<mix>
+			
+				<id>Layer2</id>
+	
+				<name>Layer2</name>
+				
+				<description>Second layer</description>	
+			
+				<potion alias="facedetection">
+					
+					<id>Face-Detect-Potion</id>
+		
+					<name>Face-Detect-Potion</name>
+					
+					<description>Face detect potion description</description>
+					
+					<!-- Arbitrary key-value params -->
+					<parameters> 
+						<parameter>
+							<key>a</key>
+							<value>b</value>
+						</parameter>
+					</parameters>
+					
+					
+					<!-- Arbitrary properties -->
+					<properties>
+						<property>a</property>
+					</properties>
+						
+				</potion>
+						
+			</mix>			
+		
+		</ingredients>
+		
+	</recipe>
+
+</brew>
