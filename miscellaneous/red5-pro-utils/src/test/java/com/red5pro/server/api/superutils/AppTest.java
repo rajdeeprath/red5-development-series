@@ -1,4 +1,4 @@
-package com.red5pro.cauldron.japi;
+package com.red5pro.server.api.superutils;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
