@@ -95,7 +95,7 @@ The `ConnectionUtils` class provides a collections of utility methods which can 
 
 
 
-__Few Sample Methods__
+__Sample Methods__
 
 
 * `public static String getConnectionType(IConnection connection)` : Accepts a `IConnection` object and returns a String indicating the connection's type. ie: (`rtmp`. `rtsp`, `rtc`) 
