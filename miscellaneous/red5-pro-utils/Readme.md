@@ -10,6 +10,33 @@ The project is open to suggestions and requests that can be accommodated to help
 
 
 
+## Compilation
+
+Prerequisites
+ * [Maven 3+](http://maven.apache.org/download.cgi)
+ * [Eclipse Mars](http://www.eclipse.org/downloads/packages/eclipse-ide-java-developers/mars2)
+ 
+ 
+ 
+## Packaging
+Packaging the artifact follows the ```<packaging>``` hint in the pom, normally this is set as _jar_ for Java Archive. To compile and package the project as a jar run the following maven command from within the project directory:
+
+```sh
+mvn clean package
+```
+
+
+## Using the jar in Eclipse
+
+
+Once you have obtained the final __red5-pro-utils.jar__  file, copy it into the Red pro lib directory - `RED5_HOME/lib`. Next in your eclipse IDE workspace, select the project, right click the project and select `properties`.
+
+Navigate to  `Jav Build Path -> Libraries` and click on `Add External Jars` option. Browse and  selct the jar file to include it in your project. You can then start using thr classes in your project. Eclipse will not be able to find and reference classes from the __red5-pro-utils.jar__ file.
+
+> Note: The library wont be exported automaticalyl with your project. When you deploy your application/plugin, ensure to deploy (copy) the __red5-pro-utils.jar__ file into `RED5_HOME/lib` prior to deploying your code.
+
+
+
 ## Supported features / utilities
 ---
 
