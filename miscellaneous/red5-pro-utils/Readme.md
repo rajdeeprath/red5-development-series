@@ -1,11 +1,11 @@
 # red5-pro-utils
 
-__red5-pro-utils__ is a red5 / red5pro helper library designed to provide quick solutions around common Red5 api problems that are not currently availabel via the official java api directly.
+__red5-pro-utils__ is a red5 / red5pro helper library designed to provide quick solutions around common Red5 api problems that are not currently available via the official java api directly.
 
-The project is open to sugegstions and requests that can be accomodated to help speed up the development process for Red5 developers. This is a maven project which can be compiled locally to a jar file for portability. The __red5-pro-utils__ classes can be used with both `web applications` and `plugins`.
+The project is open to suggestions and requests that can be accommodated to help speed up the development process for Red5 developers. This is a maven project which can be compiled locally to a jar file for portability. The __red5-pro-utils__ classes can be used with both `web applications` and `plugins`.
 
 ---
-> NOTE: To use this library you ned to build this project and the output file - `red5-pro-utils.jar` file should be placed in the `RED5_HOME/lib` directory.
+> NOTE: To use this library you need to build this project and the output file - `red5-pro-utils.jar` file should be placed in the `RED5_HOME/lib` directory.
 ---
 
 
@@ -63,4 +63,7 @@ __Few Sample Methods__
 
 * `public static boolean isRTSP(IConnection connection)` : Accepts a `IConnection` object checks if the connection is a RTSP connection or not.
 
-> For more information all the methods itis recommended you make use of the library yourself in your Red5 project.
+> For more information all the methods it is recommended you make use of the library yourself in your Red5 project.
+
+
+
