@@ -11,6 +11,7 @@ The project is open to suggestions and requests that can be accommodated to help
 
 
 ## Compilation
+---
 
 Prerequisites
  * [Maven 3+](http://maven.apache.org/download.cgi)
@@ -19,21 +20,32 @@ Prerequisites
  
  
 ## Packaging
+---
+
 Packaging the artifact follows the ```<packaging>``` hint in the pom, normally this is set as _jar_ for Java Archive. To compile and package the project as a jar run the following maven command from within the project directory:
 
 ```sh
 mvn clean package
 ```
 
+Once you have obtained the final __red5-pro-utils.jar__  file, make sure to copy it into the Red pro lib directory - `RED5_HOME/lib`. 
+
 
 ## Using the jar in Eclipse
+---
+
+> This section is only required if you with to use classes from __red5-pro-utils.jar__ in your own code. If you are usign a java bean implementation fo a class you may not require this step.
 
 
-Once you have obtained the final __red5-pro-utils.jar__  file, copy it into the Red pro lib directory - `RED5_HOME/lib`. Next in your eclipse IDE workspace, select the project, right click the project and select `properties`.
+To import the __red5-pro-utils.jar__  file in your eclipse IDE do the following steps:
 
-Navigate to  `Jav Build Path -> Libraries` and click on `Add External Jars` option. Browse and  selct the jar file to include it in your project. You can then start using thr classes in your project. Eclipse will not be able to find and reference classes from the __red5-pro-utils.jar__ file.
+1. In your eclipse IDE workspace, select the project, right click it and select `properties`.
 
-> Note: The library wont be exported automaticalyl with your project. When you deploy your application/plugin, ensure to deploy (copy) the __red5-pro-utils.jar__ file into `RED5_HOME/lib` prior to deploying your code.
+2. Navigate to  `Java Build Path -> Libraries` and click on `Add External Jars` option. 
+
+3. Browse and  selct the jar file to include it in your project. You can then start using thr classes in your project. Eclipse will now be able to find and reference classes from the __red5-pro-utils.jar__ file.
+
+> Note: The library wont be exported automatically with your project. When you deploy your application/plugin, ensure to deploy (copy) the __red5-pro-utils.jar__ file into `RED5_HOME/lib` prior to deploying your code.
 
 
 
