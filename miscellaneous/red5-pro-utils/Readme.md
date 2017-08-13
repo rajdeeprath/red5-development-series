@@ -23,7 +23,8 @@ The `CustomFilenameGenerator` implementation in __red5-pro-utils__ jar allows yo
 
 
 
-__ For relative paths__
+__For relative paths__
+
 ```xml
 	<bean id="streamFilenameGenerator" class="com.red5pro.server.api.superutils.CustomFilenameGenerator"> 
    		<property name="recordPath" value="recordedStreams/" /> 
@@ -33,7 +34,8 @@ __ For relative paths__
 ```
 
 
-__ For absolute paths__
+__For absolute paths__
+
 ```xml
 	<bean id="streamFilenameGenerator" class="com.red5pro.server.api.superutils.CustomFilenameGenerator"> 
    		<property name="recordPath" value="/path/to/recordedStreams/" /> 
