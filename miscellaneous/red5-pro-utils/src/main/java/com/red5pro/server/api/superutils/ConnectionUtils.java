@@ -22,7 +22,7 @@ public class ConnectionUtils {
 	 * @param connection
 	 * @return
 	 */
-	public static String getProtocol(IConnection connection)
+	public static String getConnectionType(IConnection connection)
 	{
 		String connectionClassName = connection.getClass().getCanonicalName();
 		
