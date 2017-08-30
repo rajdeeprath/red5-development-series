@@ -17,7 +17,7 @@ public class ConnectionUtils {
 	
 	
 	/**
-	 * Returns human readable protocol string for a given IConnection
+	 * Returns human readable string for a given IConnection type
 	 *  
 	 * @param connection
 	 * @return
