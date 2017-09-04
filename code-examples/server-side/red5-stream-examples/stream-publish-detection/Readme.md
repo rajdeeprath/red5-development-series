@@ -1,11 +1,11 @@
-# Fetching live stream statistics
+# Stream Publish/Unpublish detection
 ---
 
 
 ## About
 ---
 
-This server side application demonstrates how to read stream statistics information froma  Red5 live stream. Stream statistics includes parameters such as subscriber count, bytes transferred, publish name etc:. Red5 stream statistics are read in from a ClientBroadcastStream as a [IClientBroadcastStreamStatistics](http://red5.org/javadoc/red5-server-common/org/red5/server/api/statistics/IClientBroadcastStreamStatistics.html) object using the [getStatistics](http://red5.org/javadoc/red5-server-common/org/red5/server/stream/ClientBroadcastStream.html#getStatistics--) method.
+This server side application demonstrates how to detect stream publish event outside the Application adapter. You can use this to detect publish start in the context of a Red5 plugin or a separate service runnin within your application.
 
 
 ## Build & Deploy
