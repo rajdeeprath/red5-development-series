@@ -9,7 +9,7 @@ This example demonstrates how to secure playback and publish operations on Red5 
 
 1. An application needs to capture client parameters 
 2. Implement the IStreamPlaybackSecurity and/or IStreamPublishSecurity interfaces to intercept playback and publish 
-3. Within the intercepting methods of the implementations access client parameters and validate the action
+3. Within the intercepting methods of the implementations access client parameters and validate the action (publish/subscribe)
 
 The entire process is explained in details in the following links. It is recommended that you read through before attempting to install this application.
 
