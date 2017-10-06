@@ -59,7 +59,7 @@ To deploy the war to red5 pro server :
 ## How To Use Example
 ---
 
-To see this example in action, deploy thsi application (stream-security-demo) on your server. Connect to it and attempt to it and attempt to publish or subscribe.
+To see this example in action, deploy this application (stream-security-demo) on your server. Connect to it and attempt to it and attempt to publish or subscribe.
 
 
 1. To publish to a stream successfully, your client must pass a parameter called 'token' with the value of 'red5pro#publisher'.
@@ -72,7 +72,7 @@ Code link: https://github.com/rajdeeprath/red5-development-series/blob/master/co
 Code link: https://github.com/rajdeeprath/red5-development-series/blob/master/code-examples/server-side/red5-stream-examples/stream-security-demo/src/main/java/org/red5/streams/examples/security/PlaybackSecurity.java
 
 
-> Check out [Capturing client params](http://flashvisions.com/capturing-client-parameters-in-a-red5pro-application), to see hwo to pass parameters to the application for RTMP/RTSP/WebRTC.
+> Check out [Capturing client params](http://flashvisions.com/capturing-client-parameters-in-a-red5pro-application), to see how to pass parameters to the application for RTMP/RTSP/WebRTC.
 
 
 ## Eclipse
@@ -102,3 +102,5 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 [Intercepting and validating subscribers](http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
 
 [Writing a Red5 Pro plugin](https://red5pro.com/docs/serverside-guide/plugin-development.html)
+
+
