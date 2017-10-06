@@ -7,7 +7,10 @@
 
 This example demonstrates how to secure playback and publish operations on Red5 / Red5 Pro using [IStreamPlaybackSecurity](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamPlaybackSecurity.html) and [IStreamPublishSecurity](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamPublishSecurity.html) interfaces respectively.
 
-1. An application needs to capture client parameters 
+
+to implement security an application needs to do the folowing :
+
+1. Capture client parameters 
 2. Implement the IStreamPlaybackSecurity and/or IStreamPublishSecurity interfaces to intercept playback and publish 
 3. Within the intercepting methods of the implementations access client parameters and validate the action (publish/subscribe)
 
