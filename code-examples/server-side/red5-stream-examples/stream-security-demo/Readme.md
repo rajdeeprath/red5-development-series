@@ -62,7 +62,7 @@ To deploy the war to red5 pro server :
 ## How To Use Example
 ---
 
-To see this example in action, deploy this application (stream-security-demo) on your server. Connect to it and attempt to it and attempt to publish or subscribe.
+To see this example in action, deploy this application (stream-security-demo) on your server. Connect to the wb application and attempt to publish / subscribe.
 
 
 1. To publish to a stream successfully, your client must pass a parameter called 'token' with the value of 'red5pro#publisher'.
