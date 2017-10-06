@@ -137,3 +137,8 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 ## Additional Notes
 ---
 
+## Reference links
+---
+
+[Red5 Wiki] (https://github.com/Red5/red5-server/wiki/Customize-Stream-Path)
+
