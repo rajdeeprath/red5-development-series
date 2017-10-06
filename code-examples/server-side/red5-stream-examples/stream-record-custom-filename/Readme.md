@@ -46,7 +46,7 @@ Both implementations are integrated into the application via `red5-web.xml` file
 	<bean id="streamFilenameGenerator" class="org.red5.streams.examples.recordname.CustomFileNames"></bean>
 ```
 
-Be default the application is set to use the `CustomFileNames` implementation. To try out the `CustomLocations` implementation, comment out the second java Bean (Simple hash filename generator) and remove the commenst from the first bean (Custom directory locator for playback and recording).
+Be default the application is set to use the `CustomFileNames` implementation. To try out the `CustomLocations` implementation, comment out the second java Bean (Simple hash filename generator) and remove the comments from the first bean (Custom directory locator for playback and recording).
 
 
 #### NOTE ON CustomLocations Implementation
@@ -136,9 +136,4 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 
 ## Additional Notes
 ---
-
-
-Although the recording stops automatically when you unpublish the stream, you can also make use of a RMI call or a HTTP servlet based call to the application and program it to stop recording on demand. For more information on these subjects take a look at the [connection-messaging-demo](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-connection-examples/connection-messaging-demo) and [http-servlet-demo](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-misc-examples/http-servlet-demo) examples.
-
-
 
