@@ -1,11 +1,85 @@
-# Server Side stream recording example
+# IStreamFilenameGenerator example : Custom record / play locations and custom filenames
 ---
 
 
 ## About
 ---
 
-This server side application demonstrates server side recording feature in Red5. Using server side recording, you can save a live stream to a file for later viewing as a VOD etc:. In Red5 publishsing streams are [ClientBroadcastStream](http://red5.org/javadoc/red5-server-common/org/red5/server/stream/ClientBroadcastStream.html) objects.Therefore we can cast any BroadcastStream to a [ClientBroadcastStream](http://red5.org/javadoc/red5-server-common/org/red5/server/stream/ClientBroadcastStream.html) and invoke the recording methods on it.
+This server side application demonstrates the use of [IStreamFilenameGenerator](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamFilenameGenerator.html) intercface in Red5 for changing playback / recording locations and changing recording filenames on the fly. 
+
+The [IStreamFilenameGenerator](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamFilenameGenerator.html) interface implements two methods :
+
+```
+public String generateFilename(IScope scope, String name, GenerationType type)
+```
+
+and
+
+```
+public String generateFilename(IScope scope, String name, String extension, GenerationType type) 
+
+```
+
+Which return a media file's path along with the media name. For recording, Red5 uses the response String as record name and for playback it is used as a playback file name. The interface implements a additional method called [resolvesToAbsolutePath](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamFilenameGenerator.html#resolvesToAbsolutePath--). The method returns a boolean value, indicating whether the string being returned is a absolute or a relative path.Relative media paths are looked up relative to the scope path, whereas absolute media paths are resolved in a absolute manner.
+
+This example has two implementatiosn of the [IStreamFilenameGenerator](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamFilenameGenerator.html) interface. The `CustomFileNames` class and the `CustomLocations` class.
+
+
+* `CustomFileNames` : Demonstrates how to change a record filename on the fly for an application.
+* `CustomLocations` : Demonstrates how to change the default record/playback paths for an application.
+
+
+Both implementations are integrated into the application via `red5-web.xml` file of the application as shown below.
+
+```
+<!-- Custom directory locator for playback and recording -->
+	<!--
+	<bean id="streamFilenameGenerator" class="org.red5.streams.examples.recordname.CustomLocations"> 
+   		<property name="recordPath" value="recordedStreams/" /> 
+   		<property name="playbackPath" value="recordedStreams/" /> 
+   		<property name="absolutePath" value="false" /> 
+	</bean>
+	-->
+	
+	
+	<!-- Simple hash filename generator -->
+	<bean id="streamFilenameGenerator" class="org.red5.streams.examples.recordname.CustomFileNames"></bean>
+```
+
+Be default the application is set to use the `CustomFileNames` implementation. To try out the `CustomLocations` implementation, comment out the second java Bean (Simple hash filename generator) and remove the commenst from the first bean (Custom directory locator for playback and recording).
+
+
+#### NOTE ON CustomLocations Implementation
+
+
+The `CustomLocations` implementation of [IStreamFilenameGenerator](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamFilenameGenerator.html) interface allows you to configure a different path for playback and recording of media files. The default location is the 'streams' directory which relative to a Red5 web application.
+
+Given below are the different bean configurations that can be used to configure the `CustomLocations` class to use relative/absolute path mode.
+
+__For relative paths__
+
+```xml
+	<bean id="streamFilenameGenerator" class="org.red5.streams.examples.recordname.CustomLocations"> 
+   		<property name="recordPath" value="recordedStreams/" /> 
+   		<property name="playbackPath" value="recordedStreams/" /> 
+   		<property name="absolutePath" value="false" /> 
+	</bean>
+```
+
+
+__For absolute paths__
+
+```xml
+	<bean id="streamFilenameGenerator" class="org.red5.streams.examples.recordname.CustomLocations"> 
+   		<property name="recordPath" value="/path/to/recordedStreams/" /> 
+   		<property name="playbackPath" value="/path/to/videoStreams/" /> 
+   		<property name="absolutePath" value="true" /> 
+	</bean>
+```
+
+> Combination of relative and absolute paths is currently not supported.
+> Any changes made to any configuration file demands a restart of the Red5 / Red5 pro media server.
+
 
 A logical place to start recording is the `streamBroadcastStart` callback provided by the [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html).
 
@@ -46,9 +120,7 @@ To deploy the war to red5 pro server :
 ## How To Use Example
 ---
 
-To try out this example, you need to deploy the application `stream-record-demo` to server, connect to it using RTMP/RTSP/WebRTC client and start publishing a live stream. The server side code will automatically record the stream to a flv file using the Broadcast stream's name.After a little while stop publishing and close the client.
-
-You should be able to see the recorded file in the `streams` directory on your web application.ie: `RED5_HOME/webapps/stream-record-demo/streams`.
+To try out this example, you need to deploy the application `stream-record-custom-filename` to server, connect to it using RTMP/RTSP/WebRTC client and start publishing a stream in 'record' mode. 
 
 
 
