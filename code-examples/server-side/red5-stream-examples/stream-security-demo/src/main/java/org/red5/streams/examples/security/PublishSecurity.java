@@ -13,7 +13,7 @@ public class PublishSecurity implements IStreamPublishSecurity {
 
 	private static Logger log = LoggerFactory.getLogger(PublishSecurity.class);
 	
-	private String expectedToken = "red5pro#subscriber";
+	private String expectedToken = "red5pro#publisher";
 	
 	@Override
 	public boolean isPublishAllowed(IScope scope, String name, String mode) 
