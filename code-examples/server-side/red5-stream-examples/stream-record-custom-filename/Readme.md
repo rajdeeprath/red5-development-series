@@ -81,8 +81,6 @@ __For absolute paths__
 > Any changes made to any configuration file demands a restart of the Red5 / Red5 pro media server.
 
 
-A logical place to start recording is the `streamBroadcastStart` callback provided by the [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html).
-
 
 ## Build & Deploy
 ---
