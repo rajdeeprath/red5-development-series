@@ -5,6 +5,21 @@
 ## About
 ---
 
+This example demonstrates how to secure playback and publish operations on Red5 / Red5 Pro using [IStreamPlaybackSecurity](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamPlaybackSecurity.html) and [IStreamPublishSecurity](http://red5.org/javadoc/red5-server-common/org/red5/server/api/stream/IStreamPublishSecurity.html) interfaces respectively.
+
+1. An application needs to capture client parameters 
+2. Implement the IStreamPlaybackSecurity and/or IStreamPublishSecurity interfaces to intercept playback and publish 
+3. Within the intercepting methods of the implementations access client parameters and validate the action
+
+The entire process is explained in details in the following links. It is recommended that you read through before attempting to install this application.
+
+
+* [Capturing client params](http://flashvisions.com/capturing-client-parameters-in-a-red5pro-application)
+
+* [Intercepting and validating publishers](http://flashvisions.com/authenticating-publishers-in-a-red5pro-application)
+
+* [Intercepting and validating sunscribers](http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
+
 
 
 
@@ -71,6 +86,6 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 
 [Intercepting and validating publishers](http://flashvisions.com/authenticating-publishers-in-a-red5pro-application)
 
-[Intercepting and validating sunscribers]http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
+[Intercepting and validating sunscribers](http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
 
 [Writing a Red5 Pro plugin](https://red5pro.com/docs/serverside-guide/plugin-development.html)
