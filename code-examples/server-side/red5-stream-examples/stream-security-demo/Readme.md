@@ -18,7 +18,7 @@ The entire process is explained in details in the following links. It is recomme
 
 * [Intercepting and validating publishers](http://flashvisions.com/authenticating-publishers-in-a-red5pro-application)
 
-* [Intercepting and validating sunscribers](http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
+* [Intercepting and validating subscribers](http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
 
 
 
@@ -86,6 +86,6 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 
 [Intercepting and validating publishers](http://flashvisions.com/authenticating-publishers-in-a-red5pro-application)
 
-[Intercepting and validating sunscribers](http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
+[Intercepting and validating subscribers](http://flashvisions.com/authenticating-subscribers-in-a-red5pro-application)
 
 [Writing a Red5 Pro plugin](https://red5pro.com/docs/serverside-guide/plugin-development.html)
