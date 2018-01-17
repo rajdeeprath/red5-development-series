@@ -5,7 +5,7 @@
 ---
 
 
-This example demonstrates how to create a SharedObject on server side and then observe it using a [SharedObject listener](#http://red5.org/javadoc/red5-server-common/org/red5/server/api/so/ISharedObjectListener.html) for important evenst such as client connect, client disconnect, update, clear and close events.
+This example demonstrates how to create a SharedObject on server side and then observe it using a [SharedObject listener](#http://red5.org/javadoc/red5-server-common/org/red5/server/api/so/ISharedObjectListener.html) for important events such as client connect, client disconnect, update, clear and close events.
 
 ## Build & Deploy
 ---
