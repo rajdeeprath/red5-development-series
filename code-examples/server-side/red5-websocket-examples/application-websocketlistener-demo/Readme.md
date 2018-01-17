@@ -5,6 +5,8 @@
 ## About
 ---
 
+Application demonstrates how to integrate websockets in your red5 application. The sample WebSocketDataListener logs out connect, disconnect and messages.You can use the client code provided along with the web application to conenct to it.
+
 
 ## Build & Deploy
 ---
