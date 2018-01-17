@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WebSocket Tester</title>
+<style>
+
+body{
+	background-color: #ffb3e6;
+}
+
+.header{
+	margin-bottom:20px;
+
+}
+
+
+label{
+	padding-right: 20px;
+	
+}
+
+.wsConsole{
+	width:80%;
+}
+
+#parameterButtonsContainer
+{
+	padding-left:20px;
+}
+
+
+.parameters{
+	margin-bottom:30px;
+	float:left;
+}
+
+.parameter
+{
+	width 90px;
+	height:30px;
+	padding:2px;
+	float:left;
+}
+
+.parameter-inner{
+	border:medium;
+	border-color:#00F;
+}
+
+.parameter label
+{
+	float:left;
+	margin-top:5px;
+	margin-right:1px;	
+}
+
+.paramInput { 
+	padding: 7px 7px; line-height: 7px; 
+	float:left;	
+}
+
+.btnRemove{
+	width:30px;
+	height:30px;
+	padding:3px;
+	float:left;	
+}
+
+
+input[type="button"] {
+	background-color:#000;
+	color:#FFF;
+}
+
+
+input[type="button"]:disabled {
+	background-color:#cccccc;
+	color:#FFF;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: none;
+  border-bottom: solid 4px #000000;
+  transition: border 0.3s;
+  background-color: #ffb3e6;
+}
+
+.wsInput input[type="text"] {
+  width: 400px;
+}
+
+.paramInput input[type="text"] {
+  width: 50px;
+}
+
+
+input[type="text"]:focus,
+input[type="text"].focus {
+  border-bottom: solid 2px #969696;
+}
+
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 90px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+</style>
+</head>
+
+<body ng-app="websocket-api-tester">
+
+
+<div id="maincontent" ng-controller="websocket-api-tester-controller">
+
+<h2>CONNECT TO WEBSOCKET</h2>
+<label class="header"><h3>SERVICE CONNECTOR</h3></label>
+
+    
+<div id="connector">
+
+<label>WEBSOCKET ENDPOINT</label>
+<input class="wsInput" type="text" name="txtEndPoint" id="txtEndPoint" value="$ws.endpoint" ng-model="$ws.endpoint">
+
+<br/> <br/>
+        
+<label>WEBSOCKET PROTOCOL</label>
+<input class="wsInput" type="text" name="txtWsProtocol" id="txtWsProtocol" value="$ws.protocol" ng-model="$ws.protocol">
+        
+<br/> <br/>
+
+<input type="button" name="btnConnect" id="btnConnect" value="CONNECT"  ng-disabled="$ws.connected" ng-click="wsApiConnect($ws)"/>        
+
+</div>
+    
+<br/>
+<div>
+<label>CONSOLE</label>
+<br/>
+<textarea rows="6" cols="50" class="wsConsole" name="txtWsConsole" id="txtWsConsole" ng-model="$wsLog">
+
+</textarea>
+<br />
+<input class="btnClearWSLogs" type="button" ng-click="clearWSLogs()" value="Clear">
+</div>
+
+<br/>
+
+<hr />
+
+
+<br/>
+
+
+</div>	
+</div>
+
+
+<script src="js/jquery-2.2.4.min.js"></script>
+<script src="js/angular.min.js"></script>
+
+<script>
+    angular.module('websocket-api-tester', [])
+      .controller('websocket-api-tester-controller', ['$scope', '$rootScope', function ($scope, $rootScope) {
+
+		
+		$scope.$wsLog = "";
+		$scope.$wsResponse = "";
+		
+		$scope.$ws = {};		
+		$scope.$ws.endpoint = "ws://"+window.location.hostname+":8081/application-websocketlistener-demo";
+		$scope.$ws.protocol = "subprotocol";
+        $scope.$ws.connected = false;
+		$scope.$ws.parameters =[];
+		$scope.websocket = null; 
+
+		
+		
+		$scope.addParam = function(){
+			
+			var param = {};
+			param.type = "Object";
+			param.value = "";
+			param.hint = "Value";
+			
+			$scope.$ws.parameters.push(param);
+			
+		},
+		
+		
+		
+		$scope.clearParam = function(){
+			
+			$scope.$ws.parameters = [];
+			
+		},
+		
+		
+		$scope.clearWSLogs = function(){
+			$scope.$wsLog = "";
+		},
+		
+		
+		$scope.clearWSResponse = function(){
+			$scope.$wsResponse = "";
+		},
+		
+		
+		
+		$scope.removeParam = function($param){
+			
+			for(var i=0;i<$scope.$ws.parameters.length;i++)
+			{
+				if($param === $scope.$ws.parameters[i])
+				{
+					$scope.$ws.parameters.splice(i,1);
+					break;
+				}
+			}
+			
+		},
+		
+		
+		
+		$scope.processArgs = function($args){
+			
+			var processed = [];
+			
+			for(var i=0;i<$args.length;i++)
+			{
+				var obj = $args[i];
+				
+				switch(obj.type)
+				{
+					case "String":
+					processed.push(obj.value.toString());
+					break;
+					
+					case "Number":
+					if(obj.value.toString().indexOf(".")>0)
+					processed.push(parseFloat(obj.value.toString()));
+					else
+					processed.push(parseInt(obj.value.toString()));
+					break;
+					
+					case "Array":
+					var arr = Array();
+					arr = obj.value.toString().split("+");
+					processed.push(arr);
+					break;
+					
+					case "Object":
+					processed.push(obj.value);
+					break;
+				}
+			}
+			
+			return processed;
+			
+		},
+		
+		
+		
+		$scope.executeRequest = function(){
+					
+			
+		},
+		
+		
+		
+		$scope.requestApi = function($path, $parameters){
+			
+	  	};
+		
+		
+		
+		$scope.wsLog = function($message){
+				$scope.$wsLog += $message;
+				$scope.$wsLog += "\n";
+		};
+		
+		
+		
+		$scope.wsApiConnect = function($ws) {
+			
+			var self = $scope;
+			var socket = new WebSocket($ws.endpoint, $ws.protocol);
+			$scope.wsLog("Connecting to " + $ws.endpoint)
+			
+			
+			socket.onopen = function(event){
+				$rootScope.$apply(function () {
+					$scope.wsLog("Connected to " + $ws.endpoint + " " + JSON.stringify(event))
+					self.$ws.connected = true;
+				});
+				
+			};
+			
+			
+			socket.onclose = function(event){
+				$rootScope.$apply(function () {
+					$scope.wsLog("Connection closed to " + $ws.endpoint + " " + JSON.stringify(event));
+					self.$ws.connected = false;
+				})
+			};
+			
+			
+			socket.onerror = function(event){
+				$rootScope.$apply(function () {
+					$scope.wsLog("Connection error " + JSON.stringify(event));
+				})
+			};
+			
+			
+			socket.onmessage = function(event){
+				
+				
+			};
+			
+			
+			
+			$scope.websocket = socket;
+		};
+		
+      }]);
+	  
+		
+	   
+ </script>
+</body>
+</html>
