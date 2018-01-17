@@ -35,7 +35,7 @@
         <!-- The ws scope listeners -->
         <property name="listeners">
             <list>
-                <bean id="sampleListener" class="org.red5.websocket.examples.socketlistnerdemo.WebSocketDataListener">
+                <bean id="sampleListener" class="org.red5.websocket.examples.socketlistnerdemo.WebSocketSampleListener">
                     <!-- Pushing in application scope -->
                     <property name="appScope" ref="web.scope" />
                 </bean>
