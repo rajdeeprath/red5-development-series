@@ -45,9 +45,8 @@ public class SystemInfoPlugin extends Red5Plugin {
 	public void doStart() throws Exception {
 		log.info(NAME + "doStart called");
 		
-		Resource guarantor = context.getResource("classpath:/conf/red5.xml");
-        
-		File conf_directory = guarantor.getFile().getParentFile();
+		//Resource guarantor = context.getResource("classpath:/conf/red5.xml");
+		//File conf_directory = guarantor.getFile().getParentFile();
 		
 		
 		/******** Scan for java version *******/
