@@ -20,6 +20,8 @@ The webapp uses [Apache commons exec](https://commons.apache.org/proper/commons-
 
 ### Configuration properties
 
+Web application's configurable properties can be found in red5-web.properties file located at `{RED5_HOME}/webapps/ffmpeg-thumbnails/WEB-INF/red5-web.properties` .
+
 
 * `conf.ffmpegPath` : Path to ffmpeg executable
 
