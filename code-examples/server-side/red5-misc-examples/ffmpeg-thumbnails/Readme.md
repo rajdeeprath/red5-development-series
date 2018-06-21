@@ -70,21 +70,21 @@ To deploy the war to red5 / red5 pro server :
 ---
 
 
-Once you have the server application running, access the servlet running on server from your browser as:
+1. Deploy the application to server
 
-``` 
-http://{host}:5080/http-servlet-demo/endpoint
-```
+2. Stop the server if it is running
 
-> Where ` {host}`  is where you are running the server. Ex: for local testing it will be `localhost`.
+3. Configure the ffmpeg path in the red5-web.properties file as described earlier to point to your ffmpeg installation.
 
+4. Restart server.
 
-The http call will return the following response from the servlet :
+5. Once you have the server application running, publish to the web application `ffmpeg-thumbnails`, using RTMP/RTSP/WebRTC client.
 
+6. Publish a live stream to the application
 
-``` 
-Application context path = /default
-```
+7. Check the thumbs folder at `{RED5_HOME}/webapps/ffmpeg-thumbnails/thumbs`
+
+8. You should see a image file by the stream name created
 
 
 
