@@ -1,4 +1,4 @@
-# Using Fffmpeg to extract thumbnails on server side
+# Using Ffmpeg to extract thumbnails on server side
 ---
 
 
