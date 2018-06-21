@@ -78,7 +78,7 @@ public class ThumbNailExtractor implements Runnable, TranscodeSessionProcessCall
            
             if(!SystemUtils.IS_OS_WINDOWS)
             {
-            	commandLine = new CommandLine(bash);
+            	commandLine = new CommandLine("/bin/bash");
             	commandLine.addArgument("-c");
             	
             	String ffmpegCmdline = buildLinuxCommand(input, ffmpegCommand);
@@ -122,7 +122,7 @@ public class ThumbNailExtractor implements Runnable, TranscodeSessionProcessCall
 	
 	
 	private String buildLinuxCommand(String input, String ffmpegCommand) {
-		return input + " " + ffmpegCommand;
+		return "-i" + " " + input + " " + ffmpegCommand;
 	}
 
 
