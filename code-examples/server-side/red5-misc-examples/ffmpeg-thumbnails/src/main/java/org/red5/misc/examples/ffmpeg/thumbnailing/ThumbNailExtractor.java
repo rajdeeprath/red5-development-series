@@ -8,6 +8,7 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.lang3.SystemUtils;
 import org.red5.misc.examples.ffmpeg.thumbnailing.interfaces.TranscodeSessionDataCallback;
 import org.red5.misc.examples.ffmpeg.thumbnailing.interfaces.TranscodeSessionProcessCallback;
 import org.red5.misc.examples.ffmpeg.thumbnailing.interfaces.TranscodeSessionResultCallback;
@@ -44,16 +45,58 @@ public class ThumbNailExtractor implements Runnable, TranscodeSessionProcessCall
 	{
 		try
 		{
-			CommandLine commandLine = new CommandLine(ffmpegPath);
-			commandLine.addArgument("-i");
-			commandLine.addArgument(input);
+			CommandLine commandLine;
+			File bash = null;
 			
-			String[] commandParts = ffmpegCommand.split(" ");
-			for(int i=0;i<commandParts.length;i++){
-				commandLine.addArgument(commandParts[i]);
-			}
+			if(!SystemUtils.IS_OS_WINDOWS)
+        	{
+            	// commented this as it is not working on windows
+                // look for bash shell
+				bash = new File("/bin/bash");
+                if (bash.exists() && bash.canExecute()) {
+                    log.debug("Bash was found and is executable");
+                } else {
+                    throw new Exception("Shell not available");
+                }
+        	}
 			
-			log.info("command = " + commandLine.toString());
+			File ffmpeg = new File(ffmpegPath);
+            
+            if (ffmpeg.exists() && ffmpeg.canExecute() && !ffmpeg.isDirectory()) 
+            {
+                log.debug("FFMpeg was found and is executable");
+            } 
+            else if (ffmpeg.isDirectory()) 
+            {
+                throw new Exception(String.format("FFMpeg path is pointing at a directory, verify path: %s", ffmpegPath));
+            } 
+            else 
+            {
+                throw new Exception(String.format("FFMpeg not available, verify path: %s", ffmpegPath));
+            }
+            
+           
+            if(!SystemUtils.IS_OS_WINDOWS)
+            {
+            	commandLine = new CommandLine(bash);
+            	commandLine.addArgument("-c");
+            	
+            	String ffmpegCmdline = buildLinuxCommand(input, ffmpegCommand);
+            	commandLine.addArgument(String.format("%s %s", ffmpeg.getAbsolutePath(), ffmpegCmdline), false);
+            }
+            else
+            {
+            	commandLine = new CommandLine(ffmpegPath);
+            	commandLine.addArgument("-i");
+    			commandLine.addArgument(input);
+    			
+    			String[] commandParts = ffmpegCommand.split(" ");
+    			for(int i=0;i<commandParts.length;i++){
+    				commandLine.addArgument(commandParts[i]);
+    			}
+            }
+			
+			log.info("command = " + commandLine.toString());			
 			
 			DefaultExecutor executor = new DefaultExecutor();
 			ExecuteWatchdog watchdog = new ExecuteWatchdog(ExecuteWatchdog.INFINITE_TIMEOUT);
@@ -77,13 +120,13 @@ public class ThumbNailExtractor implements Runnable, TranscodeSessionProcessCall
 	}
 	
 	
-	private void execute(String streamname, IScope app)
-	{
-		
+	
+	private String buildLinuxCommand(String input, String ffmpegCommand) {
+		return input + " " + ffmpegCommand;
 	}
 
-	
-	
+
+
 	@Override
 	public void onTranscodeProcessAdded(Process proc) {
 		// TODO Auto-generated method stub
