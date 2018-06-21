@@ -78,7 +78,7 @@ To deploy the war to red5 / red5 pro server :
 
 4. Restart server.
 
-5. Once you have the server application running, publish to the web application `ffmpeg-thumbnails`, using RTMP/RTSP/WebRTC client.
+5. Once you have the server application running, connect to the web application `ffmpeg-thumbnails`, using RTMP/RTSP/WebRTC client.
 
 6. Publish a live stream to the application
 
