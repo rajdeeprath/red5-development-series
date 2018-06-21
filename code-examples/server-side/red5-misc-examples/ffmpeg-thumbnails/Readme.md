@@ -87,6 +87,20 @@ To deploy the war to red5 / red5 pro server :
 8. You should see a image file by the stream name created
 
 
+* For continuous frame extraction use :
+
+```
+# Continuous extraction
+conf.thumbnailExtractCommand=-y -vf fps=1 %s%d.png
+```
+
+* For single extraction use :
+
+```
+# Continuous extraction
+conf.thumbnailExtractCommand=-y -vframes 1 %s.jpg
+```
+
 
 ## Eclipse
 ---
