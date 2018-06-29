@@ -3,6 +3,7 @@ package org.red5.misc.examples.fileupload;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -21,7 +22,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 
-@MultipartConfig
+@MultipartConfig(fileSizeThreshold=1024*1024*10, 	// 10 MB 
+				maxFileSize=1024*1024*50,      	// 50 MB
+				maxRequestSize=1024*1024*100)   	// 100 MB
 public class FileUploadServlet extends HttpServlet {
 	
 	private static Logger log = LoggerFactory.getLogger(FileUploadServlet.class);
@@ -49,13 +52,16 @@ public class FileUploadServlet extends HttpServlet {
 	
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse resp)	throws ServletException, IOException 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException 
 	{
 		try
 		{
 			log.debug("Receiving upload");
 			
 			Part filePart = request.getPart("myupload");
+			
+			// IMPORTANT!! - make sure to add additional security checks / token / signature to ensure that upload is from authentic source 
+			
 		    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
 		    InputStream fileContent = filePart.getInputStream();
 		    
@@ -73,9 +79,16 @@ public class FileUploadServlet extends HttpServlet {
 
 		    // Add better check and validation logic here for security 
 		    File file = new File(uploads, fileName);
+		    if(file.exists()){
+		    	throw new Exception("file by name " + fileName + " already exists");
+		    }
+		    
 		    Files.copy(fileContent, file.toPath());
 		    
 		    log.debug("Upload saved");
+		    
+		    PrintWriter out = response.getWriter();
+		    out.println("File uploaded successfully!!");
 		}
 		catch(Exception e)
 		{
