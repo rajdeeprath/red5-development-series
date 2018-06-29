@@ -1,4 +1,4 @@
-# Exposing server side to http clients - HTTP Servlet Example
+# File Upload Example
 ---
 
 
@@ -9,13 +9,16 @@
 
 
 
-This example demonstrates how you can open a HTTP channel between a red5 server side application and a http client. The application registers a simple [java servlet](https://en.wikipedia.org/wiki/Java_servlet) `SampleHttpSevlet`class on the red5 web application. 
-
-The servlet exposes & activates itself through the `web.xml` file which is located at `RED5_HOME/webapps/{appname}/WEB-INF/web.xml`. If you take a look at the servlet class `SampleHttpSevlet.java`, you will see how the red5 application object is injected into it using `@Autowired` annotation.
-
-We can then invoke custom application methods and standard [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html) methods from the servlet itself. The servlet itself is capable to handling web requests from Http clients. Thus we can connect http client to application adapter easily.
+This example demonstrates how to upload a file into Red5 Pro using a file upload servlet. You can upload any kind of file to a location on the Red5 Pro instance.
+The servlet logic should take care of providing security and validation of the file upload. The example is intended for uploading flv and mp4 files into the streams directory for later playback.
 
 
+### Configuration properties
+
+Web application's configurable properties can be found in red5-web.properties file located at `{RED5_HOME}/webapps/file-upload-demo/WEB-INF/red5-web.properties` .
+
+
+* `webapp.uploadDir` : Path to upload directory. This is relative to the webapp's WEB-INF directory.
 
 
 ## Build & Deploy
@@ -55,21 +58,20 @@ To deploy the war to red5 / red5 pro server :
 ---
 
 
-Once you have the server application running, access the servlet running on server from your browser as:
+* Once you have the server application running, access the index page on server from your browser as:
 
 ``` 
-http://{host}:5080/http-servlet-demo/endpoint
+http://{host}:5080/file-upload-demo/
 ```
 
 > Where ` {host}`  is where you are running the server. Ex: for local testing it will be `localhost`.
 
 
-The http call will return the following response from the servlet :
+* In the html form rendered on the index page, click on `Choose File` to browse and select a `flv/mp4` for upload.
 
+* Once a file has been selected, click `Upload`.
 
-``` 
-Application context path = /default
-```
+* After the file is uploaded, it can be seen in the `{webapps}/file-upload-demo/streams directory`.
 
 
 
@@ -88,8 +90,7 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 ## Additional Notes
 ---
 
-NA
-
+This simple upload application does not implement security, validation etc for uploads. It is the responsibility of the developer to implement the same in the servlet to prevent the server from misuse.
 
 
 
