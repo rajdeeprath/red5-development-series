@@ -13,6 +13,12 @@ This example demonstrates how to upload a file into Red5 Pro using a file upload
 The servlet logic should take care of providing security and validation of the file upload. The example is intended for uploading flv and mp4 files into the streams directory for later playback.
 
 
+### Configuration properties
+
+Web application's configurable properties can be found in red5-web.properties file located at `{RED5_HOME}/webapps/file-upload-demo/WEB-INF/red5-web.properties` .
+
+
+* `webapp.uploadDir` : Path to upload directory. This is relative to the webapp's WEB-INF directory.
 
 
 ## Build & Deploy
