@@ -4,6 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
+*.jar
 *.war
 *.ear
 
@@ -21,3 +22,6 @@ Servers/
 RemoteSystemsTempFiles/
 .metadata/
 logs/
+
+
+!.lib
