@@ -91,7 +91,13 @@
 	        <version>${streammanager.commons.version}</version>
 		    <scope>system</scope>
            <systemPath>${basedir}/lib/streammanager-commons-1.2.12.jar</systemPath>
-		</dependency>    
+		</dependency> 
+		
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>${commons.io.version}</version>
+		</dependency>   
           
   </dependencies> 
    

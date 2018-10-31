@@ -21,4 +21,5 @@ generated/
 Servers/
 RemoteSystemsTempFiles/
 .metadata/
+.recommenders/
 logs/

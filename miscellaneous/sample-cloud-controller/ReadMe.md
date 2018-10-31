@@ -92,7 +92,7 @@ Before diving further into this guide, it is important to understand the differe
 
 The Stream Manager system defines discrete node states that define the operational status of a Red5 Pro Instance. Each cloud platform such as AWS or Google compute or even the simulated cloud platform defines its own set of node states. A controller understands the node states specific to the platform that it is operating on and translates then to Stream Manager recognized node states each time that a instance is being read in by the Stream Manager `core`.
 
-![Stream Manager - Node States](/asset/server/streammanagercontrollerguide/node-states.png)
+![Stream Manager - Node States](./asset/server/streammanagercontrollerguide/node-states.png)
 
 Stream Manager defines Red5 Pro instances by the following states:
 
@@ -147,7 +147,7 @@ Following are the synchronous methods of an `ICloudPlatformInstanceController` i
 * `suggestLaunchLocation` : Suggests a suitable launch zone for the next instance launch.
 * `getRegionforZone(String availabilityZone)` : Identifies the region name for a specified zone.
 
-![Stream Manager - Controller Sync Communication Diagram](/asset/server/streammanagercontrollerguide/sync-processing.png)
+![Stream Manager - Controller Sync Communication Diagram](./asset/server/streammanagercontrollerguide/sync-processing.png)
 
 ## Asynchronous Operations
 
@@ -174,7 +174,7 @@ _If the cloud platform does not provide a built in async mechanism, you can crea
 
 > It is highly recommended that you explore the code base on an existing controller such as  the `aws-cloud-controller` or the `google-compute-controller` to get a better understanding of the mechanism.
 
-![Stream Manager - Controller Async Communication Diagram](/asset/server/streammanagercontrollerguide/async-processing.png)
+![Stream Manager - Controller Async Communication Diagram](./asset/server/streammanagercontrollerguide/async-processing.png)
 
 # Developing Your Own Controller
 
