@@ -1,119 +1,107 @@
 package com.red5pro.services.cloud.platformname.component.test;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.Date;
 
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.red5pro.services.cloud.platformname.component.SampleCloudController;
+import com.red5pro.services.streammanager.exceptions.InstanceDeleteException;
+import com.red5pro.services.streammanager.exceptions.InvalidLaunchConfigurationException;
+import com.red5pro.services.streammanager.interfaces.IDeleteInstanceRequest;
 import com.red5pro.services.streammanager.interfaces.IInstanceOperationErrorResponse;
 import com.red5pro.services.streammanager.interfaces.IInstanceOperationResponseHandler;
-import com.red5pro.services.streammanager.interfaces.ILaunchConfigurationSchema;
-import com.red5pro.services.streammanager.interfaces.INewInstanceRequest;
 import com.red5pro.services.streammanager.interfaces.IRed5InstanceResponse;
-import com.red5pro.services.streammanager.nodes.model.LaunchConfigurationSchema;
-import com.red5pro.services.streammanager.nodes.model.NewInstanceRequest;
-import com.red5pro.services.streammanager.nodes.model.NodeRole;
+import com.red5pro.services.streammanager.nodes.model.DeleteInstanceRequest;
+import com.red5pro.services.streammanager.nodes.model.TerminateReason;
 
-public class SpinInstanceTest implements ITest {
+public class DestroyInstanceTest {
 	
-	private Logger logger = LoggerFactory.getLogger(SampleCloudController.class);
-
+    private static Logger logger = LoggerFactory.getLogger(DestroyInstanceTest.class);
 	
-	/**
-	 * Instance of controller
-	 */
+    /**
+     * controller instance
+     */
 	private SampleCloudController controller;
 	
 	/**
-	 * Instance identifier (must be unique)
+	 * instance identifier
 	 */
 	private String identifier;
 	
+	
 	/**
-	 * Availability zone to use
+	 * platform instance identifier
+	 */
+	private String platformIdentifier;
+	
+	
+	/**
+	 * availability zone of instance
 	 */
 	private String location;
 	
-	/**
-	 * Path to your launch config json file
-	 */
-	private String launchConfigPath;
 	
-	
-	
-	public SpinInstanceTest(SampleCloudController controller)
+	public DestroyInstanceTest(SampleCloudController controller)
 	{
-		this.controller = controller;		
+		this.controller = controller;
 	}
-
-	@Override
-	public void run() throws Exception {
-		// TODO Auto-generated method stub
-		logger.info("Running spin test at location " + getLocation() + "using launch config!");
+	
+	
+	public void run() throws IOException, InvalidLaunchConfigurationException, IllegalAccessException, JSONException, InstanceDeleteException
+	{
+		logger.info("Running delete test at location " + getLocation() + " on " + platformIdentifier);
 		
-		InputStream is = new FileInputStream(launchConfigPath);
-        String jsonTxt = IOUtils.toString(is, "UTF-8");
-        JSONObject json = new JSONObject(jsonTxt);       
-        ILaunchConfigurationSchema config = new LaunchConfigurationSchema.Builder()
-											.fromJsonString(jsonTxt)
-											.build();
-        
-        
-		INewInstanceRequest request = new NewInstanceRequest.Builder()
-		.usingImage(config.getImage())
-		.usingMachineType(config.getLaunchConfigurationForTarget("origin").getInstanceType())
-		.atAvailabilityZone(location)
-		.withAssumedRole(NodeRole.ORIGIN)
-		.withEstimatedConnectionCapacity(config.getLaunchConfigurationForTarget("origin").getConnectionCapacity())
-		.withInstanceId(identifier)
-		.usingMetadata(config.getMetadata())
-		.usingProperties(config.getProperties())
+		IDeleteInstanceRequest request = new DeleteInstanceRequest.Builder()
+		.withAvailabilityZone(location)
+		.withInstanceIdentifier(identifier)
+		.withPlatformInstanceIdentifier(platformIdentifier)
+		.withReason(TerminateReason.SCALEDOWN)
 		.withRequestTime(new Date())
 		.build();
 		
 		
 		controller.setRed5InstanceResponseHandler(handler);
-		controller.spinNewInstance(request);
+		controller.destroyInstance(request);
 	}
-
-	public SampleCloudController getController() {
-		return controller;
-	}
-
-	public void setController(SampleCloudController controller) {
-		this.controller = controller;
-	}
+	
+	
 
 	public String getIdentifier() {
 		return identifier;
 	}
 
+
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
+
 
 	public String getLocation() {
 		return location;
 	}
 
+
 	public void setLocation(String location) {
 		this.location = location;
 	}
 
-	public String getLaunchConfigPath() {
-		return launchConfigPath;
+
+
+	public String getPlatformIdentifier() {
+		return platformIdentifier;
 	}
 
-	public void setLaunchConfigPath(String launchConfigPath) {
-		this.launchConfigPath = launchConfigPath;
+
+	public void setPlatformIdentifier(String platformIdentifier) {
+		this.platformIdentifier = platformIdentifier;
 	}
-	
-	
+
+
+
+
 	IInstanceOperationResponseHandler handler = new IInstanceOperationResponseHandler()
 	{
 
@@ -121,26 +109,28 @@ public class SpinInstanceTest implements ITest {
 		public void onInstanceCreateSuccess(
 				IRed5InstanceResponse response) {
 			// TODO Auto-generated method stub
-			logger.info("Instance created " + response.getInstance().toString());
+			
 		}
 
 		@Override
 		public void onInstanceCreateFailed(
 				IInstanceOperationErrorResponse response) {
 			// TODO Auto-generated method stub
-			logger.info("Instance creation failed " + response.getError());
+			
+			
 		}
 
 		@Override
 		public void onInstanceDeleted(IRed5InstanceResponse response) {
 			// TODO Auto-generated method stub
-			
+			logger.info("Instance deleted " + response.getInstance().toString());
 		}
 
 		@Override
 		public void onInstanceDeleteFailed(
 				IInstanceOperationErrorResponse response) {
 			// TODO Auto-generated method stub
+			logger.info("Instance deletion failed " + response.getError());
 			
 		}
 
@@ -187,4 +177,5 @@ public class SpinInstanceTest implements ITest {
 		}
     	
     };
+
 }
