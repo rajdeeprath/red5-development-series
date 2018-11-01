@@ -22,10 +22,21 @@ public class ReadInstanceTest {
 	
 	private SampleCloudController controller;
 	
+	/**
+	 * Instance identifier
+	 */
 	private String identifier;
 	
+	
+	/**
+	 * Platform instance identifier
+	 */
 	private String platformIdentifier;
 	
+	
+	/**
+	 * Availability zone of the instance 
+	 */
 	private String location;
 	
 	
