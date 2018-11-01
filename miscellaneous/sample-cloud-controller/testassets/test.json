@@ -1,0 +1,35 @@
+{
+	"launchconfig": {
+		"name": "test",
+		"description": "Launch config policy",
+		"image": "red5pro-image-name",
+		"version": "0.0.3",
+
+		"targets": {
+			"target": [{
+					"role": "origin",
+					"instanceType": "t2.micro",
+					"connectionCapacity": "2000"
+				},
+				{
+					"role": "edge",
+					"instanceType": "t2.micro",
+					"connectionCapacity": "2000"
+				}
+			]
+		},
+
+		"properties": {
+			"property": [{
+				"name": "property-name",
+				"value": "property-value"
+			}]
+		},
+		"metadata": {
+			"meta": [{
+				"key": "meta-name",
+				"value": "meta-value"
+			}]
+		}
+	}
+}
