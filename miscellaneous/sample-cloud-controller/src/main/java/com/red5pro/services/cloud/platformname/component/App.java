@@ -43,6 +43,9 @@ public class App {
 		 * This may or may not be important for your evaluation of the next suitable availability zone. */
 		String instanceType = "t2.micro";
 		
+		/* Point to the `./resources/test.json` configuration file included with this project */
+		String launchConfig = "/resources/test.json";
+		
 		
 		try
 		{
@@ -69,7 +72,7 @@ public class App {
 			SpinInstanceTest test = new SpinInstanceTest(controller);
 			test.setLocation(location); // simulated zone obtained through suggestLaunchLocation
 			test.setIdentifier(identifier);
-			test.setLaunchConfigPath("/resources/test.json");
+			test.setLaunchConfigPath(launchConfig);
 			test.run();
 			*/
 			
