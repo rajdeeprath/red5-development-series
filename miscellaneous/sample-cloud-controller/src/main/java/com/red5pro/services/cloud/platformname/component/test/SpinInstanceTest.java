@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.red5pro.services.cloud.platformname.component.SampleCloudController;
+import com.red5pro.services.cloud.platformname.component.interfaces.ITest;
 import com.red5pro.services.streammanager.interfaces.IInstanceOperationErrorResponse;
 import com.red5pro.services.streammanager.interfaces.IInstanceOperationResponseHandler;
 import com.red5pro.services.streammanager.interfaces.ILaunchConfigurationSchema;
