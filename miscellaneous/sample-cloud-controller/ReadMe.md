@@ -153,6 +153,11 @@ Following are the synchronous methods of an `ICloudPlatformInstanceController` i
 
 Asynchronous operations involve that are blocking by default or take long time to conclude  and need to be monitored via a separate thread. All instance `CUD`  operations are asynchronous in nature. such operations conclude only when the instance has transitioned from the current state to the expected final state. This state change needs to be tracked via a separate thread.
 
+* `INewInstanceResponse spinNewInstance(INewInstanceRequest req)` ;  Reads a Red5 Pro instance from the cloud platform.
+* `IDeleteInstanceResponse destroyInstance(IDeleteInstanceRequest req)` ; Check to see if an instance exists.
+* `IUpdateInstanceResponse updateInstanceMetaData(IUpdateInstanceRequest request)` ; Returns the platform name string from the controller.
+* `IStopInstanceResponse stopInstance(IStopInstanceRequest req)` ; Returns the platform name string from the controller.
+
 ### Create Instance Mechanism (AWS use case)
 
 1. The controller receives an `INewInstanceRequest` object from Stream Manager core
