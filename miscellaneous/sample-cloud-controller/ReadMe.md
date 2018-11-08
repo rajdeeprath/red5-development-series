@@ -128,48 +128,55 @@ Read operations are synchronous and no not require handling in a separate thread
 
 While a platform controller has multiple responsibilities to fulfill, the `controller` operations can broadly be classified into two types : Synchronous and asynchronous operations.
 
-There are other miscellaneous operations that a controller may chose to implement based on the platform behavior. In this section however we shall discuss only those operation that are directly relevant to Stream Manager. Operations are defined as a part of the `ICloudPlatformInstanceController` interface.
+__Note: At the moment, all the methods in the controller are synchronous or semi-synchronous in nature for the Stream Manager. However the mechanism employed for read/write operatiosn that take a long time is made asynchronous by behaviour. The controller interface does provision for asynchronous methods as well, but they are currently not used by the Stream Manager core.__
+
+In this section we shall discuss only those operation that are directly relevant to Stream Manager and used in the current development model. Operations are defined as a part of the `ICloudPlatformInstanceController` interface. By behaviour, operations can be broadly classified as synchronous and asynchronous.
 
 Let us have a look at both types of operations in the context of Stream Manager.
 
 ## Synchronous Operations
 
-Synchronous operations involve operations that are non-blocking by default and the result is obtained almost immediately. A good example of a synchronous method is the `read instance` operation.
+Synchronous operations involve operations that are somewhat blocking by default however the result is **expected** to be obtained almost immediately. A good example of a synchronous method is the `read instance` operation.
 
-The read operation does not wait for any transition on the platform side. The instance is read almost immediately as it is. The response for a `read instance` api call is included in the api call result. If the API request fails, the read operation is said to have `failed`.
+The read operation does not wait for any state transition on the platform side. The instance is read almost immediately as it is. The response for a `read instance` api call is included in the api call result. If the API request fails, the read operation is said to have `failed`.
 
-Following are the synchronous methods of an `ICloudPlatformInstanceController` implementation :
+On popular platforms such as AWS, Google Compute etc, the average time needed for completion of the operation is measured to be about 3-5 seconds at most.
 
-* `getRed5Instance(IReadInstanceRequest request)` ;  Reads a Red5 Pro instance from the cloud platform.
-* `hasInstance(IReadInstanceRequest request)` ; Check to see if an instance exists.
-* `getPlatform()` ; Returns the platform name string from the controller.
-* `destroyCloudInstance(CloudInstance instance)` : Terminates the instance on the platform. does not track the process.
+Following are the **synchronous** methods of an `ICloudPlatformInstanceController` implementation by behaviour :
+
+* `getRed5Instance(IReadInstanceRequest request)`: Reads a Red5 Pro instance from the cloud platform.
+* `hasInstance(IReadInstanceRequest request)`: Check to see if an instance exists.
+* `getPlatform()`: Returns the platform name string from the controller.
+* `destroyCloudInstance(CloudInstance instance)`: Terminates the instance on the platform. The reason this method is termed as a synchronous operations is because we are only interested in executing the method and receiving the acknowledgement from the platform. We are not interested in tracking the state of the termination.
 * `suggestLaunchLocation` : Suggests a suitable launch zone for the next instance launch.
-* `getRegionforZone(String availabilityZone)` : Identifies the region name for a specified zone.
+* `getRegionforZone(String availabilityZone)`: Identifies the region name for a specified zone.
 
 ![Stream Manager - Controller Sync Communication Diagram](./asset/server/streammanagercontrollerguide/sync-processing.png)
 
 ## Asynchronous Operations
 
-Asynchronous operations involve that are blocking by default or take long time to conclude  and need to be monitored via a separate thread. All instance `CUD`  operations are asynchronous in nature. such operations conclude only when the instance has transitioned from the current state to the expected final state. This state change needs to be tracked via a separate thread.
+Asynchronous behviour is required when the operations are not only blocking in nature but also but also a take long time to conclude. These operations might also need constant monitoring to track their state. All instance `Create`, `Update` and `Delete` operations **have to be** asynchronous in nature. This is because such operations take a long tiem to conclude and their conclusion requires tracking the instance state on the platform. The initial response time from the cloud platform is expected to be immediate/very short. This tells us that the request was acknowledged by the server. Now the instance state transition needs to be tracked via a separate thread to make the behaviour of the call `asynchronous`.
 
-* `INewInstanceResponse spinNewInstance(INewInstanceRequest req)` ;  Reads a Red5 Pro instance from the cloud platform.
-* `IDeleteInstanceResponse destroyInstance(IDeleteInstanceRequest req)` ; Check to see if an instance exists.
-* `IUpdateInstanceResponse updateInstanceMetaData(IUpdateInstanceRequest request)` ; Returns the platform name string from the controller.
-* `IStopInstanceResponse stopInstance(IStopInstanceRequest req)` ; Returns the platform name string from the controller.
+Following are the **asynchronous** methods of an `ICloudPlatformInstanceController` implementation by behaviour :
 
-### Create Instance Mechanism (AWS use case)
+* `INewInstanceResponse spinNewInstance(INewInstanceRequest req)`:  Requests a new Red5 Pro instance on the cloud platform.
+* `IDeleteInstanceResponse destroyInstance(IDeleteInstanceRequest req)`: Deletes an existing registered Red5 Pro instance on the cloud platform.
+* `IUpdateInstanceResponse updateInstanceMetaData(IUpdateInstanceRequest request)`: Updates any metadata information on the instance.`(currently unused)`.
+* `IStopInstanceResponse stopInstance(IStopInstanceRequest req)`: Stops a running instance on the cloud platform without terminating it.
+
+![Stream Manager - Controller Async Communication Diagram](./asset/server/streammanagercontrollerguide/async-processing.png)
+
+### Flow of the Create Instance Mechanism (AWS use case)
 
 1. The controller receives an `INewInstanceRequest` object from Stream Manager core
 2. Controller extracts relevant information from the request object including the launch configuration information.
-3. Controller prepares the platform api client which will  be used to authenticate and make  a API call on the platform.
+3. Controller prepares the platform api client (**AWSClient**) which will be used to authenticate and make a API call on the platform.
 4. Controller extracts configuration information such as cloud machine type, image name, metadata items etc from the request.
 5. Controller prepares the platform api request using all the necessary parameters.
-6. Controller prepares a user data string using the instance identifier generated by Stream Manager to set as an identity mark on the instance. (optional). The identity is used to identify all nodes launched from the current Stream Manager instance.
-7. Execute the api request
-8. If there are any api execution errors or an exception is thrown by the platform, the controller catches them and throw a `InstanceCreateException` for Stream Manager core.
-9. If there are no errors, we assume that instance was launched on platform. A acknowledgement token is generated and set in a `INewInstanceResponse` object which is then sent back to Stream Manager as a return value.
-10. The controller launches a new `Runnable` (thread process) to track the asynchronous process.
+6. Execute the api request
+7. If there are any api execution errors or an exception is thrown by the platform, the controller catches them and throw a `InstanceCreateException` for Stream Manager core.
+8. If there are no errors, we assume that instance was launched on platform. A acknowledgement token is generated and set in a `INewInstanceResponse` object which is then sent back to Stream Manager as a return value.
+9. The controller launches a new `Runnable` (thread process) to track the process asynchronously.
 11. In the `Runnable` we check the state of the newly launched instance by tracking the state change of the instance. Once a newly launched instance reaches a `RUNNING` state  we can conclude that the instance launch was successful. There is a maximum time period (to defined by developer - `operationTimeoutMilliseconds`), within which the state change should complete. If the operation fails to reach the expected state (`RUNNING`) within that time or if there is an error reading the instance state, we conclude that the operation failed.
 12. for a successful launch operation, the controller reads the instance information and translates it into a `Red5Instance` before pushing it to the Stream Manager core as a `IRed5InstanceResponse` object. A cloud instance must always be translated to a  `IRed5InstanceResponse` before it sent to Stream Manager core.
 13. Operation success and failure should be notified back to Stream Manager over the `IInstanceOperationResponseHandler` interface along with the appropriate response object .
@@ -179,7 +186,7 @@ _If the cloud platform does not provide a built in async mechanism, you can crea
 
 > It is highly recommended that you explore the code base on an existing controller such as  the `aws-cloud-controller` or the `google-compute-controller` to get a better understanding of the mechanism.
 
-![Stream Manager - Controller Async Communication Diagram](./asset/server/streammanagercontrollerguide/async-processing.png)
+
 
 # Developing Your Own Controller
 
