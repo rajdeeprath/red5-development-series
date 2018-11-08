@@ -177,15 +177,15 @@ Following are the **asynchronous** methods of an `ICloudPlatformInstanceControll
 7. If there are any api execution errors or an exception is thrown by the platform, the controller catches them and throw a `InstanceCreateException` for Stream Manager core.
 8. If there are no errors, we assume that instance was launched on platform. A acknowledgement token is generated and set in a `INewInstanceResponse` object which is then sent back to Stream Manager as a return value.
 9. The controller launches a new `Runnable` (thread process) to track the process asynchronously.
-11. In the `Runnable` we check the state of the newly launched instance by tracking the state change of the instance. Once a newly launched instance reaches a `RUNNING` state  we can conclude that the instance launch was successful. There is a maximum time period (to defined by developer - `operationTimeoutMilliseconds`), within which the state change should complete. If the operation fails to reach the expected state (`RUNNING`) within that time or if there is an error reading the instance state, we conclude that the operation failed.
-12. for a successful launch operation, the controller reads the instance information and translates it into a `Red5Instance` before pushing it to the Stream Manager core as a `IRed5InstanceResponse` object. A cloud instance must always be translated to a  `IRed5InstanceResponse` before it sent to Stream Manager core.
+10. Controller prepares the list of metadata specified in the launch request to attach to the instance. Some of the metadata items are taken from launch configuration where as some of them are generated at runtime such as the instance `identifier`, `role`, `instanceCapacity` etc. The `identifier` is very important, as it is used to identify that the instance belongs to the current stream manager. The identity is used to identify all nodes launched from the current Stream Manager instance.
+11. In the `new thread` we check the state of the newly launched instance by tracking the state change of the instance. Once a newly launched instance reaches a `RUNNING` state  we can conclude that the instance launch was successful. There is a maximum time period (to defined by developer - `operationTimeoutMilliseconds`), within which the state change should complete. If the operation fails to reach the expected state (`RUNNING`) within that time or if there is an error reading the instance state, we conclude that the operation failed.
+12. To verify a successful launch operation, the controller `reads the instance` information and translates it into a `Red5Instance` before pushing it to the Stream Manager core as a `IRed5InstanceResponse` object. A cloud instance must always be translated to a  `IRed5InstanceResponse` before it sent to Stream Manager core.
 13. Operation success and failure should be notified back to Stream Manager over the `IInstanceOperationResponseHandler` interface along with the appropriate response object .
 14. Operation error responses are pushed as `IInstanceOperationErrorResponse` objects.
 
-_If the cloud platform does not provide a built in async mechanism, you can create a Runnable task of your own and track changes in instance state by polling the cloud platform periodically._
+__Every cloud platform SDK may not provide a built-in async mechanism for tracking instance operations. In that we recommend you create a separate thread of your own and track operations in instance state to determine state of the operation itself._
 
 > It is highly recommended that you explore the code base on an existing controller such as  the `aws-cloud-controller` or the `google-compute-controller` to get a better understanding of the mechanism.
-
 
 
 # Developing Your Own Controller
@@ -194,39 +194,37 @@ _If the cloud platform does not provide a built in async mechanism, you can crea
 
 * **Cloud platform prerequisites** : Cloud platform prerequisites include valid account, Platform SDK, Appropriate permissions to  various resources,
 
-* **Java** : JDK 1.8 or higher needs to be installed on the development machine. Java can be downloaded from [oracle's web page](#<http://www.oracle.com/technetwork/java/javase/downloads/index.html>).
+* **Java** : JDK 1.8 or higher needs to be installed on the development machine. Java can be downloaded from [oracle's web page](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
-* **Maven** : Maven is the dependency management tool used for the controller project. you should have the latest version of maven downloaded and added to the system path. Get maven from its [official website](#<https://maven.apache.org/download.cgi>).
+* **Maven** : Maven is the dependency management tool used for the controller project. you should have the latest version of maven downloaded and added to the system path. Get maven from its [official website](https://maven.apache.org/download.cgi).
 
 * **Basic knowledge of maven** : You should have a basic idea of maven, how to add/remove dependencies, when to use the `dependency management` section etc:. Although you don't need to create a maven project  from scratch, it helps in understanding how the tool works and may be beneficial in debugging issues.
 
-* **Eclipse JEE IDE** : Red5 Pro development throughout requires you to use a JEE version of eclipse. Some of the most popular flavors of JEE Eclipse IDE are : Luna, Mars, Neon etc. Eclipse is an open source IDE and can be obtained from [here](#<http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/heliossr1>).
+* **Eclipse JEE IDE** : Red5 Pro development throughout requires you to use a JEE version of eclipse. Some of the most popular flavors of JEE Eclipse IDE are : Mars, Neon, Oxygen etc. Eclipse is an open source IDE and can be obtained from [here](https://www.eclipse.org/downloads/packages/release/oxygen/3a/eclipse-ide-java-ee-developers).
 
-* Basic knowledge of spring framework and Java beans : Red5 Pro uses spring and Java beans throughout. The Stream Manager is more of a JEE web application than a Red5 Pro streaming application. Thus it is important to understand Java beans, and have an overview of spring. Enthusiastic developers can check out the overwhelming spring documentation on its [official site](#<https://spring.io/docs>).
+* Basic knowledge of spring framework and Java beans : Red5 Pro uses spring and Java beans throughout. The Stream Manager is more of a JEE web application than a Red5 Pro streaming application. Thus it is important to understand Java beans, and have an overview of spring. Enthusiastic developers can check out the overwhelming spring documentation on its [official site](https://spring.io/docs).
 
-* **Stream Manager controller maven template** : To be able to follow the guide from here onwards you need to have access to the `sample-cloud-controller` project. This sample maven project is a controller template which can be used to understand and speedup the controller development workflow. You can access the template [here](TO DO).
+* **Stream Manager controller maven template** : To be able to follow the guide from here onwards you need to have access to the `sample-cloud-controller` project. This sample maven project is a controller template which can be used to understand and speedup the controller development workflow. You can access the template [here](https://github.com/rajdeeprath/red5-development-series/tree/pro/custom-cloud-controller/miscellaneous/sample-cloud-controller).
 
-* **Red5 Pro media server with proper license** : Last but not the least you need to have a copy of the latest Red5 Pro media server with a valid license. While license is not required for controller development it is required for a bunch of other indirect features that Stream Manager targets. The first and foremost being  `clustering`.
+* **Red5 Pro media server with proper license** : Last but not the least you need to have a copy of the [latest Red5 Pro media server with a valid license](https://account.red5pro.com/login). While license is not required for controller development it is required for running the server itself, clustering & testing autoscaling.
 
 ## Know Your Platform
 
-Before you start planning out your controller, You need to have a good idea of your platform and the SDK it offers. Sometimes knowing the platform helps you apply an existing controller as a base for the target platform.
+Before you start planning out your controller, You need to have a good idea of your platform and the SDK it offers. Sometimes knowing the platform helps you apply an existing controller as a base for the target platform. For example if you are developing a controller for a relatively new platform which does not have an SDK yet, you should make use of their REST api instead.
 
-Understanding the target also helps you understand what features are  or are not supported and how to get around them if necessary. you can also understand the limitations of the platform or the SDK and plan an appropriate way to handle them.
+Understanding the target also helps you understand what features are or are not supported and how to get around the roadblocks if necessary. you can also understand the limitations of the platform or the SDK and plan an appropriate way to handle them.
 
-For example, on Google compute platform the `instance identifier` is the instance name which can be supplied when making the API call. So we use the Stream Manager decided `instance identifier` to name the instance. However On AWS platform the `instance id` is assigned by the platform itself. Hence we simply store the Stream Manager decided `instance identifier` on the instance as instance`User Data` and we gather the platform generated `instance id` into the `platform identifier` property before sending it back to Stream Manager core using the  `IInstanceOperationResponseHandler` interface.
+For example, on Google compute platform the `instance identifier` is the **instance name** which can be supplied when making the API call. So we use the Stream Manager generated `identifier` value to name the instance directly. So this acts as the `platform instance identifier` as well as Stream Manager's internal node identifier. 
 
-The Stream Manager data store stores both Stream Manager generated instance identifier as well as the platform generated instance identifier (as supported by the platform).
+However On AWS platform the `instance id` is assigned by the platform itself. Hence we simply store the Stream Manager generated `identifier` on the instance as a`Tag` and we gather the platform generated `instance id` into the `platform identifier` property before sending it back to Stream Manager core using the  `IInstanceOperationResponseHandler` interface.
 
-In subsequent  instance`RUD` (read, update, stop/delete) operations both IDs are passed in the request object. It is upto the controller to decide which if it wants to use to identify the instance.
-
-Another example of platform specific behavior is that on AWS availability zones appear and disappear frequently, which is to say that the zone information is very dynamic as compared to Google compute platform. Thus its is important to verify the availability of a zone before deciding to launch an instance in that zone.
+The Stream Manager data store stores both Stream Manager generated instance identifier as well as the platform generated instance identifier. The former is used by streammanager internally, whereas the latter is used to make instance operations.In subsequent  instance`RUD` (read, update, stop/delete) operations both IDs are passed in the request object. It is upto the controller to decide which one it wants to use to identify the instance.
 
 The better you know the platform, the better you can design the controller to handle operations without running into potential failures.
 
 ## Streammanager-Commons Dependency
 
-The controller project development has an explicit `artifact` dependency called `streammanager-commons`. The `streammanager-commons` library includes all the necessary controller classes and interfaces including the request and response objects.
+The controller project development has an explicit `artifact` dependency called `streammanager-commons`. The `streammanager-commons` library includes all the necessary controller classes and interfaces including the request and response objects. The library contains the controller interface as well as all the classes that corresponds to the request-response mechanism between Stream Manager and the controller.
 
 ### Adding Dependency via Maven
 
@@ -244,7 +242,7 @@ The dependency requirement is added to the `controller` maven project via the `p
 </dependency>
 ```
 
-Fortunately  **Stream Manager controller maven template** already contains the dependency declaration. The `streammanager.commons.version` property is declared in the `properties` section of the `pom.xml` file. This should always be the latest version released.
+The  **Stream Manager controller maven template** already contains the dependency declaration. The `streammanager.commons.version` property is declared in the `properties` section of the `pom.xml` file. This should always be the latest version released.
 
 When you import the `template` project into eclipse it will automatically resolve the  necessary dependencies by looking up the `pom.xml`. The project will contain errors if one or more `dependencies` could not be resolved.
 
@@ -252,14 +250,14 @@ When you import the `template` project into eclipse it will automatically resolv
 
  For the normal use cases, the `streammanager-commons` is deployed to public repository. The eclipse maven plugin will automatically resolve and download the library jar into the local `maven` cache. However there may be times when you want to use a custom version of the  `streammanager-commons` artifact or the public resource may not be accessible for some reason.
 
- In such cases you may want to provide the artifact to your project via the local maven cache. You can install the artifact into your local maven cache and it when the project requires a particular version of the dependency, it will provide it from the local cache. This trick is very handy for development scenarios. When you are using the **Stream Manager controller maven template** and the `streammanager-commons` is not available via public repository, you should install it into the local maven cache **before** importing the project into eclipse.
+ In such cases you may want to provide the artifact to your project via the local maven cache. You can install the artifact into your local maven cache and it when the project requires a particular version of the dependency, it will provide it from the local cache. This trick is very handy for development scenarios. When you are using the **Stream Manager controller maven template** and the `streammanager-commons` is not available via public repository, you can provide it manually as well.
 
- **To install the `streammanager-commons` artifact into local maven cache**:
+ **To provide the `streammanager-commons` artifact manually**:
 
-* Download Red5 Pro server to your development machine
-* Locate the `streammanager-commons` file in `RED5_HOME/webapps/streammanager/WEB-INF/lib/` directory. Example : `streammanager-commons-1.2.3.jar`
-* Navigate to your controller project directory and launch the console.
-* Execute the following maven command to install the `streammanager-commons` jar file :
+* Download the latest Red5 Pro server to your development machine
+* Locate the `streammanager-commons` jar file in `RED5_HOME/webapps/streammanager/WEB-INF/lib/` directory. Example : `streammanager-commons-1.2.3.jar`
+* Copy the file into your controller template directory inside `lib` folder.
+* Add the following mave tag to your project.
 
 ```sh
 mvn install:install-file -Dfile=<path-to-file> -DgroupId=com.red5pro -DartifactId=streammanager-commons -Dversion=1.2.3 -Dpackaging=jar
