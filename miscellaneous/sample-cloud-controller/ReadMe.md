@@ -257,17 +257,26 @@ When you import the `template` project into eclipse it will automatically resolv
 * Download the latest Red5 Pro server to your development machine
 * Locate the `streammanager-commons` jar file in `RED5_HOME/webapps/streammanager/WEB-INF/lib/` directory. Example : `streammanager-commons-1.2.3.jar`
 * Copy the file into your controller template directory inside `lib` folder.
-* Add the following mave tag to your project.
+* Add the following maven dependency tags to your `pom.xml`.
 
-```sh
-mvn install:install-file -Dfile=<path-to-file> -DgroupId=com.red5pro -DartifactId=streammanager-commons -Dversion=1.2.3 -Dpackaging=jar
+```xml
+
+    <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>${simplejson.version}</version>
+    </dependency>
+      
+  	<!--  streammanager-commons -->
+    <dependency>
+         <groupId>com.red5pro</groupId>
+         <artifactId>streammanager-commons</artifactId>
+         <version>${streammanager.commons.version}</version>
+         <scope>system</scope>
+    	 <systemPath>${basedir}/lib/streammanager-commons-1.2.12.jar</systemPath>
+    </dependency>
+
 ```
-
-Where `<path-to-file>` implies the full absolute path to the  `streammanager-commons` jar file and the `-Dversion` should be the version of the `streammanager-commons` jar (usually the version number can be found in the end of the file name - `streammanager-commons-x.x.x.jar`). The value for `-DgroupId` should always be `com.red5pro`.
-
-You can see from the console output whether the installation was successful or not.
-
-> Ensure to have the `streammanager-commons` dependency in place before you import the controller `template` project into eclipse.
 
 ## Starting a Controller Project
 
