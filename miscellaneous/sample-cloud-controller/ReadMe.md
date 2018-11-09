@@ -187,7 +187,6 @@ __Every cloud platform SDK may not provide a built-in async mechanism for tracki
 
 > It is highly recommended that you explore the code base on an existing controller such as  the `aws-cloud-controller` or the `google-compute-controller` to get a better understanding of the mechanism.
 
-
 # Developing Your Own Controller
 
 ## Pre-Development Checklist
@@ -214,7 +213,7 @@ Before you start planning out your controller, You need to have a good idea of y
 
 Understanding the target also helps you understand what features are or are not supported and how to get around the roadblocks if necessary. you can also understand the limitations of the platform or the SDK and plan an appropriate way to handle them.
 
-For example, on Google compute platform the `instance identifier` is the **instance name** which can be supplied when making the API call. So we use the Stream Manager generated `identifier` value to name the instance directly. So this acts as the `platform instance identifier` as well as Stream Manager's internal node identifier. 
+For example, on Google compute platform the `instance identifier` is the **instance name** which can be supplied when making the API call. So we use the Stream Manager generated `identifier` value to name the instance directly. So this acts as the `platform instance identifier` as well as Stream Manager's internal node identifier.
 
 However On AWS platform the `instance id` is assigned by the platform itself. Hence we simply store the Stream Manager generated `identifier` on the instance as a`Tag` and we gather the platform generated `instance id` into the `platform identifier` property before sending it back to Stream Manager core using the  `IInstanceOperationResponseHandler` interface.
 
@@ -261,20 +260,20 @@ When you import the `template` project into eclipse it will automatically resolv
 
 ```xml
 
-    <dependency>
-          <groupId>org.json</groupId>
-          <artifactId>json</artifactId>
-          <version>${simplejson.version}</version>
-    </dependency>
-      
-  	<!--  streammanager-commons -->
-    <dependency>
-         <groupId>com.red5pro</groupId>
-         <artifactId>streammanager-commons</artifactId>
-         <version>${streammanager.commons.version}</version>
-         <scope>system</scope>
-    	 <systemPath>${basedir}/lib/streammanager-commons-1.2.12.jar</systemPath>
-    </dependency>
+<dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>${simplejson.version}</version>
+</dependency>
+
+<!--  streammanager-commons -->
+<dependency>
+     <groupId>com.red5pro</groupId>
+     <artifactId>streammanager-commons</artifactId>
+     <version>${streammanager.commons.version}</version>
+     <scope>system</scope>
+     <systemPath>${basedir}/lib/streammanager-commons-1.2.12.jar</systemPath>
+</dependency>
 
 ```
 
@@ -284,263 +283,13 @@ When you import the `template` project into eclipse it will automatically resolv
 
 As discussed before to develop your own controller, you need to have a basic understanding of maven based projects and the spring framework centered around the JEE framework.
 
-The fastest way to get started is to use `sample-cloud-controller` (maven controller project template). The `sample-cloud-controller` project is a minimal controller wireframe project, that will help you get up to speed with your development setup.
+The fastest way to get started is to use [`sample-cloud-controller` (maven controller project template). The `sample-cloud-controller` project](https://github.com/rajdeeprath/red5-development-series/tree/pro/custom-cloud-controller/miscellaneous/sample-cloud-controller) is a minimal controller wireframe project, that will help you get up to speed with your development setup.
 
 **Top features of the controller template**
 
 * The `sample-cloud-controller` is already wired as a maven project.
 * The basic dependencies such as `slf4j` (logging) and `streammanager-commons` are already included in the project's `pom.xml` file.
 * The project is setup to package multiple dependencies from your platform SDK into a single jar for deployment.
-* The template contains a sample controller class implementation.
-
-```java
-package com.red5pro.services.cloud.platformname.component;
-
-import java.io.IOException;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.red5pro.services.streammanager.exceptions.InstanceCreateException;
-import com.red5pro.services.streammanager.exceptions.InstanceDeleteException;
-import com.red5pro.services.streammanager.exceptions.InstanceReadException;
-import com.red5pro.services.streammanager.exceptions.InstanceResetException;
-import com.red5pro.services.streammanager.exceptions.InstanceStopException;
-import com.red5pro.services.streammanager.exceptions.InstanceUpdateException;
-import com.red5pro.services.streammanager.exceptions.LaunchLocationSuggestionException;
-import com.red5pro.services.streammanager.interfaces.ICloudInstanceListResponse;
-import com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController;
-import com.red5pro.services.streammanager.interfaces.IDeleteInstanceRequest;
-import com.red5pro.services.streammanager.interfaces.IDeleteInstanceResponse;
-import com.red5pro.services.streammanager.interfaces.IInstanceOperationResponseHandler;
-import com.red5pro.services.streammanager.interfaces.INewInstanceRequest;
-import com.red5pro.services.streammanager.interfaces.INewInstanceResponse;
-import com.red5pro.services.streammanager.interfaces.IReadInstanceRequest;
-import com.red5pro.services.streammanager.interfaces.IRed5InstanceResponse;
-import com.red5pro.services.streammanager.interfaces.IResetInstanceRequest;
-import com.red5pro.services.streammanager.interfaces.IResetInstanceResponse;
-import com.red5pro.services.streammanager.interfaces.IStopInstanceRequest;
-import com.red5pro.services.streammanager.interfaces.IStopInstanceResponse;
-import com.red5pro.services.streammanager.interfaces.IUpdateInstanceRequest;
-import com.red5pro.services.streammanager.interfaces.IUpdateInstanceResponse;
-import com.red5pro.services.streammanager.nodes.model.CloudInstance;
-
-public class SampleCloudController implements ICloudPlatformInstanceController {
-
-  private Logger logger = LoggerFactory.getLogger(SampleCloudController.class);
-
-  private static String platform = "Sample Cloud";
-
-  private long operationTimeoutMilliseconds = 120000;
-
-  private IInstanceOperationResponseHandler responseHandler;
-
-  private boolean apiAvailable = true;
-
-  private String[] regions;
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#destroyCloudInstance(com.red5pro.services.streammanager.nodes.model.CloudInstance)
-   */
-  @Override
-  public void destroyCloudInstance(CloudInstance arg0)  throws InstanceDeleteException
-  {
-
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#destroyInstance(com.red5pro.services.streammanager.interfaces.IDeleteInstanceRequest)
-   */
-  @Override
-  public IDeleteInstanceResponse destroyInstance(IDeleteInstanceRequest arg0) throws InstanceDeleteException
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getAvailabilityZones()
-   */
-  @Override
-  public String[] getAvailabilityZones()
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getOperationTimeoutMilliseconds()
-   */
-  @Override
-  public long getOperationTimeoutMilliseconds()
-  {
-    return operationTimeoutMilliseconds;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getPlatform()
-   */
-  @Override
-  public String getPlatform()
-  {
-    return platform;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRed5Instance(com.red5pro.services.streammanager.interfaces.IReadInstanceRequest)
-   */
-  @Override
-  public IRed5InstanceResponse getRed5Instance(IReadInstanceRequest arg0) throws InstanceReadException
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRed5InstanceResponseHandler()
-   */
-  @Override
-  public IInstanceOperationResponseHandler getRed5InstanceResponseHandler()
-  {
-    return responseHandler;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRegionforZone(java.lang.String)
-   */
-  @Override
-  public String getRegionforZone(String arg0) throws Exception
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRegions()
-   */
-  @Override
-  public String[] getRegions()
-  {
-    return regions;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#hasInstance(com.red5pro.services.streammanager.interfaces.IReadInstanceRequest)
-   */
-  @Override
-  public boolean hasInstance(IReadInstanceRequest arg0) throws IOException
-  {
-    return false;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#initialize()
-   */
-  @Override
-  public void initialize()
-  {
-
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#isApiBridgeAvailable()
-   */
-  @Override
-  public boolean isApiBridgeAvailable()
-  {
-    return apiAvailable;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#resetInstance(com.red5pro.services.streammanager.interfaces.IResetInstanceRequest)
-   */
-  @Override
-  public IResetInstanceResponse resetInstance(IResetInstanceRequest arg0) throws InstanceResetException
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#scanListInstances(java.lang.String)
-   */
-  @Override
-  public ICloudInstanceListResponse scanListInstances(String arg0)  throws InstanceReadException
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#setOperationTimeoutMilliseconds(long)
-   */
-  @Override
-  public void setOperationTimeoutMilliseconds(long arg0)
-  {
-    this.operationTimeoutMilliseconds = arg0;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#setRed5InstanceResponseHandler(com.red5pro.services.streammanager.interfaces.IInstanceOperationResponseHandler)
-   */
-  @Override
-  public void setRed5InstanceResponseHandler(IInstanceOperationResponseHandler arg0)
-  {
-    this.responseHandler = arg0;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#spinNewInstance(com.red5pro.services.streammanager.interfaces.INewInstanceRequest)
-   */
-  @Override
-  public INewInstanceResponse spinNewInstance(INewInstanceRequest arg0) throws InstanceCreateException
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#stopInstance(com.red5pro.services.streammanager.interfaces.IStopInstanceRequest)
-   */
-  @Override
-  public IStopInstanceResponse stopInstance(IStopInstanceRequest arg0)   throws InstanceStopException
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#suggestLaunchLocation(java.util.List, java.util.List, java.lang.String, java.lang.String, java.lang.String)
-   */
-  @Override
-  public String suggestLaunchLocation(List<String> availableRegions, List<String> assignedZones, String lastUsedZone, String preferredRegion, String instanceType) throws LaunchLocationSuggestionException {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#updateInstanceMetaData(com.red5pro.services.streammanager.interfaces.IUpdateInstanceRequest)
-   */
-  @Override
-  public IUpdateInstanceResponse updateInstanceMetaData(IUpdateInstanceRequest arg0) throws InstanceUpdateException
-  {
-    return null;
-  }
-
-}
-```
 
 To get started using the template, you can download / clone the maven project to your development machine and import it into your Eclipse IDE.
 
@@ -617,11 +366,11 @@ Now that your project is set, you can start programming your controller. In ecli
 
 6. Implement the `getRed5Instance` method : This method is called by the core to read a Red5 Pro instance.
 
-  The read request object contains two instance identifiers : the Stream Manager generated identifier and the platform's instance identifier. Depending on the platform you can use either of the methods to read the instance.
+The read request object contains two instance identifiers : the Stream Manager generated identifier and the platform's instance identifier. Depending on the platform you can use either of the methods to read the instance.
 
-  * The controller must form an appropriate API request for the platform which specifies the necessary parameters using the data from the request.
-  * The controller must create any authentication mechanism required to generate the authenticate the API request.
-  * The controller will then make the API call to the platform. If an error occurs in the API call it throws the `InstanceReadException` else it must return a `IRed5InstanceResponse` object. The API response containing the instance info from the platform should be translated into a  `Red5Instance` and then returned via the  `IRed5InstanceResponse` object. The method is  synchronous in nature and thus the result is returned in the same thread.
+* The controller must form an appropriate API request for the platform which specifies the necessary parameters using the data from the request.
+* The controller must create any authentication mechanism required to generate the authenticate the API request.
+* The controller will then make the API call to the platform. If an error occurs in the API call it throws the `InstanceReadException` else it must return a `IRed5InstanceResponse` object. The API response containing the instance info from the platform should be translated into a  `Red5Instance` and then returned via the  `IRed5InstanceResponse` object. The method is  synchronous in nature and thus the result is returned in the same thread.
 
   > See AWS and Google controllers for more information.
 
@@ -629,13 +378,13 @@ Now that your project is set, you can start programming your controller. In ecli
 
 8. Implement the `spinNewInstance` : This method is called by the core to request a new instance from the platform. The method specifies a request object which contains per-configured launch configuration information that were loaded by Stream Manager.
 
-  Launch configuration information involves the instance type, the image name, the maximum capacity to allocate etc,
+Launch configuration information involves the instance type, the image name, the maximum capacity to allocate etc,
 
-  * The controller must form an appropriate API request for the platform which specifies the necessary parameters using the data from the request.
-  * The new instance request contains the the Stream Manager generated instance identifier. If your platform generates you should store this identifier on the instance as a metadata. Otherwise try to use the identifier as the instance name/id.
-  * The controller must create any authentication mechanism required to generate the authenticate the API request.
-  * The controller will then make the API call to the platform. If an error occurs in the API call it throws the `InstanceCreateException` else it must return a `INewInstanceResponse` object back to Stream Manager core indicating that the launch was successful.
-  * The controller should then track the progress of the instance startup in a separate thread and notify Stream Manager core that the instance is ready. The core implements the `IInstanceOperationResponseHandler` All instance operations that are async in nature should be notified via the `IInstanceOperationResponseHandler`to the `core.`.
+* The controller must form an appropriate API request for the platform which specifies the necessary parameters using the data from the request.
+* The new instance request contains the the Stream Manager generated instance identifier. If your platform generates you should store this identifier on the instance as a metadata. Otherwise try to use the identifier as the instance name/id.
+* The controller must create any authentication mechanism required to generate the authenticate the API request.
+* The controller will then make the API call to the platform. If an error occurs in the API call it throws the `InstanceCreateException` else it must return a `INewInstanceResponse` object back to Stream Manager core indicating that the launch was successful.
+* The controller should then track the progress of the instance startup in a separate thread and notify Stream Manager core that the instance is ready. The core implements the `IInstanceOperationResponseHandler` All instance operations that are async in nature should be notified via the `IInstanceOperationResponseHandler`to the `core.`.
 
 9. Implement the `stopInstance` and `destroyInstance` methods :  The stop and destroy (terminate) methods should be implemented in a manner similar to the `spinNewInstance` method. The request object will contain the Stream Manager generated instance identifier and the platform identifier. You can use the one of them as per your platform. both methods require async tracking for the instance state changes. So you should implement the threaded instance state tracking similar to the  `spinNewInstance` method.
 

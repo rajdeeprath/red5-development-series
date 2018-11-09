@@ -50,6 +50,7 @@
          <scope>system</scope>
     	 <systemPath>${basedir}/lib/streammanager-commons-1.2.12.jar</systemPath>
      </dependency>
+     
   	<!--  Azure stuff -->
     <dependency>
        <groupId>com.microsoft.azure</groupId>
