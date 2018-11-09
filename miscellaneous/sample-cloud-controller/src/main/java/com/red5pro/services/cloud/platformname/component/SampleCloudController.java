@@ -157,6 +157,105 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 			logger.error("Error creating instance " + e.getMessage());
 			throw new InstanceCreateException(e.getMessage());
 		}
+		
+		/**
+		 *
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 * 
+		Subnet subnet = null;
+
+        try {
+            logger.info("Launch started " + new Date().toString());
+
+            String availabilityZone = req.getAvailabilityZone();
+
+            String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+            if (region == null)
+                throw new Exception("Could not find a valid region for the given availability zone");
+
+            AmazonEC2 ec2Client = getEc2Client2(region);
+
+            List<String> sGroups = new ArrayList<String>();
+
+            if (!defaultVPC) {
+                // get vpc
+                vpc = getVPC(ec2Client, getVpcName());
+
+                // get security group
+                securityGroup = getSecurityGroup(ec2Client, getEc2SecurityGroup(), defaultVPC);
+
+                // Fetch list of public subnets for this region
+                List<Subnet> subnets = getPublicSubnets(ec2Client, vpc.getVpcId());
+
+                // Find a subnet for which availabilityZone matches
+                subnet = RegionHelper.getSubnetForavailabilityZone(subnets, availabilityZone);
+
+                sGroups.add(securityGroup.getGroupId());
+            } else {
+                sGroups.add(getEc2SecurityGroup());
+            }
+
+            String amiId = getAMIIdForImageName(ec2Client, req.getImage());
+
+            RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
+
+            runInstancesRequest.withImageId(amiId).withInstanceType(req.getMachineType());
+            runInstancesRequest.withClientToken(req.getInstanceIdentifier());
+            runInstancesRequest.withMinCount(1);
+            runInstancesRequest.withMaxCount(1);
+            runInstancesRequest.withKeyName(getEc2KeyPairName());
+
+            // user data
+            //String userData = buildCustomUserData(req);            
+            String userData = getInstanceConfigurationData(req.getProperties());
+            if (userData != null) {
+                runInstancesRequest.withUserData(userData);
+            }
+
+            if (!isDefaultVPC())
+                runInstancesRequest.setSecurityGroupIds(sGroups);
+            else
+                runInstancesRequest.setSecurityGroups(sGroups);
+
+            Placement placement = new Placement();
+            placement.setAvailabilityZone(availabilityZone);
+            runInstancesRequest.setPlacement(placement);
+
+            if (!isDefaultVPC())
+                runInstancesRequest.setSubnetId(subnet.getSubnetId());
+
+            runInstancesRequest.setInstanceInitiatedShutdownBehavior(ShutdownBehavior.Terminate);
+            runInstancesRequest.setSdkRequestTimeout((int) operationTimeoutMilliseconds);
+
+            RunInstancesResult runInstancesResult = ec2Client.runInstances(runInstancesRequest);
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(new PostLaunchChecker(req, ec2Client, runInstancesResult));
+            executorService.shutdown();
+
+            return new NewInstanceResponse.Builder().withResponseTime(new Date()).withResponseToken(runInstancesResult.getReservation().getRequesterId())
+                    .build();
+        } catch (Exception e) {
+            logger.error("Error creating instance " + e.getMessage());
+
+            if (e instanceof AmazonEC2Exception) {
+
+                AmazonEC2Exception ae = (AmazonEC2Exception) e;
+
+                LaunchFailureLog log = new LaunchFailureLog();
+                log.setErrorCode(ae.getErrorCode());
+                log.setErrorMessage(ae.getErrorMessage());
+                log.setRequestId(ae.getRequestId());
+                log.setStatusCode(ae.getStatusCode());
+                log.setRequest(req);
+
+                String lookUpId = (ae.getRequestId() != null) ? ae.getRequestId() : LaunchFailureLog.generateLookUpKey(log);
+                launchFailureLog.put(lookUpId, log);
+            }
+
+            throw new InstanceCreateException(e.getMessage());
+        }
+		 */
 	}
 	
 	
@@ -201,6 +300,40 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
             logger.error("Error deleting instance " + e.getMessage());
             throw new InstanceDeleteException(e.getMessage());
         }
+		
+		/**
+		 * 
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 * 
+		 * try {
+            String availabilityZone = req.getAvailabilityZone();
+
+            String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+            if (region == null)
+                throw new Exception("Could not find a valid region for the given availability zone");
+
+            AmazonEC2 ec2Client = getEc2Client2(region);
+
+            IRed5InstanceResponse response = getRed5Instance(new ReadInstanceRequest.Builder().withInstanceIdentifier(req.getInstanceIdentifier())
+                    .withPlatformInstanceIdentifier(req.getPlatformInstanceIdentifier()).withAvailabilityZone(availabilityZone).withRequestTime(new Date())
+                    .build());
+
+            logger.info("================== Deleting Instance " + req.getInstanceIdentifier() + " ==================");
+
+            TerminateInstancesRequest terminateInstancesRequest = new TerminateInstancesRequest();
+            terminateInstancesRequest.withInstanceIds(req.getPlatformInstanceIdentifier());
+            TerminateInstancesResult terminateInstancesResult = ec2Client.terminateInstances(terminateInstancesRequest);
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(new PostDeleteChecker(req, response, ec2Client, terminateInstancesResult));
+            executorService.shutdown();
+
+            return new DeleteInstanceResponse.Builder().withResponseTime(new Date()).withResponseToken(String.valueOf(System.currentTimeMillis())).build();
+        } catch (Exception e) {
+            logger.error("Error deleting instance " + e.getMessage());
+            throw new InstanceDeleteException(e.getMessage());
+        }
+		 */
 	}
 	
 
@@ -228,14 +361,35 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 			logger.error("Error deleting instance " + instance.getPlatformIdentifier() + " " + e.getMessage());
 			throw new InstanceDeleteException(e.getMessage());
 		}
+		
+		/**
+		 * 
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 * 
+		 * try {
+            String availabilityZone = instance.getAvailabilityZone();
+
+            String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+            if (region == null)
+                throw new Exception("Could not find a valid region for the given availability zone");
+
+            AmazonEC2 ec2Client = getEc2Client2(region);
+
+            logger.info("================== Deleting Unwanted Instance " + instance.getPlatformIdentifier() + " ==================");
+
+            TerminateInstancesRequest terminateInstancesRequest = new TerminateInstancesRequest();
+            terminateInstancesRequest.withInstanceIds(instance.getPlatformIdentifier());
+            TerminateInstancesResult terminateInstancesResult = ec2Client.terminateInstances(terminateInstancesRequest);
+        } catch (Exception e) {
+            logger.error("Error deleting instance " + instance.getPlatformIdentifier() + " " + e.getMessage());
+            throw new InstanceDeleteException(e.getMessage());
+        }  
+		*/
 	}
 
 	
 	
-	
 
-	
-	
 	/*
 	 * (non-Javadoc)
 	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getAvailabilityZones()
@@ -305,103 +459,43 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 		} catch (Exception e) {
 			throw new InstanceReadException("Unable to read instance with identifier " + " " + req.getInstanceIdentifier() + " cause: " + e.getMessage());
 		}
-	}
-	
-	
-	
-	
-	private Red5Instance vendorInstanceToRed5Instance(IReadInstanceRequest request, Object instance) {
+		
+		
+		/**
+		 * 
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 * 
+		Red5Instance red5Instance = null;
 
         try {
-            logger.debug(new Gson().toJson(instance));
+            String availabilityZone = (request.getAvailabilityZone() == null) ? defaultZone : request.getAvailabilityZone();
+
+            String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+            if (region == null)
+                throw new Exception("Could not find a valid region for the given availability zone");
+
+            AmazonEC2 ec2Client = getEc2Client2(region);
+
+            DescribeInstancesResult describeInstancesResult = ec2Client.describeInstances();
+            for (Reservation reservation : describeInstancesResult.getReservations()) {
+                for (Instance instance : reservation.getInstances()) {
+                    if (instance.getInstanceId().equalsIgnoreCase(request.getPlatformInstanceIdentifier())) {
+                        red5Instance = vendorInstanceToRed5Instance(request, instance);
+                        break;
+                    }
+                }
+            }
+
+            if (red5Instance == null)
+                throw new InstanceReadException("Could not read instance details");
+
+            return new Red5InstanceResponse.Builder().withInstance(red5Instance).withResponseTime(new Date()).build();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new InstanceReadException("Unable to read instance with identifier " + " " + request.getInstanceIdentifier() + " cause: " + e.getMessage());
         }
-
-        Red5Instance red5Instance = new Red5Instance();
-        red5Instance.setIdentifier(request.getInstanceIdentifier());
-        
-        // Determine the `platfoirmIdentifier` of the machine from ` your instance object` and store it
-        String platformIdentifier = null;
-        /* AWS Example : platformIdentifier = instance.getInstanceId() */
-        red5Instance.setPlatformIdentifier(platformIdentifier);
-        
-        
-        NodeState red5InstanceState = null;
-        String instanceState; // <- get your instance state and store it
-
-        // Translate your instance state into Red5 instance state
-        
-        /* AWS Example
-        if (instanceState.getCode() == AWSInstanceStatus.PROVISIONING)
-            cloudInstanceState = NodeState.PENDING;
-        else if (instanceState.getCode() == AWSInstanceStatus.RUNNING)
-            cloudInstanceState = NodeState.RUNNING;
-        else if (instanceState.getCode() == AWSInstanceStatus.STOPPING)
-            cloudInstanceState = NodeState.STOPPING;
-        else if (instanceState.getCode() == AWSInstanceStatus.SHUTTING_DOWN)
-            cloudInstanceState = NodeState.TERMINATING;
-        else if (instanceState.getCode() == AWSInstanceStatus.TERMINATED)
-            cloudInstanceState = NodeState.DISPOSED;
-        */
-        
-        red5Instance.setState(red5InstanceState);
-
-        Date creationTime = null;
-        /* AWS Example : creationTime = awsInstance.getLaunchTime(); */
-        red5Instance.setLaunchTime(creationTime);
-
-        String availabilityZone = null; // <-Determine the availability zone of the node and store it
-        /* AWS Example : availabilityZone = instance.getPlacement().getAvailabilityZone() */
-        red5Instance.setAvailabilityZone(availabilityZone);
-
-        String publicIP = null; // <-Determine the public ip address of the node and store it
-        /* AWS Example : publicIP = instance.getPublicIpAddress(); */
-        red5Instance.setPublicIpAddress(publicIP);
-
-        String dns = null; // <-Determine the public dns of the node and store it (optional)
-        /* AWS Example : dns = instance.getPublicDnsName() */
-        red5Instance.setHostname(dns);
-
-        return red5Instance;
-    }
-
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRed5InstanceResponseHandler()
-	 */
-	@Override
-	public IInstanceOperationResponseHandler getRed5InstanceResponseHandler() 
-	{
-		return responseHandler;
+		 */
 	}
 
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRegionforZone(java.lang.String)
-	 */
-	@Override
-	public String getRegionforZone(String arg0) throws Exception 
-	{
-		// look up region for a specified availability zone and return the region string
-		return null;
-	}
-
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRegions()
-	 */
-	@Override
-	public String[] getRegions() 
-	{
-		return regions;
-	}
 	
 	
 	
@@ -434,6 +528,44 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 		}
 
 		return found;
+		
+		
+		/**
+		 * 
+		 *  AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 *  		 * 
+		boolean found = false;
+
+        try {
+            String instanceId = request.getPlatformInstanceIdentifier();
+            if (instanceId == null)
+                throw new Exception("Invalid lookup request.");
+
+            String availabilityZone = request.getAvailabilityZone();
+
+            String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+            if (region == null)
+                throw new Exception("Could not find a valid region for the given availability zone");
+
+            AmazonEC2 ec2Client = getEc2Client2(region);
+
+            DescribeInstancesResult describeInstancesResult = ec2Client.describeInstances();
+            for (Reservation reservation : describeInstancesResult.getReservations()) {
+                for (Instance instance : reservation.getInstances()) {
+                    if (instance.getInstanceId().equalsIgnoreCase(instanceId)) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.warn("Unable to find instance for id " + request.getInstanceIdentifier() + ".Cause : " + e.getMessage());
+            found = false;
+        }
+
+        return found;
+		 * 
+		 */
 	}
 	
 	
@@ -479,6 +611,41 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 			logger.error("Error stopping instance " + req.getInstanceIdentifier() + " " + e.getMessage());
 			throw new InstanceStopException(e.getMessage());
         }
+		
+		
+		/**
+		 * 
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 * 
+		 * try {
+            String availabilityZone = req.getAvailabilityZone();
+
+            String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+            if (region == null)
+                throw new Exception("Could not find a valid region for the given availability zone");
+
+            AmazonEC2 ec2Client = getEc2Client2(region);
+
+            IRed5InstanceResponse response = getRed5Instance(new ReadInstanceRequest.Builder().withInstanceIdentifier(req.getInstanceIdentifier())
+                    .withPlatformInstanceIdentifier(req.getPlatformInstanceIdentifier()).withAvailabilityZone(availabilityZone).withRequestTime(new Date())
+                    .build());
+
+            logger.info("================== Stopping Instance " + req.getInstanceIdentifier() + " ==================");
+
+            StopInstancesRequest stopInstancesRequest = new StopInstancesRequest().withInstanceIds(req.getPlatformInstanceIdentifier());
+            StopInstancesResult stopInstancesResult = ec2Client.stopInstances(stopInstancesRequest);
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(new PostStopChecker(req, response, ec2Client, stopInstancesResult));
+            executorService.shutdown();
+
+            return new StopInstanceResponse.Builder().withResponseTime(new Date()).withResponseToken(String.valueOf(System.currentTimeMillis())).build();
+        } catch (Exception e) {
+            logger.error("Error stopping instance " + req.getInstanceIdentifier() + " " + e.getMessage());
+            throw new InstanceStopException(e.getMessage());
+        }
+		 * 
+		 **/
 	}
 	
 	
@@ -490,7 +657,7 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 	public IResetInstanceResponse resetInstance(IResetInstanceRequest arg0)	throws InstanceResetException 
 	{
 		// not required as not implemented at core. Method has no use yet.
-		return null;
+		throw new InstanceResetException("Controller doesn't support Instance reset");
 	}
 
 	
@@ -562,12 +729,235 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 		{
             throw new InstanceReadException("Unable to read one or more instance(s). Cause: " + e.getMessage());
         }
+		
+		
+		/**
+		 * 
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC 
+		 * 
+		 * try {
+            List<String> processedRegions = new ArrayList<String>();
+            List<CloudInstance> cloudInstances = new ArrayList<CloudInstance>();
+            String[] zones = getAvailabilityZones();
+            AmazonEC2 ec2Client = null;
+
+            for (String zone : zones) {
+                try {
+                    String region = RegionHelper.getRegionFromAvailabilityZone(zone);
+
+                    if (processedRegions.contains(region)) {
+                        continue;
+                    }
+
+                    if (region == null)
+                        throw new Exception("Could not find a valid region for the given availability zone");
+                    ec2Client = getEc2Client2(region);
+                    processedRegions.add(region);
+
+                    DescribeInstancesResult describeInstancesResult = ec2Client.describeInstances();
+                    for (Reservation reservation : describeInstancesResult.getReservations()) {
+                        for (Instance instance : reservation.getInstances()) {
+                            try {
+                                if (instance.getState().getCode() == AWSInstanceStatus.RUNNING) {
+                                    //recognize own instance and add it to cloud instances list
+                                    boolean belongsToMe = instanceBelongsToMe(instance, namePrefix);
+                                    if (belongsToMe) {
+                                        CloudInstance cloudInstance = vendorInstanceToCloudInstance(instance);
+                                        if (cloudInstance == null)
+                                            throw new InstanceReadException("Could not read instance details");
+                                        cloudInstances.add(cloudInstance);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                if (logger.isDebugEnabled()) {
+                                    logger.debug("Problem occured trying to identify instance " + instance.getInstanceId() + " " + e.getMessage());
+                                }
+                                continue;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Error in scanning for one or more instance(s)" + e.getMessage() + " zone = " + zone);
+                    }
+                    continue;
+                }
+            }
+
+            return new CloudInstanceListResponse.Builder().withInstance(cloudInstances).withResponseTime(new Date()).build();
+        } catch (Exception e) {
+            throw new InstanceReadException("Unable to read one or more instance(s). Cause: " + e.getMessage());
+        }
+		 * 
+		 */
 	}
 	
 	
 	
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#updateInstanceMetaData(com.red5pro.services.streammanager.interfaces.IUpdateInstanceRequest)
+	 */
+	@Override
+	public IUpdateInstanceResponse updateInstanceMetaData(IUpdateInstanceRequest req) throws InstanceUpdateException 
+	{
+		// not required as not implemented at core. Method has no use yet explicitly.
+		
+		try {
+			String availabilityZone = req.getAvailabilityZone();
+
+			String region = null; // lookup region for availability zone
+
+
+			// Read instance to update metadata
+			IRed5InstanceResponse response = getRed5Instance(new ReadInstanceRequest.Builder().withInstanceIdentifier(req.getInstanceIdentifier())
+					.withPlatformInstanceIdentifier(req.getPlatformInstanceIdentifier()).withAvailabilityZone(availabilityZone).withRequestTime(new Date())
+					.build());
+
+			logger.info("================== Updating Instance data " + response.getInstance().getIdentifier() + " ==================");
+
+			// get `platformIdentifier`
+			String platformIdentifier = req.getPlatformInstanceIdentifier();
+
+			List<InstanceMetaDataItem> newInstanceMetadata = new ArrayList<InstanceMetaDataItem>();
+
+			/* Update metadata from request */
+			newInstanceMetadata.add(new InstanceMetaDataItem("identifier", req.getInstanceIdentifier()));
+			newInstanceMetadata.add(new InstanceMetaDataItem("role", req.getRole().name().toLowerCase()));
+			newInstanceMetadata.add(new InstanceMetaDataItem("connectionCapacity", String.valueOf(req.getEstimatedConnectionCapacity())));
+
+			ExecutorService taggerService = Executors.newSingleThreadExecutor();
+			taggerService.execute(new MetaDataTagger(newInstanceMetadata, req.getMetadata(), platformIdentifier));
+			taggerService.shutdown();
+
+			return new UpdateInstanceResponse.Builder().withResponseTime(new Date()).withResponseToken(String.valueOf(System.currentTimeMillis())).build();
+		} 
+		catch (Exception e) 
+		{
+			logger.error("Error updating instance data " + e.getMessage());
+			throw new InstanceUpdateException(e.getMessage());
+		}
+		
+		
+		/**
+		 * 
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 * 
+		 * try {
+            String availabilityZone = request.getAvailabilityZone();
+
+            String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+            if (region == null)
+                throw new Exception("Could not find a valid region for the given availability zone");
+
+            AmazonEC2 ec2Client = getEc2Client2(region);
+
+            IRed5InstanceResponse response = getRed5Instance(new ReadInstanceRequest.Builder().withInstanceIdentifier(request.getInstanceIdentifier())
+                    .withPlatformInstanceIdentifier(request.getPlatformInstanceIdentifier()).withAvailabilityZone(availabilityZone).withRequestTime(new Date())
+                    .build());
+
+            logger.info("================== Updating Instance data " + response.getInstance().getIdentifier() + " ==================");
+
+            String instanceId = request.getPlatformInstanceIdentifier();
+
+            List<InstanceMetaDataItem> newInstanceMetadata = new ArrayList<InstanceMetaDataItem>();
+
+            // Update metadata from request
+            newInstanceMetadata.add(new InstanceMetaDataItem("identifier", request.getInstanceIdentifier()));
+            newInstanceMetadata.add(new InstanceMetaDataItem("role", request.getRole().name().toLowerCase()));
+            newInstanceMetadata.add(new InstanceMetaDataItem("connectionCapacity", String.valueOf(request.getEstimatedConnectionCapacity())));
+
+            ExecutorService taggerService = Executors.newSingleThreadExecutor();
+            taggerService.execute(new MetaDataTagger(newInstanceMetadata, request.getMetadata(), instanceId, ec2Client));
+            taggerService.shutdown();
+
+            return new UpdateInstanceResponse.Builder().withResponseTime(new Date()).withResponseToken(String.valueOf(System.currentTimeMillis())).build();
+        } catch (Exception e) {
+            logger.error("Error updating instance data " + e.getMessage());
+            throw new InstanceUpdateException(e.getMessage());
+        }
+		 * 
+		 */
+	}
 	
+	
+	
+	/**
+	 * Method to convert a cloud platform instance to a valid Red5 Pro instance 
+	 * 
+	 * @param request The original IReadInstanceRequest object to read the instance
+	 * @param instance Custom object denoting the cloud platform instance.
+	 * 
+	 * @return Red5Instance
+	 */
+	private Red5Instance vendorInstanceToRed5Instance(IReadInstanceRequest request, Object instance) {
+
+        try {
+            logger.debug(new Gson().toJson(instance));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Red5Instance red5Instance = new Red5Instance();
+        red5Instance.setIdentifier(request.getInstanceIdentifier());
+        
+        // Determine the `platfoirmIdentifier` of the machine from ` your instance object` and store it
+        String platformIdentifier = null;
+        /* AWS Example : platformIdentifier = instance.getInstanceId() */
+        red5Instance.setPlatformIdentifier(platformIdentifier);
+        
+        
+        NodeState red5InstanceState = null;
+        String instanceState; // <- get your instance state and store it
+
+        // Translate your instance state into Red5 instance state
+        
+        /* AWS Example
+        if (instanceState.getCode() == AWSInstanceStatus.PROVISIONING)
+            cloudInstanceState = NodeState.PENDING;
+        else if (instanceState.getCode() == AWSInstanceStatus.RUNNING)
+            cloudInstanceState = NodeState.RUNNING;
+        else if (instanceState.getCode() == AWSInstanceStatus.STOPPING)
+            cloudInstanceState = NodeState.STOPPING;
+        else if (instanceState.getCode() == AWSInstanceStatus.SHUTTING_DOWN)
+            cloudInstanceState = NodeState.TERMINATING;
+        else if (instanceState.getCode() == AWSInstanceStatus.TERMINATED)
+            cloudInstanceState = NodeState.DISPOSED;
+        */
+        
+        red5Instance.setState(red5InstanceState);
+
+        Date creationTime = null;
+        /* AWS Example : creationTime = awsInstance.getLaunchTime(); */
+        red5Instance.setLaunchTime(creationTime);
+
+        String availabilityZone = null; // <-Determine the availability zone of the node and store it
+        /* AWS Example : availabilityZone = instance.getPlacement().getAvailabilityZone() */
+        red5Instance.setAvailabilityZone(availabilityZone);
+
+        String publicIP = null; // <-Determine the public ip address of the node and store it
+        /* AWS Example : publicIP = instance.getPublicIpAddress(); */
+        red5Instance.setPublicIpAddress(publicIP);
+
+        String dns = null; // <-Determine the public dns of the node and store it (optional)
+        /* AWS Example : dns = instance.getPublicDnsName() */
+        red5Instance.setHostname(dns);
+
+        return red5Instance;
+    }
+	
+	
+	
+	
+	/**
+	 * Method to convert a cloud platform instance to a valid arbitrary cloud instance object 
+	 * 
+	 * @param request The original IReadInstanceRequest object to read the instance
+	 * @param instance Custom object denoting the cloud platform instance.
+	 * 
+	 * @return CloudInstance
+	 */
 	private CloudInstance vendorInstanceToCloudInstance(Object instance) {
 
         CloudInstance cloudInstance = new CloudInstance();
@@ -620,6 +1010,55 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 	
 	
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRed5InstanceResponseHandler()
+	 */
+	@Override
+	public IInstanceOperationResponseHandler getRed5InstanceResponseHandler() 
+	{
+		return responseHandler;
+	}
+
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRegionforZone(java.lang.String)
+	 */
+	@Override
+	public String getRegionforZone(String arg0) throws Exception 
+	{
+		// look up region for a specified availability zone and return the region string
+		return null;
+		
+		/**
+		 * 
+		 * AWS CONTROLLER SAMPLE CODE PROVIDED AS  GUIDE - PLEASE DELETE THEN WHEN YOU IMPLEMENT YOUR OWN LOGIC
+		 * 
+		 * String region = RegionHelper.getRegionFromAvailabilityZone(availabilityZone);
+        ;
+	        if (region == null){
+	            throw new Exception("Could not locate region for zone " + availabilityZone);
+			}
+	        return region;
+		 */
+	}
+
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#getRegions()
+	 */
+	@Override
+	public String[] getRegions() 
+	{
+		return regions;
+	}
+	
+	
+	
 	
 	/*
 	 * (non-Javadoc)
@@ -655,61 +1094,14 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 		this.responseHandler = arg0;
 	}
 
-	
-
-	
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.red5pro.services.streammanager.interfaces.ICloudPlatformInstanceController#updateInstanceMetaData(com.red5pro.services.streammanager.interfaces.IUpdateInstanceRequest)
-	 */
-	@Override
-	public IUpdateInstanceResponse updateInstanceMetaData(IUpdateInstanceRequest req) throws InstanceUpdateException 
-	{
-		// not required as not implemented at core. Method has no use yet explicitly.
-		
-		try {
-			String availabilityZone = req.getAvailabilityZone();
-
-			String region = null; // lookup region for availability zone
-
-
-			// Read instance to update metadata
-			IRed5InstanceResponse response = getRed5Instance(new ReadInstanceRequest.Builder().withInstanceIdentifier(req.getInstanceIdentifier())
-					.withPlatformInstanceIdentifier(req.getPlatformInstanceIdentifier()).withAvailabilityZone(availabilityZone).withRequestTime(new Date())
-					.build());
-
-			logger.info("================== Updating Instance data " + response.getInstance().getIdentifier() + " ==================");
-
-			// get `platformIdentifier`
-			String platformIdentifier = req.getPlatformInstanceIdentifier();
-
-			List<InstanceMetaDataItem> newInstanceMetadata = new ArrayList<InstanceMetaDataItem>();
-
-			/* Update metadata from request */
-			newInstanceMetadata.add(new InstanceMetaDataItem("identifier", req.getInstanceIdentifier()));
-			newInstanceMetadata.add(new InstanceMetaDataItem("role", req.getRole().name().toLowerCase()));
-			newInstanceMetadata.add(new InstanceMetaDataItem("connectionCapacity", String.valueOf(req.getEstimatedConnectionCapacity())));
-
-			ExecutorService taggerService = Executors.newSingleThreadExecutor();
-			taggerService.execute(new MetaDataTagger(newInstanceMetadata, req.getMetadata(), platformIdentifier));
-			taggerService.shutdown();
-
-			return new UpdateInstanceResponse.Builder().withResponseTime(new Date()).withResponseToken(String.valueOf(System.currentTimeMillis())).build();
-		} 
-		catch (Exception e) 
-		{
-			logger.error("Error updating instance data " + e.getMessage());
-			throw new InstanceUpdateException(e.getMessage());
-		}
-	}
-
 
 
 	@Override
 	public CompletableFuture<IRed5InstanceResponse> getRed5InstanceAsync(IReadInstanceRequest arg0) {
-		// not required as not implemented at core. Method has no use yet.
+		/**
+		 * Not required as not implemented at core. Method has no use yet. 
+		 * Usage is Reserved for future.
+		 */
 		return null;
 	}
 
@@ -717,7 +1109,10 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 
 	@Override
 	public CompletableFuture<Boolean> hasInstanceAsync(IReadInstanceRequest arg0) throws IOException {
-		// not required as not implemented at core. Method has no use yet.
+		/**
+		 * Not required as not implemented at core. Method has no use yet. 
+		 * Usage is Reserved for future.
+		 */
 		return null;
 	}
 
@@ -725,14 +1120,23 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 
 	@Override
 	public CompletableFuture<ICloudInstanceListResponse> scanListInstancesAsync(String arg0) {
-		// not required as not implemented at core. Method has no use yet.
+		/**
+		 * Not required as not implemented at core. Method has no use yet. 
+		 * Usage is Reserved for future.
+		 */
 		return null;
 	}
 
 
 	
 	
-	
+	/**
+	 * Class implementing Runnable to work as a parallel thread to monitor and report 
+	 * new instance startup
+	 * 
+	 * @author Rajdeep Rath
+	 *
+	 */
 	class PostLaunchChecker implements Runnable {
 		
 		INewInstanceRequest req;
@@ -769,7 +1173,6 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
         			newInstanceMetadata.add(new InstanceMetaDataItem("connectionCapacity", String.valueOf(req.getEstimatedConnectionCapacity())));
         			
         			// do logic to store initial required metadata on your instance here ->
-
                 	
                 	IRed5InstanceResponse response = getRed5Instance(new ReadInstanceRequest.Builder()
                 			.withInstanceIdentifier(req.getInstanceIdentifier()).withPlatformInstanceIdentifier(platformIdentifier)
@@ -804,6 +1207,13 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 	
 	
 	
+	/**
+	 * Class implementing Runnable to work as a parallel thread to monitor and report 
+	 * instance deletion
+	 * 
+	 * @author Rajdeep Rath
+	 *
+	 */
 	class PostDeleteChecker implements Runnable {
 
 		Object deleteResponse;
@@ -861,6 +1271,13 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 	
 	
 	
+	/**
+	 * Class implementing Runnable to work as a parallel thread to monitor and report 
+	 * instance stop operation
+	 * 
+	 * @author Rajdeep Rath
+	 *
+	 */
 	class PostStopChecker implements Runnable {
 
 		Object stopResponse;
@@ -917,6 +1334,17 @@ public class SampleCloudController implements ICloudPlatformInstanceController {
 	
 	
 	
+	/**
+	 * Class implementing Runnable to work as a parallel thread to add metadata to a instance.
+	 * Usually if the platform allows attaching metadata during instance launch then you do not need a seperate thread.
+	 * However if the target platform, like AWS allows metadata  (`Tags`) only after instance has started, then you should use
+	 * this type of a thread to add metadata to the instance. 
+	 * 
+	 * NOTE: Adding metadata is not optional!. Metadata items such as the `identifier` is used to identify instance. 
+	 * 
+	 * @author Rajdeep Rath
+	 *
+	 */
 	class MetaDataTagger implements Runnable {
 
 		List<InstanceMetaDataItem> specified;
