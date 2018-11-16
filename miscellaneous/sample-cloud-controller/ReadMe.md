@@ -187,6 +187,16 @@ __Every cloud platform SDK may not provide a built-in async mechanism for tracki
 
 > It is highly recommended that you explore the code base on an existing controller such as  the `aws-cloud-controller` or the `google-compute-controller` to get a better understanding of the mechanism.
 
+## Unimplemented Asynchronous Methods
+
+The `ICloudPlatformInstanceController` interface also commands the implementation of asynchronous versions of some of the common synchronous methods of a controller. These methods are currently not used and they are not tapped into by the Stream Manager core. So it is safe to say that the implementation of logic for these methods can be excluded at the moment. These methods are explained below for information of the developer.
+
+Following are the `unused` **asynchronous** variation methods of an `ICloudPlatformInstanceController`:
+
+* `CompletableFuture<IRed5InstanceResponse> getRed5InstanceAsync(IReadInstanceRequest arg0)`:  Attempts to read a instance on the clodu platform, using the `1IReadInstanceRequest` request and returns a `CompletableFuture` object that cna be used to track and capture the result.
+* `CompletableFuture<Boolean> hasInstanceAsync(IReadInstanceRequest arg0)`: Checks for the presence of an instance on the platform using tyhe `IReadInstanceRequest`. The call returns a `CompletableFuture` object that can be used to capture the `boolean` result value.
+* `CompletableFuture<ICloudInstanceListResponse> scanListInstancesAsync(String arg0)`: Scans for instances on the cloud platform using the String argument (which is the `nodeNamePrefix`), used to identify a Stream Manager spawned instance.The method returns a a `CompletableFuture` object containing the list of instances found.
+
 # Developing Your Own Controller
 
 ## Pre-Development Checklist
