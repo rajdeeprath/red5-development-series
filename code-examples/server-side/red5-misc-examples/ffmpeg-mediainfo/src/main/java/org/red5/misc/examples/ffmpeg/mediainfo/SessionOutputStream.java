@@ -51,7 +51,9 @@ public class SessionOutputStream extends LogOutputStream implements IResultProvi
 	@Override
 	protected void processLine(String line, int level) {
 		
-		logger.info(line);
+		if(logger.isDebugEnabled()){
+			logger.debug(line);
+		}
 		
 		lines.add(line);
 		lastOutputTime = System.currentTimeMillis();
@@ -134,7 +136,6 @@ public class SessionOutputStream extends LogOutputStream implements IResultProvi
 		        String vcodec = scanner.findWithinHorizon(vCodecPattern, 0);
 		        if (vCodecPattern == null)
 		          throw new RuntimeException("Could not parse video info.");
-		        System.out.println("Video codec : " + vcodec + "");
 		        
 		        String[] vParts = line.split(",");
 		        String cod = vParts[0].trim();
@@ -163,7 +164,6 @@ public class SessionOutputStream extends LogOutputStream implements IResultProvi
 		        String aCodec = scanner.findWithinHorizon(aCodecPattern, 0);
 		        if (aCodecPattern == null)
 		          throw new RuntimeException("Could not parse audio info.");
-		        System.out.println("Audio codec : " + aCodec + "");
 		        
 		        String[] aParts = line.split(",");
 		        String cod = aParts[0].trim();
@@ -176,7 +176,7 @@ public class SessionOutputStream extends LogOutputStream implements IResultProvi
 		        this.resultObject.setAudioBitrate(Integer.parseInt(bit.trim().split(" ")[0]));
 		        this.resultObject.setChannels((channels.trim().split(" ")[0]));
 		        
-		        logger.info("sample={}, channels={}, bit={}", sample, channels, bit);
+		        logger.debug("sample={}, channels={}, bit={}", sample, channels, bit);
 			}
 		}
 		
