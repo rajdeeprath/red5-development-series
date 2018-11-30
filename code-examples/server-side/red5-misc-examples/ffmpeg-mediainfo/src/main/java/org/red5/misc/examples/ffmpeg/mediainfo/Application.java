@@ -35,6 +35,7 @@ public class Application extends MultiThreadedApplicationAdapter {
 
 	private IScope app;
 	
+	private static String INPUT_TEST_FLV = "20051210-w50s.flv";
 	
 
 	@Override
@@ -46,7 +47,7 @@ public class Application extends MultiThreadedApplicationAdapter {
         {
         	Resource resource = app.getResource("WEB-INF");
         	if(!resource.getFile().exists()){
-        		log.error("servere error : web-inf folder not found");
+        		log.error("severe error : web-inf folder not found");
         	}
         	
 			File streamsDirectory = new File(resource.getFile().getParentFile().getAbsolutePath() + File.separator + "streams");
@@ -56,6 +57,20 @@ public class Application extends MultiThreadedApplicationAdapter {
 			
 			this.workingDirectory = streamsDirectory.getAbsolutePath();
 			log.info("Working directory {}", this.workingDirectory);
+			
+			// Start file check in thread
+			execservice.execute(new Runnable(){
+
+				@Override
+				public void run() {
+					
+					File sample = new File(streamsDirectory.getAbsolutePath() + File.separator + INPUT_TEST_FLV);
+					new InfoGrabber(getFfmpegPath(), sample.getAbsolutePath(), "-hide_banner", workingDirectory).run();
+				}
+				
+			});
+			
+			
 		} 
         catch (IOException e) 
         {
