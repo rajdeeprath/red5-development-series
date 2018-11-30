@@ -516,7 +516,13 @@ The most challenging part of the controller development process is the testing a
 
 #### Testing Methods During Development
 
-It is recommended that you test each method separately (as a single unit) before you test it alongside Stream Manager. **To test your methods locally :**
+##### Unit Testing
+
+It is recommended that you test each method separately (as a single unit) before you test it alongside Stream Manager (integrated testing). 
+
+Code samples demonstrating how to test each relevant method individually, can be found at `src/main/java/com/red5pro/services/cloud/platformname/component/test`. Each test class involves testing one controller method with appropriate params.
+
+The main class that is used to run the test classes is located at `src/main/java/com/red5pro/services/cloud/platformname/component/App.java`. Editing the main class in your editor will show you how are tests are layed-out sequentially.
 
 * Open your Eclipse IDE and create a simple Java Project. `File => New => Project => Java Project`.
 * Click `Next`, name you project and then click `Finish` to create the project.
@@ -541,7 +547,7 @@ Once your simple Java project is ready, you can test your platform API  call and
 
 Once your logic is working with your platform , you can move it to your actual controller class and integrate it with the formal request and response mechanism. Using this approach will save you a lots of time and iterations at the development stage.
 
-#### Testing Methods Integrated With Streammanager
+##### Integrated Testing
 
 While testing methods during development is a good way to ensure that we have lesser issues when running on live system, it is more important to test your controller on the live system.
 
