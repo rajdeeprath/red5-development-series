@@ -147,7 +147,7 @@ public class SessionOutputStream extends LogOutputStream implements IResultProvi
 		        int width = Integer.parseInt(resParts[0]);
 		        int height = Integer.parseInt(resParts[1]);
 		        
-		        this.resultObject.setVideoCodec(cod);
+		        this.resultObject.setVideoCodec(vcodec);
 		        this.resultObject.setVideoWidth(width);
 		        this.resultObject.setVideoHeight(height);
 		        this.resultObject.setVideoBitrate(Integer.parseInt(bit.trim().split(" ")[0]));
@@ -171,7 +171,7 @@ public class SessionOutputStream extends LogOutputStream implements IResultProvi
 		        String channels = aParts[2].trim();
 		        String bit = aParts[4].trim();
 		        
-		        this.resultObject.setAudioCodec(cod);
+		        this.resultObject.setAudioCodec(aCodec);
 		        this.resultObject.setSampleRate(Integer.parseInt(sample.trim().split(" ")[0]));
 		        this.resultObject.setAudioBitrate(Integer.parseInt(bit.trim().split(" ")[0]));
 		        this.resultObject.setChannels((channels.trim().split(" ")[0]));

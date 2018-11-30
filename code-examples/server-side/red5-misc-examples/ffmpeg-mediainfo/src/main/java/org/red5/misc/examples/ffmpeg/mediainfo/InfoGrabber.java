@@ -8,6 +8,7 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.red5.misc.examples.ffmpeg.mediainfo.interfaces.SessionDataCallback;
 import org.red5.misc.examples.ffmpeg.mediainfo.interfaces.SessionProcessCallback;
@@ -158,8 +159,17 @@ public class InfoGrabber implements Runnable, SessionProcessCallback, SessionDat
 
 	@Override
 	public void onProcessComplete(int exitValue, long timestamp, Object data) {
+		
 		log.debug("onProcessComplete exitValue: " + exitValue);
-		log.info("Result {}", data.toString());
+		
+		MediaInfo result = (MediaInfo) data;
+		File source = new File(input);
+		if(source.isFile()){
+			result.setName(source.getName());
+			result.setType(FilenameUtils.getExtension(source.getName()));
+		}
+		
+		log.info("Result {}", result.toString());
 	}
 
 
