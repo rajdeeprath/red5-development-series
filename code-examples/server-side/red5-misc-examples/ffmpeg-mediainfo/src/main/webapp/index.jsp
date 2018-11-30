@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>Fffmpeg thumbnail extraction example</h2>
+<h2>FFprobe media info extraction example</h2>
 </body>
 </html>
