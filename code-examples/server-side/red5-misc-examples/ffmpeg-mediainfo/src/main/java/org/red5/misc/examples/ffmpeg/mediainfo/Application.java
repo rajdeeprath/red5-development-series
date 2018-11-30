@@ -49,12 +49,12 @@ public class Application extends MultiThreadedApplicationAdapter {
         		log.error("servere error : web-inf folder not found");
         	}
         	
-			File thumbsDirectory = new File(resource.getFile().getParentFile().getAbsolutePath() + File.separator + "thumbs");
-			if(!thumbsDirectory.exists()){
-				thumbsDirectory.mkdirs();
+			File streamsDirectory = new File(resource.getFile().getParentFile().getAbsolutePath() + File.separator + "streams");
+			if(!streamsDirectory.exists()){
+				streamsDirectory.mkdirs();
 			}
 			
-			this.workingDirectory = thumbsDirectory.getAbsolutePath();
+			this.workingDirectory = streamsDirectory.getAbsolutePath();
 			log.info("Working directory {}", this.workingDirectory);
 		} 
         catch (IOException e) 
