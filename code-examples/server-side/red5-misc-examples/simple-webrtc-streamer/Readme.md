@@ -13,6 +13,24 @@ This example demonstrates the bare minimum skeleton of a WebRTC enabled webapp r
 
 The main `Application` class demonstrates hwo to obtain an instance of the `WebSocketScopeManager` and then register the application scope to it on the overridden `appStart` handler of the `MultiThreadedApplicationAdapter`. Similarly we deregister the application from the `WebSocketScopeManager` on `appStop` handler.
 
+```java
+
+@Override
+	public boolean appStart(IScope app) {
+		WebSocketUtils.configureApplicationScopeWebSocket(app);
+		log.info("Application started");
+		return super.appStart(app);
+	}
+
+	@Override
+	public void appStop(IScope app) {
+		WebSocketUtils.deConfigureApplicationScopeSocket(app);
+		log.info("Application stopped");
+		super.appStop(app);
+	}
+
+```
+
 Additionally the configuration file `web.xml` must include an additional WebSocket filter to enable the `WebSocketScopeManager` to respond to client requests. It is important to note that Red5 open source as well as Red5 Pro now support WebSockets over the existing HTTP and HTTPs ports `5080` and `443` respectively. The following filter must be present in your web application's web.xml file:
 
 ```xml
