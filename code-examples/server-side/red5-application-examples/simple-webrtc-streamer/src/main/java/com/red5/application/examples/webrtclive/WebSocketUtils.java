@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class WebSocketUtils {
 	
-	private static Logger log = LoggerFactory.getLogger(Application.class);
+	private static Logger log = LoggerFactory.getLogger(WebSocketUtils.class);
 	
 	
 	
