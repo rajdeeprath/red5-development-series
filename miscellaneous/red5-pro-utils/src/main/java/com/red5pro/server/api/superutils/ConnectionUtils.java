@@ -1,17 +1,12 @@
 package com.red5pro.server.api.superutils;
 
 import org.red5.server.api.IConnection;
+import org.red5.server.net.rtmp.RTMPMinaConnection;
+
+import com.red5pro.server.stream.rtsp.IRTSPConnection;
+import com.red5pro.server.stream.webrtc.IWebRTCConnection;
 
 public class ConnectionUtils {
-	
-	
-	static String RTSPCONNECTION = "com.red5pro.server.stream.rtsp.RTSPMinaConnection";
-
-	
-	static String RTMPCONNECTION = "org.red5.server.net.rtmp.RTMPMinaConnection";	
-	
-	
-	static String RTCCONNECTION = "com.red5pro.webrtc.RTCConnection";
 	
 	
 	
@@ -24,17 +19,15 @@ public class ConnectionUtils {
 	 */
 	public static String getConnectionType(IConnection connection)
 	{
-		String connectionClassName = connection.getClass().getCanonicalName();
-		
-		if(connectionClassName.equalsIgnoreCase(RTMPCONNECTION))
+		if(connection instanceof RTMPMinaConnection)
 		{
 			return "rtmp";
 		}
-		else if(connectionClassName.equalsIgnoreCase(RTSPCONNECTION))
+		else if(connection instanceof IRTSPConnection)
 		{
 			return "rtsp";
 		}
-		else if(connectionClassName.equalsIgnoreCase(RTCCONNECTION))
+		else if(connection instanceof IWebRTCConnection)
 		{
 			return "rtc";
 		}
@@ -53,8 +46,7 @@ public class ConnectionUtils {
 	 */
 	public static boolean isRTMP(IConnection connection)
 	{
-		String connectionClassName = connection.getClass().getCanonicalName();
-		return connectionClassName.equalsIgnoreCase(RTMPCONNECTION);
+		return (connection instanceof RTMPMinaConnection);
 	}
 	
 	
@@ -68,8 +60,7 @@ public class ConnectionUtils {
 	 */
 	public static boolean isRTSP(IConnection connection)
 	{
-		String connectionClassName = connection.getClass().getCanonicalName();
-		return connectionClassName.equalsIgnoreCase(RTSPCONNECTION);
+		return (connection instanceof IRTSPConnection);
 	}
 	
 	
@@ -84,8 +75,7 @@ public class ConnectionUtils {
 	 */
 	public static boolean isRTC(IConnection connection)
 	{
-		String connectionClassName = connection.getClass().getCanonicalName();
-		return connectionClassName.equalsIgnoreCase(RTCCONNECTION);
+		return (connection instanceof IWebRTCConnection);
 	}
 
 }
