@@ -1,4 +1,4 @@
-# Exposing server side to http clients - HTTP Servlet Example
+# Basic WebRTC enabled application
 ---
 
 
@@ -9,12 +9,30 @@
 
 
 
-This example demonstrates how you can open a HTTP channel between a red5 server side application and a http client. The application registers a simple [java servlet](https://en.wikipedia.org/wiki/Java_servlet) `SampleHttpSevlet`class on the red5 web application. 
+This example demonstrates the bare minimum skeleton of a WebRTC enabled webapp running on Red5 Pro **version: 5.4.x**.This application is also compatible with Red5 Open source **version: M10**. The code / logic in this web app demonstrates hwo to enable WebSockets on the application level, thereby making is possible for WebRTC client (on Red5 Pro) and simple WebSocket clients (on Red5 Pro and Red5 Open Source) to be abl eto conenct to the server.
 
-The servlet exposes & activates itself through the `web.xml` file which is located at `RED5_HOME/webapps/{appname}/WEB-INF/web.xml`. If you take a look at the servlet class `SampleHttpSevlet.java`, you will see how the red5 application object is injected into it using `@Autowired` annotation.
+The main `Application` class demonstrates hwo to obtain an instance of the `WebSocketScopeManager` and then register the application scope to it on the overridden `appStart` handler of the `MultiThreadedApplicationAdapter`. Similarly we deregister the application from the `WebSocketScopeManager` on `appStop` handler.
 
-We can then invoke custom application methods and standard [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html) methods from the servlet itself. The servlet itself is capable to handling web requests from Http clients. Thus we can connect http client to application adapter easily.
+Additionally the configuration file `web.xml` must include an additional WebSocket filter to enable the `WebSocketScopeManager` to respond to client requests. It is important to note that Red5 open source as well as Red5 Pro now support WebSockets over the existing HTTP and HTTPs ports `5080` and `443` respectively. The following filter must be present in your web application's web.xml file:
 
+```xml
+
+<!-- WebSocket filter -->
+ <filter>
+     <filter-name>WebSocketFilter</filter-name>
+     <filter-class>org.red5.net.websocket.server.WsFilter</filter-class>
+     <async-supported>true</async-supported>         
+ </filter>  
+ <filter-mapping>   
+     <filter-name>WebSocketFilter</filter-name> 
+     <url-pattern>/*</url-pattern>  
+     <dispatcher>REQUEST</dispatcher>   
+     <dispatcher>FORWARD</dispatcher>   
+ </filter-mapping>
+
+```
+
+> Please checkout the web.xml file provided in this sample application for more info.
 
 
 
@@ -50,28 +68,16 @@ To deploy the war to red5 / red5 pro server :
 
 4. Start server.
 
-
 ## How To Use Example
 ---
 
+**Red5 Pro** :  Once the application has been deployed on server :
 
-Once you have the server application running, access the servlet running on server from your browser as:
+1. Navigate to the testbed application at `http://{host}:5080/webrtcexamples/index.html`
+2. Change `WebApp` value to `simple-webrtc-streamer`
+3. Go to **TestBed** menu and click `Publish`
 
-``` 
-http://{host}:5080/http-servlet-demo/endpoint
-```
-
-> Where ` {host}`  is where you are running the server. Ex: for local testing it will be `localhost`.
-
-
-The http call will return the following response from the servlet :
-
-
-``` 
-Application context path = /default
-```
-
-
+**Red5 OpenSource** : TO DO
 
 ## Eclipse
 ---
@@ -83,14 +89,7 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 3. In eclipse go to `File -> Import -> Existing Maven Projects` and click `Next`.
 4. Browse and select `the project root` and Click `Finish` to import the project.
 
-
-
 ## Additional Notes
 ---
 
 NA
-
-
-
-
-
