@@ -15,7 +15,7 @@ The main `Application` class demonstrates hwo to obtain an instance of the `WebS
 
 ```java
 
-@Override
+	@Override
 	public boolean appStart(IScope app) {
 		WebSocketUtils.configureApplicationScopeWebSocket(app);
 		log.info("Application started");
@@ -110,4 +110,4 @@ You can edit the server side code in your eclipse JEE IDE such as Luna, Mars, Ne
 ## Additional Notes
 ---
 
-NA
+Red5 now uses the `tomcatplugin` jar insetad of the `websocket` jar for referencing websocket classes. If you are running into errors whil egetting your custom web app to support WebRTC in th elatest Red5 Pro, make sure your webapp references  the `tomcatplugin` plugin in your pom and that there is no `websocket-xxx.jar` type file in your plugins directory.
