@@ -25,7 +25,7 @@
     <properties>
     	<finalName>application-adapter-demo</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <red5-server.version>1.0.9-RELEASE</red5-server.version>
+        <red5-server.version>1.0.10-M10</red5-server.version>
         <spring.version>4.3.5.RELEASE</spring.version>
         <mina.version>[2.0.12, 2.0.16)</mina.version>
         <slf4j.version>1.7.22</slf4j.version>
@@ -42,8 +42,8 @@
                 <configuration>
                     <compilerVersion>1.7</compilerVersion>
                     <fork>true</fork>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <executable>${maven.compiler.executable}</executable>
                 </configuration>
             </plugin>
