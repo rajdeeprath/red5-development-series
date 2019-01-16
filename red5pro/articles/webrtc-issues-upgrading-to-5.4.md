@@ -7,7 +7,7 @@ The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosy
 ## What has changed
 
 * WebSockets now use HTTP and HTTPs ports instead of separate WS and WSS ports in prior versions
-* The WebSocket plugin used in previous versions is removed and we have switched to a more standardized `tomcatplugin`. Reference: [https://mvnrepository.com/artifact/org.red5/tomcatplugin](https://mvnrepository.com/artifact/org.red5/tomcatplugin)
+* The WebSocket plugin used in previous versions is removed and we have switched to a more standardized `tomcatplugin`. Reference: [https://mvnrepository.com/artifact/org.red5/tomcatplugin](https://mvnrepository.com/artifact/org.red5/tomcatplugin). You can see the `tomcatplugin-x.x.x` jar file in the red5 plugins directory.
 * A special web socket filter needs to be included in the web apps that need to support WebRTC or even plain WebSockets.
 
 ## Troubleshooter flow chart
@@ -26,3 +26,5 @@ The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosy
 * Take a look at this [github sample application](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-application-examples/simple-webrtc-streamer) which is compatible with both open source Red5 (for Websockets) and Red5 Pro (for Websockets / WebRTC)
 
 > Note do not copy the entire pom.xml of the sample webapp.Just ensure you have the Websocket scope initialization code in your webapp and the tomcat plugin is referenced in pom.xml along with the wsfilter in the web.xml.
+
+* Additionally i recommend that you check out the **updated** official Red5 Pro app dvelopment series by [Dominick Accattato on the topic](https://www.red5pro.com/docs/developerseries/04/example.html).
