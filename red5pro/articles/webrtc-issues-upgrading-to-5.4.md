@@ -25,6 +25,31 @@ The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosy
 * In your firewall settings, make sure `http port` - `5080` and `https port` - `443` are allowed.
 * Take a look at this [github sample application](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-application-examples/simple-webrtc-streamer) which is compatible with both open source Red5 (for Websockets) and Red5 Pro (for Websockets / WebRTC)
 
-> Note do not copy the entire pom.xml of the sample webapp.Just ensure you have the Websocket scope initialization code in your webapp and the tomcat plugin is referenced in pom.xml along with the wsfilter in the web.xml.
+> Note do not copy the entire pom.xml of the sample webapp.
+
+### Details of webapp update
+
+* Make sure your webapp's web.xml specifies the WSFilter
+
+```xml
+
+<!-- WebSocket filter -->
+ <filter>
+     <filter-name>WebSocketFilter</filter-name>
+     <filter-class>org.red5.net.websocket.server.WsFilter</filter-class>
+     <async-supported>true</async-supported>         
+ </filter>  
+ <filter-mapping>   
+     <filter-name>WebSocketFilter</filter-name> 
+     <url-pattern>/*</url-pattern>  
+     <dispatcher>REQUEST</dispatcher>   
+     <dispatcher>FORWARD</dispatcher>   
+ </filter-mapping>
+
+```
+
+* Make sure your webapp's pom.xml references the latest Red5 server dependency - `1.0.10-M10`
+
+* **Optionally**, make sure you have added the websocket scope initialization & deinitialization code on `appStart` and `appStop` respectively for your webapp as shown [here](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-application-examples/simple-webrtc-streamer). This is optional on Red5 Pro since the `webrtc plugin` will automatically add this when it scans for application on server.
 
 * Additionally i recommend that you check out the **updated** official Red5 Pro app dvelopment series by [Dominick Accattato on the topic](https://www.red5pro.com/docs/developerseries/04/example.html).
