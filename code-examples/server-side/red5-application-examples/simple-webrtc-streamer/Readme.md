@@ -11,7 +11,7 @@
 
 This example demonstrates the bare minimum skeleton of a WebRTC enabled webapp running on Red5 Pro **version: 5.4.x**.This application is also compatible with Red5 Open source **version: M10**. The code / logic in this web app demonstrates hwo to enable WebSockets on the application level, thereby making is possible for WebRTC client (on Red5 Pro) and simple WebSocket clients (on Red5 Pro and Red5 Open Source) to be abl eto conenct to the server.
 
-The main `Application` class demonstrates hwo to obtain an instance of the `WebSocketScopeManager` and then register the application scope to it on the overridden `appStart` handler of the `MultiThreadedApplicationAdapter`. Similarly we deregister the application from the `WebSocketScopeManager` on `appStop` handler.
+The main `Application` class demonstrates how to obtain an instance of the `WebSocketScopeManager` and then register the application scope to it on the overridden `appStart` handler of the `MultiThreadedApplicationAdapter`. Similarly we deregister the application from the `WebSocketScopeManager` on `appStop` handler.
 
 ```java
 
@@ -30,6 +30,8 @@ The main `Application` class demonstrates hwo to obtain an instance of the `WebS
 	}
 
 ```
+
+> Adding the above code to register a websocket scope for your application is optional for Red5 Pro. This is because when your application runs in Red5 Pro, the WebRTC plugin will automatically do what the snippet above does. The real deal to ensure that your application is new websockets compatible for Red5 Pro, is to make sure you use the latest `red5-srver` dependency whilee compiling your application and additionally you have the `WebSocketFilter` in your web.xml.
 
 Additionally the configuration file `web.xml` must include an additional WebSocket filter to enable the `WebSocketScopeManager` to respond to client requests. It is important to note that Red5 open source as well as Red5 Pro now support WebSockets over the existing HTTP and HTTPs ports `5080` and `443` respectively. The following filter must be present in your web application's web.xml file:
 
