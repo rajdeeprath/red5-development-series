@@ -27,4 +27,4 @@ The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosy
 
 > Note do not copy the entire pom.xml of the sample webapp.Just ensure you have the Websocket scope initialization code in your webapp and the tomcat plugin is referenced in pom.xml along with the wsfilter in the web.xml.
 
-* Additionally i recommeend that you check out the **updated** official Red5 Pro app dvelopment series by [Dominick on the topic](https://www.red5pro.com/docs/developerseries/04/example.html).
+* Additionally i recommend that you check out the **updated** official Red5 Pro app dvelopment series by [Dominick Accattato on the topic](https://www.red5pro.com/docs/developerseries/04/example.html).
