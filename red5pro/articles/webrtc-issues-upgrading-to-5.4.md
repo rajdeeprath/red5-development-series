@@ -48,7 +48,7 @@ The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosy
 
 ```
 
-* Make sure your webapp's pom.xml references the latest Red5 server dependency - `1.0.10-M10`
+* Make sure your webapp's pom.xml references the latest Red5 server dependency - `1.0.10-M10` (optional but recommended).
 
 * **Optionally**, make sure you have added the websocket scope initialization & deinitialization code on `appStart` and `appStop` respectively for your webapp as shown [here](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-application-examples/simple-webrtc-streamer). This is optional on Red5 Pro since the `webrtc plugin` will automatically add this when it scans for application on server.
 
