@@ -26,3 +26,5 @@ The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosy
 * Take a look at this [github sample application](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-application-examples/simple-webrtc-streamer) which is compatible with both open source Red5 (for Websockets) and Red5 Pro (for Websockets / WebRTC)
 
 > Note do not copy the entire pom.xml of the sample webapp.Just ensure you have the Websocket scope initialization code in your webapp and the tomcat plugin is referenced in pom.xml along with the wsfilter in the web.xml.
+
+* Additionally i recommeend that you check out the **updated** official Red5 Pro app dvelopment series by [Dominick on the topic](https://www.red5pro.com/docs/developerseries/04/example.html).
