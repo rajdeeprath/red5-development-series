@@ -1,26 +1,26 @@
-# Red5 Pro 5.4 Upgrade Trouble shooter
+# Red5 Pro 5.4 Upgrade Troubleshooter
 
 ## Introduction
 
-The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosystem. The websocket servic enow flows through the standard http and https ports. There fore there is no neeed to have seperate ports - 8081 and 8083 opened for the same. This also means that custom websocket or webrtc applicatiosn previosuly built will break on the new server.This little guide aims to help you understand the changes and adapt your custom webapp accordingly.
+The latest version of Red5 Pro (5.4) brings a major change to the Red5 Pro ecosystem. The WebSocket service now flows through the standard HTTP and https ports. Therefore there is no need to have separate ports - 8081 and 8083 opened for the same. This also means that custom WebSocket or webrtc applications previously built will break on the new server. This little guide aims to help you understand the changes and adapt your custom web app accordingly.
 
 ## What has changed
 
-* Websockets now use HTTP and HTTPs ports instead of seperate WS and WSS ports in prior versions
-* The websocket plugin used in previosu versiosn is removed and we have switched to a more standardized `tomcatplugin`. Reference: [https://mvnrepository.com/artifact/org.red5/tomcatplugin](https://mvnrepository.com/artifact/org.red5/tomcatplugin)
-* A special websocket filteer needs to be included in the webapps that need to support WebRTC or even plain WebSockets.
+* WebSockets now use HTTP and HTTPs ports instead of separate WS and WSS ports in prior versions
+* The WebSocket plugin used in previous versions is removed and we have switched to a more standardized `tomcatplugin`. Reference: [https://mvnrepository.com/artifact/org.red5/tomcatplugin](https://mvnrepository.com/artifact/org.red5/tomcatplugin)
+* A special web socket filter needs to be included in the web apps that need to support WebRTC or even plain WebSockets.
 
 ## Troubleshooter flow chart
 
-![New websockets trouble shooter](images/5-4-server-upgrade-troubleshooter.png)
+![New web sockets trouble shooter](images/5-4-server-upgrade-troubleshooter.png)
 
 ## What You should not do
 
-* Upgrade your server as with previous versions carrying over som econfiguratgion files from old server into new
+* Upgrade your server as with previous versions carrying over some configuration files from old server into new
 
 ## What You need to do
 
 * Configure the `red5.properties` and `jee-container.xml` files for SSL fresh from the 5.4 build
-* Dont put your old webapp into new server without making it compatible with new websockets implementation
+* Don't put your old web app into the new server without making it compatible with new WebSockets implementation
 * In your firewall settings, make sure `http port` - `5080` and `https port` - `443` are allowed.
 * Take a look at this [github sample application](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-application-examples/simple-webrtc-streamer) which is compatible with both open source Red5 (for Websockets) and Red5 Pro (for Websockets / WebRTC)
