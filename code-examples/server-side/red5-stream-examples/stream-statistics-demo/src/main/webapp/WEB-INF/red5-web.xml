@@ -4,7 +4,7 @@
     xmlns:lang="http://www.springframework.org/schema/lang"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd                            
     http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd">
-	<!--
+    	<!--
 	Defines a properties file for dereferencing variables
 	-->
 	<bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
