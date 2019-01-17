@@ -153,6 +153,7 @@
             <groupId>org.red5</groupId>
             <artifactId>red5-server</artifactId>
         </dependency>
+        <!-- Optional, if running application in Red5 Pro. -->
         <dependency>
             <groupId>org.red5</groupId>
             <artifactId>tomcatplugin</artifactId>
