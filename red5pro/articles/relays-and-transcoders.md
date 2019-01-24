@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Autoscaling has always been the center of gravity for cloud business that requires dynamic scaling capabilities for their dynamic needs......
+Autoscaling has always been the center of gravity for cloud business that requires dynamic scaling capabilities for their dynamic needs. With Red5 Pro autoscaling we have 
 
 What about even larger businesses with even larger infrastructures that require hundreds and thousands of servers in a cluster relaying streams from publishers to subscribers with unpredictable network speeds across continents.
 
@@ -16,7 +16,7 @@ For sake of discussion, let us assume a system, where we need to support `100,00
 
 ### Along came relays
 
-To provide a solution to the problem discussed above and to alleviate restreaming stress from the origin, **Relays** were introduced as a part of **Red5 Pro Autoscaling v3**. Relays are streaming nodes that sit in between origins and edges for the sole purpose of making restreaming scalable. Relays **pull** stream from the origin for restreaming  & edges connect to relays to **pull** streams for the subscription. In terms of Red5 Pro autoscaling, we call clusters with `relays` as `Tier 2` node groups.
+To provide a solution to the problem discussed above and to alleviate restreaming stress from the origin, **Relays** were introduced as a part of **Red5 Pro Autoscaling v3**. Relays are streaming nodes that sit in between origins and edges for the sole purpose of making restreaming scalable. Relays **pull** stream from the origin for restreaming  & edges connect to relays to **pull** streams for the subscription. In orher words `relays` are restreamer delegates for origins. In terms of Red5 Pro autoscaling, we call clusters with `relays` as `Tier 2` node groups.
 
 **Tier 1 Node Groups**
 
@@ -42,7 +42,7 @@ So the obvious question to summarize our problems would be - "if there are count
 
 ### Making sure everyone is happy
 
-To solve the problem to matching a  high bandwidth ingest with different kind of subscribers, we introduced `transcoders` nodes. Transcoders are not a part of the regular clustering mechanism. Rather they are floating nodes that can be thought of as a desktop encoder software such as Flash media lives encoder or Open Broadcaster Software etc.
+To solve the problem to matching a  high bandwidth ingest with different kind of subscribers, we introduced **transcoders** nodes. **Transcoders** are not a part of the regular clustering mechanism. Rather they are floating nodes that can be thought of as a desktop encoder software such as Flash media lives encoder or Open Broadcaster Software etc.
 
 With transcoder in place, the ingest goes to the transcoder nodes instead of origins. The transcoder nodes create multivariate streams (Different quality variations of the ingest) for subscriptions. From here on the clients can consume the appropriate version of the stream as per their bandwidth through various Red5 Pro SDK offerings based on the protocol used.
 
