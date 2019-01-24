@@ -11,7 +11,7 @@
     <properties>
     	<finalName>simple-webrtc-streamer</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <red5-server.version>1.0.10-M6</red5-server.version>
+        <red5-server.version>1.0.10-M10</red5-server.version>
         <servlet.version>3.1.0</servlet.version>
         <spring.version>4.3.12.RELEASE</spring.version>
         <mina.version>2.0.19</mina.version>
@@ -153,6 +153,7 @@
             <groupId>org.red5</groupId>
             <artifactId>red5-server</artifactId>
         </dependency>
+        <!-- Optional, if running application in Red5 Pro. -->
         <dependency>
             <groupId>org.red5</groupId>
             <artifactId>tomcatplugin</artifactId>

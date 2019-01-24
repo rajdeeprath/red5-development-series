@@ -8,16 +8,10 @@
   <name>file-upload-demo</name>
   <url>http://maven.apache.org</url>
   <description>Red5 application demonstrating the use of http servlets along side red5 code</description>
-    <mailingLists>
-        <mailingList>
-            <name>red5-interest</name>
-            <post>https://groups.google.com/forum/?fromgroups#!forum/red5interest</post>
-        </mailingList>
-    </mailingLists>
     <properties>
     	<finalName>file-upload-demo</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <red5-server.version>1.0.9-RELEASE</red5-server.version>
+        <red5-server.version>1.0.10-M10</red5-server.version>
         <spring.version>4.3.5.RELEASE</spring.version>
         <mina.version>[2.0.12, 2.0.16)</mina.version>
         <slf4j.version>1.7.22</slf4j.version>
@@ -160,7 +154,7 @@
     	<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
-		    <version>3.0.1</version>
+		    <version>3.1.0</version>
 		    <scope>provided</scope>
 		</dependency>
         <dependency>

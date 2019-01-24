@@ -22,7 +22,7 @@ public class WebSocketSampleListener extends WebSocketDataListener {
 	
 	@Override
 	public void onWSMessage(WSMessage message) {
-		log.info("onWSMessage called, for message type {}", message.getMessageType().name());
+		log.info("onWSMessage called, for message type {}", message);
 	}
 
 	@Override

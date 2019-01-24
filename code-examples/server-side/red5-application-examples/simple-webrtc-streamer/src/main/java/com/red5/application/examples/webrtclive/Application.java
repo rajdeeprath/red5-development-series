@@ -11,10 +11,19 @@ public class Application extends MultiThreadedApplicationAdapter {
 
 	private static Logger log = LoggerFactory.getLogger(Application.class);
 	
-
 	@Override
 	public boolean appStart(IScope app) {
-		WebSocketUtils.configureApplicationScopeWebSocket(app);
+		
+		/* 
+		 * FOLLOWING code is optional when running the application inside Red5 Pro,
+		 * and is only required when you run the application in Red5 Pro open source
+		 * for WebSocket support.
+		 * 
+		 * SEE METHOD OF WebSocketUtils CLASS FOR EXACT CODE.
+		 * 
+		 * WebSocketUtils.configureApplicationScopeWebSocket(app);
+		 */
+		
 		log.info("Application started");
 		return super.appStart(app);
 	}
@@ -39,7 +48,16 @@ public class Application extends MultiThreadedApplicationAdapter {
 
 	@Override
 	public void appStop(IScope app) {
-		WebSocketUtils.deConfigureApplicationScopeSocket(app);
+		/* 
+		 * FOLLOWING code is optional when running the application inside Red5 Pro,
+		 * and is only required when you run the application in Red5 Pro open source
+		 * for WebSocket support. 
+		 * 
+		 * SEE METHOD OF WebSocketUtils CLASS FOR EXACT CODE.
+		 * 
+		 * WebSocketUtils.deConfigureApplicationScopeSocket(app);
+		 */
+		
 		log.info("Application stopped");
 		super.appStop(app);
 	}

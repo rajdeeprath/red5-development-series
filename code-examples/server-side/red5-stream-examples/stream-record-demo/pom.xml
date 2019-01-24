@@ -7,29 +7,17 @@
   <version>1.0.0</version>
   <name>stream-record-demo</name>
   <url>http://maven.apache.org</url>
-  <description>Sample Red5 maven application</description>
-    <licenses>
-        <license>
-            <name>Apache 2</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
-        </license>
-    </licenses>
-    <mailingLists>
-        <mailingList>
-            <name>red5-interest</name>
-            <post>https://groups.google.com/forum/?fromgroups#!forum/red5interest</post>
-        </mailingList>
-    </mailingLists>
+  <description>Sample Red5 application demonstrating how to record l.ive stream</description>
     <properties>
     	<finalName>stream-record-demo</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <red5-server.version>1.0.9-RELEASE</red5-server.version>
+        <red5-server.version>1.0.10-M10</red5-server.version>
         <spring.version>4.3.5.RELEASE</spring.version>
         <mina.version>[2.0.12, 2.0.16)</mina.version>
         <slf4j.version>1.7.22</slf4j.version>
         <logback.version>1.1.7</logback.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <build>
         <defaultGoal>package</defaultGoal>
@@ -40,8 +28,8 @@
                 <configuration>
                     <compilerVersion>1.7</compilerVersion>
                     <fork>true</fork>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                     <executable>${maven.compiler.executable}</executable>
                 </configuration>
             </plugin>

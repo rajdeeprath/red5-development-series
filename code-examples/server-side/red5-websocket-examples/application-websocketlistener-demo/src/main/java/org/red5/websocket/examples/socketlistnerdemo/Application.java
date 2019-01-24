@@ -30,16 +30,7 @@ public class Application extends MultiThreadedApplicationAdapter implements Appl
     public boolean appStart(IScope scope) 
 	 {
         log.info("Application starting");
-        // get the websocket plugin
-        WebSocketPlugin wsPlugin = (WebSocketPlugin) PluginRegistry.getPlugin("WebSocketPlugin");
-        // add this application to it
-        wsPlugin.setApplication(this);
-        // get the manager
-        WebSocketScopeManager manager = wsPlugin.getManager(scope);
-        // get the ws scope
-        WebSocketScope defaultWebSocketScope = (WebSocketScope) applicationContext.getBean("webSocketScopeDefault");
-        // add the ws scope
-        manager.addWebSocketScope(defaultWebSocketScope);
+        WebSocketUtils.configureApplicationScopeWebSocket(scope);
         return super.appStart(scope);
     }
 
@@ -49,10 +40,7 @@ public class Application extends MultiThreadedApplicationAdapter implements Appl
 	 @Override
     public void appStop(IScope scope) {
         log.info("Application stopping");
-        // remove our app
-        WebSocketScopeManager manager = ((WebSocketPlugin) PluginRegistry.getPlugin("WebSocketPlugin")).getManager(scope);
-        manager.removeApplication(scope);
-        manager.stop();
+        WebSocketUtils.deConfigureApplicationScopeSocket(scope);
         super.appStop(scope);
     }
 
