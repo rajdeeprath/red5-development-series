@@ -2,15 +2,15 @@
 
 ## Introduction
 
-Autoscaling has always been the center of gravity for cloud business that requires dynamic scaling capabilities for their dynamic needs. With Red5 Pro autoscaling we have 
+Autoscaling has always been the center of focus for cloud business that requires dynamic scaling capabilities for their dynamic traffic needs. Uptill now, with the past Red5 Pro autoscaling versions we have addressed scaling needs of small and medium size systems. However as the streaming industry grows, there are always going to be use cases that require colossal scaling to match a very high consumer base. There are large businesses with even larger infrastructures that require hundreds and thousands of servers in a cluster relaying streams from publishers to subscribers with unpredictable network speeds across the globe.
 
-What about even larger businesses with even larger infrastructures that require hundreds and thousands of servers in a cluster relaying streams from publishers to subscribers with unpredictable network speeds across continents.
+To be able to cater such use cases & businesses Red5 Pro autoscaling has evolved from `version 2` to a more matured  `version 3` which is now capable of scaling out in capacity for even larger traffic base and at the same time scaling across bandwidths to provide a more consistent experience for subscribers of different bandwidths. 
 
 ## Relays
 
 ### Stressed out origins
 
-With such a use case, we realized the bottleneck of a simple **origin-edge** cluster. One could connect only so many edges an origin before the origin got stressed-out, thereby reducing true scalability for extra large systems.
+With such high scale and high demand systems in mind, we realized the bottleneck of a simple **origin-edge** cluster was that, one could connect only so many edges an origin before the origin got stressed-out (cpu & memory-wise), thereby reducing true scalability for extra large systems.
 
 For sake of discussion, let us assume a system, where we need to support `100,000` subscribers for a ingest stream. The capacity of each edge is about `100` and the origin capacity is about `50`. Each publisher connected to the origin reduces the capacity by stresses other resources such as CPU, Memory etc. Adding an edge to the origin creates a path for subscription and at the same time reduces the original capacity even further. Eventually, we reach a point where the origin capacity is at its last breath and we need to add more edges to support more subscribers but that's not possible anymore.
 
