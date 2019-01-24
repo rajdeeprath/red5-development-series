@@ -18,17 +18,19 @@ For sake of discussion, let us assume a system, where we need to support `100,00
 
 To provide a solution to the problem discussed above and to alleviate restreaming stress from the origin, **Relays** were introduced as a part of **Red5 Pro Autoscaling v3**. Relays are streaming nodes that sit in between origins and edges for the sole purpose of making restreaming scalable. Relays **pull** stream from the origin for restreaming  & edges connect to relays to **pull** streams for the subscription. In orher words `relays` are restreamer delegates for origins. In terms of Red5 Pro autoscaling, we call clusters with `relays` as `Tier 2` node groups.
 
-**Tier 1 Node Groups**
+**Diagram 1 : Tier 1 Node Groups (Low scalability)**
 
 ![Tier 1 NodeGroups](images/tier-1-cluster.png)
 
-**Tier 2 Node Groups**
+**Diagram 2 : Tier 2 Node Groups (High scalability)**
 
 ![Tier 2 NodeGroups](images/tier-2-cluster.png)
 
-So going back to the problem we mentioned earlier, we can redesign the system by adding relays to origins and then connects multiple edges to the relays. This way the stress at the origin is minimized as we require fewer relays and we maximize egress capacity since we can easily expand the number of edges by simply adding relays in steps.
+So going back to the problem mentioned earlier, we can redesign the system by adding relays to origins and then connects multiple edges to the relays. This way the `stress at the origin` is minimized as we require fewer relays and we maximize egress capacity since we can easily expand the number of edges by simply adding relays in steps.
 
 This kind of scaling strategy coupled with Red5 autoscaling ensures that you can now defy limits and build a system with very high scalability.
+
+**Reducing bandwidth costs**
 
 Another interesting yet effective use of relays can be seen in bandwidth cost optimization. Consider a use case where the publishing starts in Asia, ie the origin resides in Asia and some of the subscribers will be in Asia and some in the North America. Now if `each` edges in the North America need to pull the stream from the origin in Asia the bandwidth cost will rise accordingly. However, if you use one relay to pull the stream from Asia into the North America region and then connect edges in United to that relay, you will be effectively cutting down cross-continent delivery costs as well as making the system more efficient.
 
@@ -44,7 +46,7 @@ So the obvious question to summarize our problems would be - "if there are count
 
 To solve the problem to matching a  high bandwidth ingest with different kind of subscribers, we introduced **transcoders** nodes. **Transcoders** are not a part of the regular clustering mechanism. Rather they are floating nodes that can be thought of as a desktop encoder software such as Flash media lives encoder or Open Broadcaster Software etc.
 
-With transcoder in place, the ingest goes to the transcoder nodes instead of origins. The transcoder nodes create multivariate streams (Different quality variations of the ingest) for subscriptions. From here on the clients can consume the appropriate version of the stream as per their bandwidth through various Red5 Pro SDK offerings based on the protocol used.
+With transcoder in place, the ingest goes to the transcoder nodes instead of origins. The transcoder nodes create multivariate streams (Different quality variations of the ingest) for subscriptions. From here on the clients can consume the appropriate version of the stream as per their bandwidth through various **Red5 Pro client SDK offerings** based on the protocol used for stream consumption.
 
 ![Simple 2 quality transcoding](images/basic-2-quality-transcoding.png)
 
