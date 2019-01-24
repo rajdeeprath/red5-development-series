@@ -48,12 +48,20 @@ To solve the problem to matching a  high bandwidth ingest with different kind of
 
 With transcoder in place, the ingest goes to the transcoder nodes instead of origins. The transcoder nodes creates multi variate streams (Different quality variations of the ingest) for subscriptions. From here on the clients can consume the appropriate version of the stream as per their bandwidth through various Red5 Pro SDK offerings based on the protocol used.
 
-<Diagram>
+![Simple 2 quality transcoding](images/basic-2-quality-transcoding.png)
 
-The process of configuring multivariate streams is called **Provisioning**, where you define the different output qualities for your ingest. for information on provisioning take a look at our [Stream Manager provisioning API](https://www.red5pro.com/docs/autoscale/smapi-streamprovision) and the [Read stream API](https://www.red5pro.com/docs/autoscale/smapi-streams#read-stream) for information on requesting a transcoder for your ingest.
+The process of configuring multivariate streams is called **Provisioning**, where you define the different output qualities for your ingest. You can configure **multiple** outputs for a single ingest using the provisioning api. For information on provisioning take a look at our [Stream Manager provisioning API](https://www.red5pro.com/docs/autoscale/smapi-streamprovision) and the [Read stream API](https://www.red5pro.com/docs/autoscale/smapi-streams#read-stream) for information on requesting a transcoder for your ingest.
 
 ## Conclusion & Summary
 
-* Transcoding can be used for small, medium and large scale systems to ehance user experience.
+* Relays are necessary for building very large scale architecttures.
+
+* Relays can be very useful in saving bandwidth costs for cross continent streaming scenarios
+
+* Transcoders can be used with (tier 2 groups) or without relays (tier 1 groups).
+
+* Transcoding can be used for small, medium and large scale systems to enhance user experience.
 
 * Transcoding is not available with standalone Red5 Pro instances. They are available only as a part of the Red5 Pro autoscaling. Thus to make use of `transcoding`, you should ensure that your license is applicable to Red5 Pro autosclaing.
+
+If you need more information on relays and transcoders, please contact support to schedule a business call with us for further clarifications.
