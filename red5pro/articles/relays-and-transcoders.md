@@ -1,4 +1,4 @@
-# Scaling beyond limits with Relays & Transcoders
+# Maximize Scaling with Relays & Transcoders
 
 ## Introduction
 
