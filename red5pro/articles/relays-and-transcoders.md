@@ -12,7 +12,7 @@ What about even larger businesses with even larger infrastructures that require 
 
 With such a use case, we realized the bottleneck of a simple **origin-edge** cluster. One could connect only so many edges an origin before the origin got stressed-out, thereby reducing true scalability for extra large systems.
 
-For argument sake, let us assume a system, where we need to support `100,000` subscribers for a ingest stream. The capacity of each edge is about `100` and the origin capacity is about `50`. Each publisher connected to the origin reduces the capacity by stresses other resources such as CPU, Memory etc. Adding an edge to the origin creates a path for subscription and at the same time reduces the original capacity even further. Eventually, we reach a point where the origin capacity is at its last breath and we need to add more edges to support more subscribers but that's not possible anymore.
+For sake of discussion, let us assume a system, where we need to support `100,000` subscribers for a ingest stream. The capacity of each edge is about `100` and the origin capacity is about `50`. Each publisher connected to the origin reduces the capacity by stresses other resources such as CPU, Memory etc. Adding an edge to the origin creates a path for subscription and at the same time reduces the original capacity even further. Eventually, we reach a point where the origin capacity is at its last breath and we need to add more edges to support more subscribers but that's not possible anymore.
 
 ### Along came relays
 
@@ -36,7 +36,7 @@ Another interesting yet effective use of relays can be seen in bandwidth cost op
 
 ### One size does not fit all
 
-The second problem, which is not limited to a large scale business, is the need to support different bandwidth subscribers. A high-quality high bitrate stream will easily choke subscribers lower bandwidths. Some will not be playable at all, whereas some will have the worst user experience ever.
+The other major problem in building scaling streaming systems, which is not limited to the actual size of the streaming architecture, is the ability to cater users with different bandwidths across the globe. A high-quality high bitrate stream will easily choke subscribers lower bandwidths. Some will not be playable at all, whereas some will have the worst user experience ever.
 
 So the obvious question to summarize our problems would be - "if there are countries with different average internet speeds, and people in those countries use different devices having different internet speeds, then how can we ensure that every customer has a good streaming experience ?".
 
@@ -52,11 +52,15 @@ The process of configuring multivariate streams is called **Provisioning**, wher
 
 ## Conclusion & Summary
 
+True scaling of a streaming system happens when it is able to scale out by **capacity**, growing vertically to meet the demands of its ever growing traffic while at the same time growing horizontally to make sure every type of client, by bandwidth, by protocol and by location is cared for in an appriate manner such that it can gurantee a single unified user experience across the entire system.
+
+Finally before i conclude, here are few points to highlight, regarding the latest Red5 Pro autoscaling additions - `Relays & Transcoders`.
+
 * Relays are necessary for building very large scale architectures.
 
 * Relays can be very useful in saving bandwidth costs for cross-continent streaming scenarios
 
-* Transcoders can be used with (tier 2 groups) or without relays (tier 1 groups).
+* Transcoders can be used with (Tier 2 groups) or without relays (Tier 1 groups).
 
 * Transcoding can be used for small, medium and large scale systems to enhance user experience.
 
