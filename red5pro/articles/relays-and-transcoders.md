@@ -20,11 +20,11 @@ To provide a solution to the problem discussed above and to alleviate restreamin
 
 **Diagram 1 : Tier 1 Node Groups (Low scalability)**
 
-![Tier 1 NodeGroups](images/tier-1-cluster.png)
+![Tier 1 NodeGroups](images/tier1groups.png)
 
 **Diagram 2 : Tier 2 Node Groups (High scalability)**
 
-![Tier 2 NodeGroups](images/tier-2-cluster.png)
+![Tier 2 NodeGroups](images/tier2groups.png)
 
 So going back to the problem mentioned earlier, we can redesign the system by adding relays to origins and then connects multiple edges to the relays. This way the `stress at the origin` is minimized as we require fewer relays and we maximize egress capacity since we can easily expand the number of edges by simply adding relays in steps.
 
@@ -48,7 +48,7 @@ To solve the problem to matching a  high bandwidth ingest with different kind of
 
 With transcoder in place, the ingest goes to the transcoder nodes instead of origins. The transcoder nodes create multivariate streams (Different quality variations of the ingest) for subscriptions. From here on the clients can consume the appropriate version of the stream as per their bandwidth through various **Red5 Pro client SDK offerings** based on the protocol used for stream consumption.
 
-![Simple 2 quality transcoding](images/basic-2-quality-transcoding.png)
+![Simple 2 quality transcoding](images/simple-transcoding.png)
 
 The process of configuring multivariate streams is called **Provisioning**, where you define the different output qualities for your ingest. You can configure **multiple** outputs for a single ingest using the provisioning API. For information on provisioning take a look at our [Stream Manager provisioning API](https://www.red5pro.com/docs/autoscale/smapi-streamprovision) and the [Read stream API](https://www.red5pro.com/docs/autoscale/smapi-streams#read-stream) for information on requesting a transcoder for your ingest.
 
