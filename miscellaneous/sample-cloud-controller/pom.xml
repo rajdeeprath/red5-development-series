@@ -50,13 +50,6 @@
          <scope>system</scope>
     	 <systemPath>${basedir}/lib/streammanager-commons-1.2.12.jar</systemPath>
      </dependency>
-     
-  	<!--  Azure stuff -->
-    <dependency>
-       <groupId>com.microsoft.azure</groupId>
-       <artifactId>azure</artifactId>
-       <version>1.16.0</version>
-  	</dependency>
 	<dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
