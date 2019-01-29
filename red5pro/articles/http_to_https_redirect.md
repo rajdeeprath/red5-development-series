@@ -59,7 +59,7 @@ To enable HTTP to HTTPS Redirection:
 
 ```
 
-**Note: you cannot enable redirection by adding the configuration to the `root` web app alone. the same configuration needs to be added to every webapp in the `webapps` folder on which want to enable redirection on access. For example if you need redirection on the webrtcexamples web app, you need to add the configuration changed to it explicitly**
+**Note: you cannot enable redirection by adding the configuration to the `root` web app alone. the same configuration needs to be added to every webapp in the `webapps` folder on which want to enable redirection on access. For example if you need redirection on the webrtcexamples web app, you need to add the configuration changes to it explicitly**
 
 5. Save changes and restart server.
 
