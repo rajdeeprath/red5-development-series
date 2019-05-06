@@ -1,7 +1,7 @@
 # Basic WebRTC enabled application for Red5 Pro >= 5.4
 ---
 
-
+**This is not for Red5 open source**
 
 
 ## About
