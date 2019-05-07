@@ -35,11 +35,11 @@ For a successful system integration, it is necessary to identify the different i
 
 So now that, you probably have a good idea of what integration is all about, let us proceed with taking deeper look into both server and client integration stacks in details.
 
-## server side integration - examples: php, asp.net, nodejs
+## Server side integration
 
 Server side integration is required when you need granular control over the streaming sub system at different levels to be able to communicate with it and control it from another sub-system.
 
-### Brief intro to important elements of Red5 Pro
+### Introuction to important elements of Red5 Pro server side
 
 **Red5 Pro Webapps**
 
@@ -49,7 +49,7 @@ Red5 Pro webapps are the main entry points for clients wanting to consume stream
 
 Red5 Pro plugins are the `minions` of the Red5 pro platform that can help you accomplish almost anything. Plugins unlike webapsp atre headless entities. They can augment any existing webapp with new behaviour, or even implement it across all webapps on the server. You can use plugins to implement isolated features or tap into the existing features provided by the Red5 pro platform.
 
-### Out of the box features for integration
+### Out of the box features for server side integration
 
 **Ready to use streaming applications**
 
@@ -160,19 +160,128 @@ There are differnt ways to interface communications betweeen systems. The path t
 
 ##### Custom plugin development
 
-Red5 pro server plugins are your head-less interface into the server. They can do pretty much anything that webapps can do, since thay have access to all the same resources and configurations across the system. However plugins have no scope of their own. That means, you do not and cannot connect to a plugin using a client.
+Red5 pro server plugins are your head-less interface into the server. They can do pretty much anything that webapps can do, since thay have access to all the same resources and configurations across the system. However plugins have no scope of their own. That means, you do not and cannot connect to a plugin using a client. Additionally if a plugin needs to expose any HTTP API or websocket service, it needs a webapp to hook into. Plugins cannot host servlets on their own. 
 
-Additionally if a plugin needs to expose any HTTP API or websocket service, it needs a webapp to hook into. Plugins cannot host servlets on their own. By design paradigm, as i mentioned earlier, use a plugin when you need to augment the features and behaviour of a webapp.
+By design paradigm, as i mentioned earlier, use a plugin when you need to augment the features and behaviour of a webapp. Pluigins are reusable components, which means that you can target more than one webapp with the same plugin.
 
+Here are a few typical use cases that make a good case for a custom plugin:
 
+* Authenticate connections on your webapp. 
 
+* Creating a media file cleaner, that automatically deletes files older than a a period of time.
 
+* You have one or more webapps that require some sort of common behaviour augmented to them at `runtime`.
 
+* Isolating your code into plugins and attaching them to webapps at runtime, means you can share the plugin with others without sharing your entire webapp.
 
-## client side integration - desktop, mobile
+**Coding References:**
 
+* For custom plugin development checkout our [official documentation on Red5 Pro plugins](https://www.red5pro.com/docs/serverside-guide/plugin-development.html).It will guide you through creating your first plugin.
 
-## use cases
+* For more snippets and understanding on different things that you can do with Red5 pro, checkout [the collection sample plugins on github by Rajdeep Rath](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-plugin-examples)
+
+##### Runtime integrations or RPC integrations
+
+There is another type of integration, which is also popular amonst a certain types developers. Its called runtime integration. Usually two different technologies can talk to each other by either loading each other's runtimes to access their classes at low level or each one talsk to the other using an internal RPC mechanism over sockets. Some popular examples of such implementations are:
+
+* [Jython](https://www.jython.org/) or [Py4J](https://www.py4j.org/) for java-python integration
+* [Node-Java](https://github.com/joeferner/node-java) for nodejs and java integration
+* [Php-java bridge](http://php-java-bridge.sourceforge.net/pjb/) for php and java integration
+* [JNBridge](https://jnbridge.com/) for dot net java integrations
+
+If you do want to make use of such integrations, i would advise going with RPC style integrations instead of runtime based integrations for clarity.
+
+### Autoscale specific integration factors and considerations
+
+TODO
+
+**Conclusion**
+
+So with that we conclude the discussion on server side integrations for Red5 pro. All the points and links shared in the previous sections should be good enough to help you integrate your system with Red5 pro server side withotu hiccups. If you still have problems and need help, get in touch with me & my peers on [slack](https://red5pro.slack.com).
+
+## Client side integration
+
+Client side integration is required when you need to interface your customers/clients with the streaming system to be able to consume services. Client integrations requirement are usually more common than server integration requiremnts for most of the simple use cases.
+
+As we discussed earlier, there are lots of out of the box solutions provided by the Red5 pro platform, that can help build your solution aroudn Red5 pro with little or no server integration. Therefore we are left with the client side of things which is the main are of focus for most businesses.
+
+### Introduction to important elements of Red5 Pro client side
+
+#### Client SDKs
+
+The Red5 pro platform provides you with a [collection of SDKs](https://www.red5pro.com/docs/streaming/) to help you translate your business ideas into streaming interfaces for Android, IOS and Desktop browsers.
+
+**Android SDK**
+
+The [Android SDK](https://www.red5pro.com/docs/streaming/android.html) empowers you to add streaming  and realtime data exchange capabilities to your native android app. You can take browse the [Android API documentation](https://www.red5pro.com/docs/static/android-streaming/) to take a peek at the various methods it offers.
+
+**IOS SDK**
+
+The [IOS SDK](https://www.red5pro.com/docs/streaming/ios.html) empowers you to add streaming  and realtime data exchange capabilities to your native IOS app.You can take browse the [IOS API documentation](https://www.red5pro.com/docs/static/ios-streaming/) to take a peek at the various methods it offers.
+
+**HTML5 SDK**
+
+The [HTML5 SDK](https://www.red5pro.com/docs/streaming/web.html) allows you to add streaming  and realtime data exchange capabilities to your HTML5 applications through Red5 pro's **WebRTC** implementation.You can take browse the [HTML5 API documentation](https://www.red5pro.com/docs/static/html5-streaming/) to take a peek at the various methods it offers.
+
+**It is worth mentioning here that the HTML5 SDK is perfectly compatible with both mobile and desktop browsers.**
+
+So the very first step in client side integration would be to identify the different platforms that are going to target for clients, and then take a look at the appropriate SDKs.
+
+### Out of the box features for client side integration
+
+#### Client Testbeds
+
+To help you with using the sdks and some out of the box code snippets, we have created something called testbeds. There is a testbed repository on github containing various examples for each of the SDKs that we offer. You can see test bed as a opportunity to get accustomed with the SDKs and at the same time learn about different things that can be built using the SDKs with Red5 pro. Whenever you need to lookup a 'how to' on client side integration, testebes is the first place to get started.
+
+**Android Testbed**
+
+The Android testbed is located at [https://github.com/red5pro/streaming-android](https://github.com/red5pro/streaming-android).
+
+**IOS Testbed**
+
+The IOS testbed is located at [https://github.com/red5pro/streaming-ios](https://github.com/red5pro/streaming-ios).
+
+**HTML5 Testbed**
+
+The HTML5 testbed is located at [https://github.com/red5pro/streaming-html5](https://github.com/red5pro/streaming-html5).
+
+**React Native**
+
+As a bonus we have included react native examples as well, in case you want to integrate Red5 pro streaming into a react native app. The react native examples can be located at [https://github.com/infrared5/react-native-red5pro](https://github.com/infrared5/react-native-red5pro)
+
+##### Important Testbed examples
+
+Let me quickly point you to relevant testbed examples that can help you solve your real world use cases  quickly.
+
+* Building two way a/v chat:
+
+  * [Android example](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/TwoWayTest)
+  * [IOS example](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/TwoWay)
+  * [HTML5 example](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/twoWay)
+  
+* Building one to many streaming
+
+  * Android [publisher](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishTest) and [subscriber](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeTest) examples
+  * IOS [publisher](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Publish) and [subscriber](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Subscribe) examples
+  * HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publish) and [subscriber](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribe) examples
+  
+* Authenticating clients
+
+  * Android [publisher](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishAuthTest) and [subscriber](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeAuthTest) examples
+  * IOS [publisher](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishAuth) and [subscriber](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeAuth) examples
+  * HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishAuth) and [subscriber](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribeAuth) examples
+  
+* Building realtime data oriented apps such as chat etc
+
+  * Android publisher and subscriber examples
+  * IOS publisher and subscriber examples
+  * HTML5 publisher and subscriber examples
+
+### Developing custom features for integration
+
+**Design considerations:**
+
+## Use Cases
 
 
 ## Tips and tricks
