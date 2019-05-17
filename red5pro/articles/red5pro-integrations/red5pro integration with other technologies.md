@@ -104,7 +104,7 @@ There could be many more use cases, but these are good enough to help you unders
 So the next question in your mind would be - **Where do i start ?**. To answer that, the first thing you need to do is sketch out the integration requirement. Here are a few sample topics that you should go over, as you decide on server side integration efforts:
 
 * What are the requirements for integration ? 
-* What do you need from the server side for your system ?
+* What  do you need from the server side for your system ?
 * Are the APIs not sufficient for your use case?
 * Do you need more/different APIs ?
 * Does your team have a good expertise in java ?
@@ -271,15 +271,28 @@ Let me quickly point you to relevant testbed examples that can help you solve yo
   * IOS [publisher](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishAuth) and [subscriber](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeAuth) examples
   * HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishAuth) and [subscriber](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribeAuth) examples
   
-* Building realtime data oriented apps such as chat etc
+* Building realtime data oriented apps such as chats, multiplayer games etc
 
-  * Android publisher and subscriber examples
-  * IOS publisher and subscriber examples
-  * HTML5 publisher and subscriber examples
+  * Android [SharedObject](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SharedObjectTest) example
+  * IOS [SharedObject](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SharedObject) examples
+  * HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishSharedObject) and [subscriber](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribeSharedObject) examples
+  * HTML5 [conference](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/sharedObjectMultistream) example
 
 ### Developing custom features for integration
 
-**Design considerations:**
+We have seen the different SDKs that Red5 pro offers for building/integrating clients with Red5 pro. While the SDKs themselves are not Open Source, there are various possibilities to extend the functionality or even develop your feature using the SDKs to help your client code integrate better with Red5 pro.
+
+Most of the custom development requirements are centered around using the SDKs & the testbed examples to build a complete client side application.
+
+**At the time of writing this article, none of the SDKs are open source. If you need a feature added or a bug to be fixed, please use the Github issue reporting system in the appropriate repository. Additionally you can get in touch wih us via email or slack channel if you need any undocuemnted information on one of the SDKs.**
+
+**Sample use-cases where custom development is required**
+
+* You wish to develop your own communication mechanism based on WebSockets or HTTP, other than the ones provided in the SDKs, such as SharedObjects.
+
+* If you have a custom logic/method on the server to be invoked from the client. Example if you need to set/update a property on the client's `IConnection` object on the server side, whenever the client interacts with the application.
+
+There could be many more use cases, but these are good enough to help you understand, when/if you need custom effort on for server side integration. Each of the use cases mentioned above, warrants custom development either partially or completely. 
 
 ## Use Cases
 
