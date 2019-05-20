@@ -55,4 +55,29 @@ public class CustomFilenameGenerator implements IStreamFilenameGenerator {
 		 resolvesAbsolutePath = absolute; 
 	 }
 
+
+
+	public boolean isResolvesAbsolutePath() {
+		return resolvesAbsolutePath;
+	}
+
+
+
+	public void setResolvesAbsolutePath(boolean resolvesAbsolutePath) {
+		this.resolvesAbsolutePath = resolvesAbsolutePath;
+	}
+
+
+
+	public String getRecordPath() {
+		return recordPath;
+	}
+
+
+
+	public String getPlaybackPath() {
+		return playbackPath;
+	}
+
+	 
 }
