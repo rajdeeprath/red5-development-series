@@ -419,6 +419,8 @@ In general we provide the [Red5 pro simple auth plugin](https://red5pro.com/docs
 
 #### Publishing
 
+TO DO
+
 From a publisher point of view, you can do a bandwidth test to determine the best quality settings for the client. Optionally you may also provide selectable presets of quality settings.Based on the quality settings you can intialize the publisher's camera device for a broadcast.
 
 **RTMP Publishers**
@@ -475,13 +477,43 @@ HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/pag
 
 #### Subscribing
 
+TO DO
+
 #### ABR
+
+The abbreviation ABR stands for adaptive bitrate streaming. This is a feature used to distribute a stream to multiple clients having different bandwidths efficiently by matching a appropriate version (by quality) of the stream with each client.
+
+ABR is not supported for single server installs or even manual multi server clusters. If you need ABR, you need to use Red5 pro autoscaling. for more information i recommend reading through the [ABR guide](https://red5pro.com/docs/streaming/abruserguide.html) and the use of [transcode nodes](https://red5pro.com/docs/autoscale/transcoder.html)
 
 #### Muting Audio
 
+When publishing or subscribing, sometimes you might want to mute audio of the stream. Typically with online public events, sometimes when there is a break or so, the video is still running and the audio is paused to avoid noise to subscribers. On the other side a subscriber too might sometimes want to watch just the video.
+
+In such cases you need to implement the mute audio funtionality in your application.
+
+**HTML5 SDK**
+
+To implement audio/video mute/unmute for a HTML5 SDK client, check out the [example on publisher audio/video mute](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishMute). On the other hand, subscribers can either adjust the volume of the playback stream or completely mute it.
+
+**Android/IOS SDK**
+
+**Publishers**
+
+To implement audio/video mute/unmute for a Android /IOS SDK client, check out the [android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishPauseTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishPause) examples on publisher audio/video mute funtionality.
+
+**Android subscribers**
+
+- [Adjust the volume](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeSetVolume)
+- [Entirely mute](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeMuteAudio)
+
+**IOS subscribers**
+
+- [Adjust the volume](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeSetVolumeTest)
+- [Entirely mute](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeMuteTest)
+
 #### Sending messages over stream
 
-#### Adding Chat
+#### Adding data exchange capability
 
 #### Handling interruptions
 
@@ -489,7 +521,7 @@ HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/pag
 
 #### Capturing snapshot
 
-#### Viewing VOD Recordings
+#### Storing and Viewing VOD Recordings
 
 ## Use Cases
 
