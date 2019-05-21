@@ -253,6 +253,15 @@ As a bonus we have included react native examples as well, in case you want to i
 
 Let me quickly point you to relevant testbed examples that can help you solve your real world use cases  quickly.
 
+* Bandwidth detection:
+
+  * Android [upload](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/BandwidthDetectionUploadOnlyTest), [download](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/BandwidthDetectionDownloadOnlyTest) & [generic](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/BandwidthDetectionTest) examples
+  * IOS [upload](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/BandwidthDetection), [download](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/BandwidthDetectionDownloadOnly) & [generic](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/BandwidthDetection) examples
+
+  * [Android example](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/TwoWayTest)
+  * [IOS example](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/TwoWay)
+  * [HTML5 example](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/twoWay)
+
 * Building two way a/v chat:
 
   * [Android example](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/TwoWayTest)
@@ -293,6 +302,79 @@ Most of the custom development requirements are centered around using the SDKs &
 * If you have a custom logic/method on the server to be invoked from the client. Example if you need to set/update a property on the client's `IConnection` object on the server side, whenever the client interacts with the application.
 
 There could be many more use cases, but these are good enough to help you understand, when/if you need custom effort on for server side integration. Each of the use cases mentioned above, warrants custom development either partially or completely. 
+
+Before getting started with client side development you shoudl ask yourself the same questions that we discussed for server side development :
+
+* What are the requirements for client integration ? 
+* How will the server side interface with the client side ?
+* Are the testbed examples enough for developing what you need ?
+* Do you have a custom webapp or plugin on the server, that your client nees to interface with ?
+* What are the platforms you wish to target - HTML5/Android/IOS ?
+  * What type of clients do you expect ?
+* Do you want an addition to an existing SDK features ?
+
+Having thought this over, you should now be ready to dive into some of the technical details of Red5 pro client side integrations.
+
+### Common activities of a Red5 pro client application
+
+Based on application use cases and development patterns, there are few easily identifyable activities in a  Red5 pro client applications. Almost every Red5 pro client application will include one or more of these features directly or indirectly.
+
+Red5 Pro features may makeup for a small part or a majority of your application functionality.In this section, we will discuss those features and take a look at how they can be included in our own application.
+
+#### Loading configuration
+
+The first part is to load the Red5 pro related configuration data into your application. The freedom of choosing the design is upto you. You can keep thinsg simple by hardcoding the configuration data in your application code (not recommended) or add it via a configuration file or even have it load from your application server over `HTTPS`.
+
+Mobile SDKs require you to specify your `SDK LICENSE KEY` as well. Take special care as to not expose this to your users. You can normally keep this embedded in the application itself. Use obfuscation to protect the license.
+
+#### Configuring settings
+
+Next step is to initialize your application code to connect to server endpoint to consume services. 
+
+**Publishers**
+
+From a publisher point of view, you can do a bandwidth test to determine the best quality settings for the client. Optionally you may also provide selectable presets of quality settings.Based on the quality settings you can intialize the publisher's camera device for a broadcast.
+
+**RTMP Publishers**
+
+If you are using a RTMP encoder, take a look at our [encoder configuration guide](https://www.red5pro.com/docs/server/rtmppublishers.html) on recommended settings.
+
+**Android/IOS Publishers**
+
+For mobile SDK publishers, `854x480` at either `750Kbps` or `1000Kbps` is a standard value. You can experiment around it to find what best suits your application. It a commonly known theory that motion requires bandwidth. So depending on your content you can try higher resolution at same bandwidth if you knwo there is little or no motion.
+
+**HTM5 Publishers**
+
+**Subscribers**
+
+For subscribers the standard subscribing code should be good enough.
+
+#### Providing stream name
+
+#### Authenticating clients
+
+#### Building coordination between publishers and subscribers
+
+#### Publishing
+
+#### Subscribing
+
+#### ABR
+
+#### Muting Audio
+
+#### Sending messages over stream
+
+#### Adding Chat
+
+#### Handling interruptions
+
+#### Recording the session
+
+#### Capturing snapshot
+
+#### Viewing VOD Recordings
+
 
 ## Use Cases
 
