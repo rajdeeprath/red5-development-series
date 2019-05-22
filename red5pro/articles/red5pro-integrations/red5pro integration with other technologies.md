@@ -504,7 +504,17 @@ There is a subscriber reconnect example in the [HTML5 SDK testbed](https://githu
 
 Publisher interruption can have different reasons and different ways to resume for each reason. Once you identify the reasons you will have a reconnect strategy for each.I recommend getting in touch with us via email or slack channel if you want help on this.
 
-For autoscaling setups - TO DO
+**Mobile device interruptions**
+
+As compared to desktops, the mobile platform is prone to special types of interruptions such as switching between applications, incoming phone call etc. We have provided some special examples in the respective testbeds to help you build better user experience on mobile devices:
+
+**Background subscribe**
+
+[Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeBackgroundTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeBackground) examples for subscribing in background, allowing people to multitask without needing to disconnect from their stream.
+
+**Background publish**
+
+[Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishBackgroundTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishBackground) examples for publishing in background, allowing people to multitask without needing to disconnect from their stream. And an additional example on [handling telephony interrupts on IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishTelephonyInterrupt)
 
 #### Capturing snapshot
 
@@ -522,11 +532,35 @@ Additionally to help you our SDKS have an example of image capture for [HTML5](h
 
 **Server side**
 
-If you want to capture snapshots on the server side directly, you can use ffmpeg to do the same. Check out our [guide on using ffmpeg with live streams](https://www.red5pro.com/docs/server/ffmpegstreaming.html). Check out [this integrated webapp example](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-misc-examples/ffmpeg-thumbnails) so see how to read stream as soon as publish starts.
+If you want to capture snapshots on the server side directly, you can use ffmpeg to do the same. Check out our [guide on using ffmpeg with live streams](https://www.red5pro.com/docs/server/ffmpegstreaming.html). Check out [this integrated webapp example](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-misc-examples/ffmpeg-thumbnails) so see how to read stream as soon as `publish` starts.
 
 #### Recording the session
 
+Now irrespective of whether you need a poster image or not, wanting to record the live stream is the most common need for most streaming systems. At the time of writing this guide, Red5 pro allows you to records a stream in `FLV` and `HLS` containers.
+
+Red5 pro gives you multiple ways to record a stream. You can choose the way that is optimal for your use case. the following optiosn are available to enable recording of a live stream.
+
+1. As a client if you can direct the server to record the stream by specifying the publish mode as `record` in your client code. We have examples for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishRecord), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Publish)
+
+For IOS and Android examples, simply change the publish mode to `record` to test the code.
+
+2. To enable automatic recording for all streams, you can set the server side flag `broadcaststream.auto.record=true` in `{RED5_HOME}/conf/red5.properties`.
+
+3. You can also use [Red5 pro server api](https://red5pro.com/docs/server/serverapi.html#recordlivestream) to record your streams. Using an out of the box api can be very useful when you need to initiate recording from a remote location on demand. while options `#1` and `#2` cannot be toggled on the fly without stopping the client or server, API gives you a flexible solution to record/stop without disturbing either.
+
+4. If you are writing your own webapp and want to record a live stream on some internal condition, you can cal the `IProStream.saveAs()` method to start recording. Every Red5 pro stream is an `IProStream` object.
+
+By default automatic recording captures FSL ad HLS files. If you do not want HLS recordings across the system, you can simply delete the `red5pro-mpegts-plugin-5.5.0.343-RELEASE.jar` file.
+
 #### Storing and Viewing VOD Recordings
+
+By default recordings are stored in the `streams` directory of the webapp in the context. If you want you can move the recordings to a remote server for storage and later serving.
+
+If you write your own custom solution as a webapp or plugin, you can conenct with us on slack for development tips on subjects such as detecting when to upload file etc.
+
+As an out fo the box solution, we offer [Red5 pro cloud storage plugin](https://red5pro.com/docs/server/cloudstoragevod.html), which can help you move your recordings to AWS or Google bucket automatically. It can also help transcode flv to mp4 before uploading.
+
+If you wish to serve all types fo clients, make sure you have `MP4` version of the recording alongside `FLV` and `HLS`. You can build any custom security around VOD similar to live streams using the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html).
 
 ## Use Cases
 
