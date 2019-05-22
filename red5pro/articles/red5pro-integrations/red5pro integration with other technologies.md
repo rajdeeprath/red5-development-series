@@ -438,40 +438,6 @@ Android [publisher](https://github.com/red5pro/streaming-android/tree/master/app
 
 For HTML5 SDK publishers, the SDK provides simple way of defining publish settings as a JSON object. The capture dimensions, bandwidth, keyFramerate and framerate the primary parameters for a publisher client. The SDK will use the `mediaConstraints` defined and then cycle through the `gUM` to find a appropriate match that is allowed by the browser.Here the `cameraWidth` and `cameraHeight` are thee initial dimensions.
 
-**Excerpt from testbed-config.js**
-
-```JSON
-{
-      "cameraWidth": 854,
-      "cameraHeight": 480,
-      "buffer": 0.5,
-      "bandwidth": {
-        "audio": 56,
-        "video": 512
-      },
-      "keyFramerate": 3000,
-      "useAudio": true,
-      "useVideo": true,
-      "mediaConstraints": {
-        "audio": isiPod ? false : true,
-        "video": (isMoz || isEdge) ? true : {
-          "width": {
-            "min": 320,
-            "max": 640
-          },
-          "height": {
-            "min": 240,
-            "max": 480
-          },
-          "frameRate": {
-            "min": 8,
-            "max": 24
-          }
-        }
-      }
-}
-```
-
 For hands-on code, take a look at
 HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publish) example.
 
@@ -501,25 +467,64 @@ To implement audio/video mute/unmute for a HTML5 SDK client, check out the [exam
 
 To implement audio/video mute/unmute for a Android /IOS SDK client, check out the [android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishPauseTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishPause) examples on publisher audio/video mute funtionality.
 
-**Android subscribers**
+**Subscribers**
+
+**Android**
 
 - [Adjust the volume](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeSetVolume)
 - [Entirely mute](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeMuteAudio)
 
-**IOS subscribers**
+**IOS**
 
 - [Adjust the volume](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeSetVolumeTest)
 - [Entirely mute](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeMuteTest)
 
+#### Adding data exchange capability
+
+In lot of application use cases, there is a need to work with realtime data. Realtime data can be thought of as chat messages, shared temporary data stores
+
 #### Sending messages over stream
 
-#### Adding data exchange capability
+Red5 pro has multiple ways to transmit data in realtime. While SharedObject and RPCs are common to use cases, transmitting data over the stream is yet another possibility.
+
+Sometimes a publisher might want to quickly want to send a text or control message to all client currently subscribed to the publishing stream. This is where you use transmission over the stream channel.
+
+**Use cases**
+
+- Sending control messages to indicate when publisher is muted/unmuted
+- Transmitting stream stats info to subscriber clients
 
 #### Handling interruptions
 
-#### Recording the session
+Unforseen interruptions are always a part of any activity, and streaming is no different. Connection drops, power interruptions, system crash or even human induced disturbances are just a few causes why your publish/subscribe session might be lost.
+
+Thats where a well designed application will tend to create a seamless resume mechanism. To assist you design a graceful resum funtionality, we have special examples for each of the SDKs.
+
+There is a subscriber reconnect example in the [HTML5 SDK testbed](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribeReconnect), the [Android testbed](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeReconnectTest) and the [IOS testbed](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeReconnect).
+
+Publisher interruption can have different reasons and different ways to resume for each reason. Once you identify the reasons you will have a reconnect strategy for each.I recommend getting in touch with us via email or slack channel if you want help on this.
+
+For autoscaling setups - TO DO
 
 #### Capturing snapshot
+
+Capturing a snapshot of the live stream and displaying it as the poster image for the live stream on your website is oen of the most prominent features in live streaming systems.
+
+At the time of writing this, there is no built-in api/mechanims to get a snapshot image o fthe live stream. that said there are two ways to capture image from a live red5 pro stream.
+
+**Client side:**
+
+On client side create a mechanism to capture the video renderer screenshot, depending on what platform/SDK you are using. Encode the captured data as jpeg/png and then encode it as a base64 string.
+
+You can then send this data to your backend server where a script can base64 decode it and write it to the disk as a jpeg/png. This is the easiest way to capture snapshots of the client.
+
+Additionally to help you our SDKS have an example of image capture for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishImageCapture), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishImageTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishStreamImage) in their testbeds.
+
+**Server side**
+
+If you want to capture snapshots on the server side directly, you can use ffmpeg to do the same. Check out our [guide on using ffmpeg with live streams](https://www.red5pro.com/docs/server/ffmpegstreaming.html). Check out [this integrated webapp example](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-misc-examples/ffmpeg-thumbnails) so see how to read stream as soon as publish starts.
+
+#### Recording the session
 
 #### Storing and Viewing VOD Recordings
 
