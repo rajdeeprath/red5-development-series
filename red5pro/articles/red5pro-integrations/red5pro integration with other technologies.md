@@ -341,7 +341,7 @@ Mobile SDKs require you to specify your `SDK LICENSE KEY` as well. Take special 
 
 Stream names are the `key` component of a streaming context. Stream Name is used to create and access streams in the system. Thus it is important to pay special attention to them.
 
-\*Stream names can be loaded in the application as part of the configuration or separately.
+- Stream names can be loaded in the application as part of the configuration or separately.
 
 - Stream names can be dynamic or static depending on your application's needs. Using dynamic stream names always ensures better security.
 
@@ -409,7 +409,7 @@ In the context of a streaming application associated with Red5 pro, authorizatio
 
 Since a lot of this (administration by role) is related to the server side behaviour, you might need to interface client code with some custom server side code.
 
-In general we provide the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html) for the server, which can help you implement authentication or authorization very easily. All of this is provided `out of the box` with simple configuration and comprehencive instructions for client integrations. You can also extend the auth module to have your security system do more.
+For implementing security we provide the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html) for the server, which can help you implement authentication or authorization very easily. All of this is provided `out of the box` with simple configuration and comprehencive instructions for client integrations. You can also extend the auth module to have your security system do more.
 
 **Recommended Reads**
 
@@ -451,6 +451,8 @@ The abbreviation ABR stands for adaptive bitrate streaming. This is a feature us
 
 ABR is not supported for single server installs or even manual multi server clusters. If you need ABR, you need to use Red5 pro autoscaling. for more information i recommend reading through the [ABR guide](https://red5pro.com/docs/streaming/abruserguide.html) and the use of [transcode nodes](https://red5pro.com/docs/autoscale/transcoder.html)
 
+At the time of writing this, ABR is not supported for RTSP clients. Clients can subscribe to the stream quality of their choice manually.
+
 #### Muting Audio
 
 When publishing or subscribing, sometimes you might want to mute audio of the stream. Typically with online public events, sometimes when there is a break or so, the video is still running and the audio is paused to avoid noise to subscribers. On the other side a subscriber too might sometimes want to watch just the video.
@@ -481,7 +483,51 @@ To implement audio/video mute/unmute for a Android /IOS SDK client, check out th
 
 #### Adding data exchange capability
 
-In lot of application use cases, there is a need to work with realtime data. Realtime data can be thought of as chat messages, shared temporary data stores
+In lot of application use cases, there is a need to work with realtime data. Realtime data can be thought of as chat messages, control messages, shared temporary data stores and so on.
+
+Red5 pro has multiple ways of transmistting data in realtime, with each having its own usage scenario.
+
+- **Sending data over stream:** : Transmitting data over stream using the `stream.send` api provided in each SDK.
+- **Client to server RPC:** Invoking custom Red5 pro server side methods from client.
+- **Red5 pro SharedObjects:** Using Red5 pro SharedObject to build interactive two communication between two or more clients.
+
+In this section we will be discussing about [Red5 pro SharedObjects](https://www.red5pro.com/docs/streaming/sharedobject.html) only. You can read the basics of [Red5 pro SharedObjects](https://www.red5pro.com/docs/streaming/sharedobject.html) in our official documentations.
+
+In the context of a Red5 pro application, you use sharedobjects, when you need to communicate in real time between clients. Usually sharedobjects facilitate bidirectional communication, but you can design your application to restrict communication as you see fit.
+
+We offer SharedObjects as part of each SDK and also the server side API. SharedObjects can be used with or without streams in general. If you needs sharedobjects support in your application take a look at following testbed examples:
+
+**HTML5 SDK**
+
+- [SharedObject with publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishSharedObject)
+
+* [SharedObject with subscriber](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribeSharedObject)
+
+* [Standalone SharedObjects](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/sharedObject)
+
+**Android**
+
+- [Standalone SharedObjects](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SharedObjectTest)
+
+**IOS**
+
+- [Standalone SharedObjects](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SharedObject)
+
+**A few good use cases**
+
+**Communication and state sharing**
+
+If you are designing a video conference, you can use shared objects to share information about the participants such as usernames, stream names etc. Whenever a client joins the system, the username, stream name etc are pushed into a common shared object associated with the session. As soon as the connecting clients subscribes to the shared object, they get updated about users that are already in the system. Similarly the existing clients also get notified about the new client.
+
+Through the session, you can also communicate the muted/unmuted state of devices of a client to other clients, if your application warrants of it.
+
+If you are building a game or whiteboard application you can relay/share the state of the game/whiteboard with other clients in realtime using sharedobjects.
+
+**Tracking stream subscribers in realtime**
+
+You can also use shared objects as a means of sharing arbitrary data in realtime.
+
+Consider that you have an server side application that tracks subscriber count. Now if you want to share that with clients (ex: display active subscriber count on player), you can have the server side logic push this informatrion intoa shared object. On client side, you can subscribe to this sharedobject to receieve realtime updates of changing subscriber count.
 
 #### Sending messages over stream
 
