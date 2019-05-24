@@ -417,7 +417,7 @@ Publisher connects to the server application called `live` and acquires a Shared
 
 > You can also use any other third party push notification system such as Amazon SNS etc to relay the information between clients.
 
-#### Authenticating clients
+#### Adding Authentication for clients
 
 Next, depending on your requirements it is both important and prudent to secure your system against unauthorized client access.
 
@@ -437,7 +437,9 @@ Since a lot of this (authorization by role) is related to the server side behavi
 
 For implementing security we provide the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html) for the server, which can help you implement authentication or authorization very easily. All of this is provided `out of the box` with simple configuration and comprehencive instructions for client integrations. You can also extend the auth module to have your security system do more.
 
-**Recommended Reads**
+Our testbed examples contain examples to help you integrate the server side security plugin with your own client. Check out the [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishAuth), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishAuthTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishAuth) examples on how to send authentication parameters from clien to server.
+
+**Additional Recommended Reads**
 
 - [Red5 Pro Simple Auth Plugin - Introduction](https://red5pro.com/docs/server/authplugin.html)
 - [Red5 Pro Simple Auth Plugin - Walkthrough](https://blog.red5pro.com/simple-authentication-walkthrough/)
@@ -445,13 +447,42 @@ For implementing security we provide the [Red5 pro simple auth plugin](https://r
 
 #### Publishing
 
+Once yourself publisher client is configured properly with necessary broadcast settings and authentication parameters as necessary, you can implement the mechanism to initialize your publisher client and start publishing. Depending on your requirement, you may want publishing with different contrains and options. 
 
+**Standard Publish**
 
-Once your publisher client is configured properly with necessary broadcast settings and authentication parameters as necessary, you can implement the mechanism to initialize your publisher client and start publishing. Depending on your requirement, you may want the publishing with different contrains and options.
+For simple publishing example take a look at the `Publish` example for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publish), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Publish) in the respective testbeds.
+
+**Changing Camera**
+
+In case of multiple camera devices, such as as in mobile phones and desktops with more than one USB cameras, you can easily select which device you with to use for publishing. In come cases it is possible to even swap devices while publishing.
+
+For  Camera Select and Camera Change examples take a look the following HTML5, Android and IOS testbeds.
+
+*  [HTML5 Camera Swap](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishCameraSwap)
+* [HTML5 Camera Select](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishCameraSource) 
+* [HTML5 live Camera Swap](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishMediaStreamCamera)
+* [Android Camera Swap](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishCameraSwapTest)
+* [IOS Camera Swap](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/CameraSwap)
+
+**HQ Audio**
+
+If audio quality is of more importance in your application checkout the HQ audio examples for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishHQAudio), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishHQAudioTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishHQAudio) respectively.
+
+**Custom Video Source**
+
+For mobile devices if you are looking to use a custom video source instead of the default camera devices, then perhaps the Custom Video Source example for [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishCustomSourceTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishCustomSource) is what you need to taek a look at.
+
 
 #### Subscribing
 
-TO DO
+Similar to the publisher, once yourself subscriber client is configured properly with necessary playback settings and authentication parameters as necessary, you can implement the mechanism to initialize your subscriber client and start subscribing. Depending on your requirement, you may want the subscription with different contrains and options. 
+
+**Standard Subscribe**
+
+**Playback Buffer**
+
+**VOD Playback**
 
 #### ABR
 
