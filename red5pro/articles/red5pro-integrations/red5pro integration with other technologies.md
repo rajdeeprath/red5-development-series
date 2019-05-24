@@ -449,9 +449,9 @@ Our testbed examples contain examples to help you integrate the server side secu
 
 Once yourself publisher client is configured properly with necessary broadcast settings and authentication parameters as necessary, you can implement the mechanism to initialize your publisher client and start publishing. Depending on your requirement, you may want publishing with different contrains and options. 
 
-**Standard Publish**
+**Simple Publish**
 
-For simple publishing example take a look at the `Publish` example for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publish), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Publish) in the respective testbeds.
+For simple publishing example take a look at the `Publish` testbed example for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publish), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Publish) in the respective testbeds.
 
 **Changing Camera**
 
@@ -473,16 +473,25 @@ If audio quality is of more importance in your application checkout the HQ audio
 
 For mobile devices if you are looking to use a custom video source instead of the default camera devices, then perhaps the Custom Video Source example for [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishCustomSourceTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishCustomSource) is what you need to taek a look at.
 
-
 #### Subscribing
 
 Similar to the publisher, once yourself subscriber client is configured properly with necessary playback settings and authentication parameters as necessary, you can implement the mechanism to initialize your subscriber client and start subscribing. Depending on your requirement, you may want the subscription with different contrains and options. 
 
-**Standard Subscribe**
+**Simple Subscribe**
 
-**Playback Buffer**
+For simple subscribe example take a look at the `Subscribe` testbed example for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribe), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Subscribe) in the respective testbeds.
+
+**Audio only subscription**
+
+If the target stream is audio oriented or if you do not want to subscribe to the video in the stream, checkout the `Audio only subscription` examples for [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/subscribeVideoMute), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeNoViewTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeNoView) in the respective testbeds.
 
 **VOD Playback**
+
+Each Red5 Pro SDK also provides the capability to subscribe to a recorded video (video on demand), with the platform's / protocol's limitation under consideration. 
+
+For HTML5 use the [VOD playback](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD) example, whereas for Android and IOS you can follow the standard subscribe examples, with the differnce that you specify the `filename with extension` instead of `live stream name`.
+
+For HLs / Mp4 VOD you can also play your media file from a cloud bucket (S3 or GStorage) in the mobile browser of a webview as a standard HTML5 media.
 
 #### ABR
 
