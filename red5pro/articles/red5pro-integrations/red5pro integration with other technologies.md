@@ -353,7 +353,37 @@ Stream names are the `key` component of a streaming context. Stream Name is used
 
 #### Configuring clients
 
-TO DO
+Once you have the mechanism to load the configuration in place, the next step is to properly configuring your clients for publishing/subscribing.
+
+##### Resolution and framerate
+
+Quality is a subtle combination of appropriate resolution, framerate, keyframe interval and bandwidth settings.It a commonly known concept that motion requires bandwidth. So depending on your content you can try higher resolution at same bandwidth if you know there is little or no motion.
+
+**RTMP Publishers**
+
+If you are using a third party RTMP encoder (non flash), take a look at our [encoder configuration guide](https://www.red5pro.com/docs/server/rtmppublishers.html) on recommended settings. When using third party encoders, you can take advantage of their industry standard presets for recommedned resolution and framerate settings.
+
+**Android/IOS Publishers**
+
+For mobile SDK publishers, `854x480` at either `750Kbps` or `1000Kbps` is a standard value. You can experiment around it to find what best suits your application. If you wish to set high quality resolutions such as `720P` or `1080P`, make sure to test it thoroughly with the intended devices to make sure that the network as well as the device can handle it. You can checkout the [testbed configuration](https://github.com/red5pro/streaming-android/blob/master/app/src/main/res/raw/tests.xml) to see the different configuration attributes available and sample values.
+
+**HTML5 Publishers**
+
+For HTML5 SDK publishers, the SDK provides simple way of defining publish settings as a JSON object. Capture dimensions, bandwidth, keyFrameInterval and framerate the primary parameters for a publisher client. The SDK will use the `mediaConstraints` defined and then cycle through the `gUM` to find a appropriate match that is allowed by the browser. You can checkout the [testbed configuration](https://github.com/red5pro/streaming-html5/blob/master/static/script/testbed-config.js) to see the different configuration attributes available and sample values.
+
+##### FrameRate
+
+Framerate is usally the most concealed settings of a streaming application. When you see a video stream you probably cannot make a qualitative or quantitative assumption of the framerate that is used. Human brain can interpret upto 1000fps but it cannot makeout any difference above 60fps. TV standards NTSC and PAL are set at 29.27 fps & 25 fps respectively, whereas webcam stream appreas `just fine` at 15 fps. However, the determination of framerate also must consider the bandwidth available. More pictures you want to send over the network, more bandwidth you need.
+
+So the selection of Framerate depends on the type of content being broadcasted, where it will be played back and how much bandwidth you have.
+
+##### KeyFrame Interval
+
+KeyFrame interval dictates how often shoudl the encoder transmit `keyframes`. The keyframe (i-frame) is the full frame of the image in a video. Subsequent frames, the delta frames, only contain the information that has changed. It is all about how video compression works in transmission. We dwont be going into the details of it here. But you should just know that in general, `frequent keyframes can improve quality and initial playback time at the cost of significant bandwidth and cpu`.
+
+##### Bandwidth
+
+If you are using a web based encoder, you can do a bandwidth test to determine the optimal bandwidth quality settings for the client. We have bandwidth detection examples for each SDK in the respective testbeds. Optionally you may also provide selectable presets of quality settings.Based on the quality settings you can intialize the publisher's camera device for a broadcast.
 
 #### Building coordination between publishers and subscribers
 
@@ -383,7 +413,7 @@ Publisher publishes a stream to the server application called `live`. A mechanis
 
 **Example**
 
-Publisher connects to server application called `live` and acquires a SharedObject called `users`. the publisher then publishes a stream to the server application. On successful publish acknowledgement from server, the publisher pushes the stream name into the sharedobject.Subscriber(s) also follow the same initialization sequence and acquires a SharedObject called `users`. As soon as publisher pushes data into the sharedobject, the server will push it to all connected clients. The subscribers can then read the stream name from the payload and play the stream. Subscribers that connect late will also recieve the pushed data, as soon as they conenct to the sharedobject.
+Publisher connects to the server application called `live` and acquires a SharedObject called `users`. the publisher then publishes a stream to the server application. On successful publish acknowledgement from server, the publisher pushes the stream name into the sharedobject.Subscriber(s) also follow the same initialization sequence and acquires a SharedObject called `users`. As soon as publisher pushes data into the sharedobject, the server will push it to all connected clients. The subscribers can then read the stream name from the payload and play the stream. Subscribers that connect late will also recieve the pushed data, as soon as they conenct to the sharedobject.
 
 > You can also use any other third party push notification system such as Amazon SNS etc to relay the information between clients.
 
@@ -395,19 +425,15 @@ Here let me talk about two things - authentication and authorization.
 
 **Authentication**
 
-Authentication implies granting access to your resources. It just simply means you need to prove that you can access the resources. Simplest example is a `login system`. At the top most level the form will just validate your access to the system without caring for who you are.
-
-In the context of a streaming application associated with Red5 pro, authentication is useful when all clients will have equal rights. Example: for an a/v chat if you assume that everyone can publish and everyone can subscribe and there is no admin then all you care about is authentication.
+Authentication implies granting access to your resources. It just simply means you need to prove that you can access the resources. Simplest example is a `login system`. At the top most level the form will just validate your access to the system without caring for who you are. In the context of a streaming application associated with Red5 pro, authentication is useful when all clients will have equal rights. Example: for an a/v chat if you assume that everyone can publish and everyone can subscribe and there is no admin then all you care about is authentication.
 
 You can authenticate your clients at your own application level using a remote database or api, or you can even authenticate them using Red5 pro server side code.
 
 **Authorization**
 
-Authorization implies granting role specific permissions. So your authentication can be augmented with authorization on server level. This means you want to have separate rights for seperate clients.
+Authorization implies granting role specific permissions. So your authentication can be augmented with authorization on server level. This means you want to have separate rights for seperate clients. In the context of a streaming application associated with Red5 pro, authorization is necessary to seperate client behaviour based on the roles they play in the system.
 
-In the context of a streaming application associated with Red5 pro, authorization is necessary to seperate publisher activity from subscriber activity. Or perhaps ensure that one of the multi-user chat participants is an admin.
-
-Since a lot of this (administration by role) is related to the server side behaviour, you might need to interface client code with some custom server side code.
+Since a lot of this (authorization by role) is related to the server side behaviour, you might need to interface client code with some custom server side code.
 
 For implementing security we provide the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html) for the server, which can help you implement authentication or authorization very easily. All of this is provided `out of the box` with simple configuration and comprehencive instructions for client integrations. You can also extend the auth module to have your security system do more.
 
@@ -419,27 +445,9 @@ For implementing security we provide the [Red5 pro simple auth plugin](https://r
 
 #### Publishing
 
-TO DO
 
-From a publisher point of view, you can do a bandwidth test to determine the best quality settings for the client. Optionally you may also provide selectable presets of quality settings.Based on the quality settings you can intialize the publisher's camera device for a broadcast.
 
-**RTMP Publishers**
-
-If you are using a RTMP encoder, take a look at our [encoder configuration guide](https://www.red5pro.com/docs/server/rtmppublishers.html) on recommended settings.
-
-**Android/IOS Publishers**
-
-For mobile SDK publishers, `854x480` at either `750Kbps` or `1000Kbps` is a standard value. You can experiment around it to find what best suits your application. If you wish to set high quality resolutions such as `720P` or `1080P`, make sure to test it thoroughly with the intended devices to make sure that the network as well as the device can handle it. It a commonly known concept that motion requires bandwidth. So depending on your content you can try higher resolution at same bandwidth if you know there is little or no motion.
-
-For hands-on code, take a look at
-Android [publisher](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishTest) and IOS [publisher](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/Publish) examples.
-
-**HTM5 Publishers**
-
-For HTML5 SDK publishers, the SDK provides simple way of defining publish settings as a JSON object. The capture dimensions, bandwidth, keyFramerate and framerate the primary parameters for a publisher client. The SDK will use the `mediaConstraints` defined and then cycle through the `gUM` to find a appropriate match that is allowed by the browser.Here the `cameraWidth` and `cameraHeight` are thee initial dimensions.
-
-For hands-on code, take a look at
-HTML5 [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publish) example.
+Once your publisher client is configured properly with necessary broadcast settings and authentication parameters as necessary, you can implement the mechanism to initialize your publisher client and start publishing. Depending on your requirement, you may want the publishing with different contrains and options.
 
 #### Subscribing
 
