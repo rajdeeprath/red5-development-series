@@ -191,9 +191,41 @@ There is another type of integration, which is also popular amonst a certain typ
 
 If you do want to make use of such integrations, i would advise going with RPC style integrations instead of runtime based integrations for clarity.
 
-### Autoscale specific integration factors and considerations
+### Autoscale specific server side integration factors and considerations
 
-TODO
+Server side integrations for autoscale setups is similar to single server or manual cluster setups with a few differences. In this section, i wont be deep diving into autoscaling deployments. Rather we will take a look at the implications that the autoscaling deployment has on server side integrations.
+
+## Autoscale design considerations for Server side development of plugins and webapps
+
+* Never rely on local file system of the VM to save media or other assets at runtime. VMs are volatile and might get deleted at anytime due to scaledown, failure etc.
+
+* Avoid depending on per-node client-server RMI calls and other server side mechanism that cannot be globalized in the cluster.These calls are fine for single server setups only. For global communication over cluster use sharedobjects. You can design cross cluster communication solution using SharedObjects by combining server side and client side shared objects api. You can also take a look at our documentation on [extending the clustering solution](https://www.red5pro.com/docs/server/clusters.html#extending) and working with [server side sharedobjects](https://red5pro.com/docs/serverside-guide/state-management.html) for guidance.
+
+You can also use cloud based solutions such as amazon sns and google pub-sub for communication between nodes.
+
+* Prefer to use cloud offerings to externalize and synchronize data between nodes for media storage and sharing.
+
+#### Deploying Red5 pro plugins in autoscaling environments
+
+Red5 pro plugins in an autoscale environment should be deployed via the Red5 pro image that is used to spin up autoscale node. At the time of writing this document, we dont support specifying different images for each node type (`origin`, `edge` etc).
+
+Thus you will have the same node image being for every node type, and that means the plugin will be deployed to every node created. If you want to deploy the plugin only specific node types only,then you will need to create your own mechnaisn for it. Every playform has an option for creating a `startup script`, which is usually a simple bash script that will run when the VM is created.
+
+> The `startup script` option is supported for AWS and Google through Stream Manager's launch configuration format. You can also use the [standard linux procedures](https://linuxtechlab.com/executing-commands-scripts-at-reboot/) to define a `startup script`, which will be executed when the operating system starts.
+
+The `role` assigned to a node by the stream manager, is usually attached to the vm instance as `metadata` or `tags` (depending on the platform). You can access this data from within the VM using the platform's API for reading metadata. Once you have the `role`, you can use contional logic in your startup script to configure the plugin differently as needed.
+
+You can also pull in the plugin and deploy it to the node dynamically from a remote site at the  time of initalization using the `startup script`. This is a more flexible and advance way of deploying assets to autoscaling nodes. This way of installing the plugin will help you make updates without having to create a new image everytime.
+
+#### Deploying Red5 pro webapps in autoscaling environments
+
+Similar to plugins the primary and recommended method to deploy custom webapps in an autoscale environment is to add them in the node `image`. While plugins may or may not be installed on all the nodes, a webapp has to be present on all node types. This is because of hwo the clustering system works.
+
+Again similar to plugins, you can also pull in the webapp and deploy it to the node dynamically from a remote site at the time of initalization using the `startup script`. 
+
+Make sure the folder structure of the webapp being deployed is correct as per a Red5 pro webapps. Once you have checked it thoroughly, deploy ti to a remote location as a `zip` or `war` file. then configure your script to pull the file to the server and extract it into the webapps folder.
+
+> The `war`file is also an archive. Just rename it to zip and extract it.
 
 **Conclusion**
 
