@@ -463,6 +463,10 @@ For implementing security we provide the [Red5 pro simple auth plugin](https://r
 
 Our testbed examples contain examples to help you integrate the server side security plugin with your own client. Check out the [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishAuth), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishAuthTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishAuth) examples on how to send authentication parameters from client to server.
 
+> For WebRTC clients in autoscale setups, make sure to use [publish proxy](https://github.com/red5pro/streaming-html5/tree/master/src/page/sm-test/publishStreamManagerProxy) and [subscribe proxy](https://github.com/red5pro/streaming-html5/tree/master/src/page/sm-test/subscribeStreamManagerProxy) examples as a base for building your publisher and subscriber clients respectively.
+
+You can also take a look at the `round-trip` authentication examples using [Red5 pro simple auth plugin](https://www.red5pro.com/docs/server/authplugin.html) for [publisher](https://github.com/red5pro/streaming-html5/tree/master/src/page/sm-test/publishStreamManagerProxyRoundTripAuth) and [subscriber](https://github.com/red5pro/streaming-html5/tree/master/src/page/sm-test/subscribeStreamManagerProxyRoundTripAuth) clients.
+
 **Additional Recommended Reads**
 
 - [Red5 Pro Simple Auth Plugin - Introduction](https://red5pro.com/docs/server/authplugin.html)
@@ -472,6 +476,8 @@ Our testbed examples contain examples to help you integrate the server side secu
 #### Publishing
 
 Once yourself publisher client is configured properly with necessary broadcast settings and authentication parameters as necessary, you can implement the mechanism to initialize your publisher client and start publishing. Depending on your requirement, you may want to publish with different constraints and options. 
+
+> For WebRTC clients in autoscale setups, make sure to use [publish proxy](https://github.com/red5pro/streaming-html5/tree/master/src/page/sm-test/publishStreamManagerProxy) example as a base for building your publisher client and then augment it with additional features.
 
 **Simple Publish**
 
@@ -500,6 +506,8 @@ For mobile devices, if you are looking to use a custom video source instead of t
 #### Subscribing
 
 Similar to the publisher, once yourself subscriber client is configured properly with necessary playback settings and authentication parameters as necessary, you can implement the mechanism to initialize your subscriber client and start subscribing. Depending on your requirement, you may want the subscription with different constraints and options. 
+
+> For WebRTC clients in autoscale setups, make sure to use [subscribe proxy](https://github.com/red5pro/streaming-html5/tree/master/src/page/sm-test/subscribeStreamManagerProxy) example as a base for building your subscriber client and then augment it with additional features.
 
 **Simple Subscribe**
 
@@ -553,9 +561,11 @@ Publisher connects to the server application called `live` and acquires a Shared
 
 The abbreviation ABR stands for adaptive bitrate streaming. This is a feature used to distribute a stream to multiple clients having different bandwidths efficiently by matching an appropriate version (by quality) of the stream with each client.
 
+To use ABR, you need to first create a [stream provision using the Stream Manager API](https://red5pro.com/docs/autoscale/smapi-streamprovision). `Provisioning` implies, describing the different stream qualities that you want to generate. Once the original stream is published, the transcoder will accordingly generate ABR. Subsequently when you subscribe to the stream using the [Red5 pro HTML5 SDK](https://github.com/red5pro/streaming-html5), the client will automatically be switched to the appropriate quality based on its bandwidth.
+
 ABR is not supported for single server installs or even manual multi-server clusters. If you need ABR, you need to use Red5 pro autoscaling. for more information, I recommend reading through the [ABR guide](https://red5pro.com/docs/streaming/abruserguide.html) and the use of [transcode nodes](https://red5pro.com/docs/autoscale/transcoder.html)
 
-At the time of writing this, ABR is not supported for RTSP clients. Clients can subscribe to the stream quality of their choice manually.
+> At the time of writing this, ABR is not supported for RTSP clients. Clients can subscribe to the stream quality of their choice manually.
 
 #### Muting Audio
 
