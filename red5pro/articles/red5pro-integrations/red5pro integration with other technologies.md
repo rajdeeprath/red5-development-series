@@ -571,29 +571,19 @@ ABR is not supported for single server installs or even manual multi-server clus
 
 When publishing or subscribing, sometimes you might want to mute the audio of the stream. Typically with online public events, sometimes when there is a break or so, the video is still running and the audio is paused to avoid noise to subscribers. On the other side, a subscriber too might sometimes want to watch just the video.
 
-In such cases, you need to implement the mute audio functionality in your application.
-
-**HTML5 SDK**
-
-To implement audio/video mute/unmute for a HTML5 SDK client, check out the [example on publisher audio/video mute](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishMute). On the other hand, subscribers can either adjust the volume of the playback stream or completely mute it.
-
-**Android/IOS SDK**
-
 **Publishers**
 
-To implement audio/video mute/unmute for a Android /IOS SDK client, check out the [android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishPauseTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishPause) examples on publisher audio/video mute funtionality.
+To implement audio/video mute/unmute for a publisher client, check out the [HTML5](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishMute), [Android](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishPauseTest) and [IOS](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/PublishPause) examples respectively.
 
 **Subscribers**
 
-**Android**
+For subscribers, you can implement audio control in two ways. You can either control the volume to implement mute effect or simply use the mute api.
 
-- [Adjust the volume](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeSetVolume)
-- [Entirely mute](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeMuteAudio)
+HTML5 clients can invoke [<subcriberImplementation>.mute()](https://www.red5pro.com/docs/static/html5-streaming/RTCSubscriber.html#mute). Although this api is for `RTCSubscriber`, `RTMPSubscriber` and `HLSSubscriber` implement it as well. Essentially this causes a mute on the video element of the page. Server does not stop sending audio.
 
-**IOS**
+Android clients can either [adjust the volume](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeSetVolume) or [entirely mute](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeMuteAudio) the stream.
 
-- [Adjust the volume](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeSetVolumeTest)
-- [Entirely mute](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeMuteTest)
+similarly, IOS clients can either [adjust the volume](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeSetVolumeTest) or [entirely mute](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeMuteTest) the stream.
 
 #### Adding data capabilities - SharedObjects
 
@@ -601,7 +591,7 @@ In a lot of application use cases, there is a need to work with real-time data. 
 
 Red5 pro has multiple ways of transmitting data in real-time, with each having its own usage scenario.
 
-- **Sending data over the stream: **: Transmitting data over a stream using the `stream.send` API provided in each SDK.
+- **Sending data over the stream**: Transmitting data over a stream using the `stream.send` API provided in each SDK.
 - **Client to server RPC:** Invoking custom Red5 pro server side methods from the client.
 - **Red5 pro SharedObjects:** Using Red5 pro shared object to build interactive two communication between two or more clients.
 
@@ -627,7 +617,7 @@ We offer SharedObjects as part of each SDK and also the server side API. Shared 
 
 - [Standalone SharedObjects](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SharedObject)
 
-**A few good use cases**
+**A few good use cases for SharedObjects**
 
 **Communication and state sharing**
 
@@ -721,5 +711,13 @@ If you write your own custom solution as a webapp or plugin, you can connect wit
 As an out of the box solution, we offer [Red5 pro cloud storage plugin](https://red5pro.com/docs/server/cloudstoragevod.html), which can help you move your recordings to AWS or Google bucket automatically. It can also help transcode flv to mp4 before uploading.
 
 If you wish to serve all types of clients, make sure you have `MP4` version of the recording alongside `FLV` and `HLS`. You can build any custom security around VOD similar to live streams using the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html).
+
+Checkout the following testbed examples to get more info on implementing VOD in your application:
+
+[HTML5 SDK](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
+[Android](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
+[IOS](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
+
+
 
 ## Use cases
