@@ -1,6 +1,55 @@
 # Integrating Red5 Pro with external systems
 
-\pagebreak
+[Introduction](#)
+
+[Integration with Red5 Pro - implication and expectations](#)
+
+[Server-side integration](#)
+  * [Elements of Red5 Pro server side](#)
+    * [Red5 Pro Webapps]()
+    * [Red5 Pro Plugins]()
+  * [Out of the box features for server-side integration](#)
+    * [Ready to use streaming applications]()
+    * [Ready to use plugins]()
+    * [Ready to use APIs]()
+  * [Developing custom server side features for integration](#)
+    * [When and where custom development is required](#)
+    * [Webapp vs Plugin development](#)
+      * [Custom webapp development](#)
+      * [Custom plugin development](#)
+    * [RPC and Low Level integrations](#)
+  * [Autoscale specific server side integration factors and considerations](#)
+    * [Design considerations for autoscale oriented server side development](#)
+    * [Deploying Red5 pro plugins in autoscaling environments](#)
+    * [Deploying Red5 pro webapps in autoscaling environments](#)
+  * [Conclusion on server side integration](#)
+
+[Client-side integration](#)
+  * [Elements of Red5 Pro client side](#)
+    * [Client SDKs](#)
+    * [Autoscale specific client side integration factors and considerations](#)
+    * [Out of the box features for client-side integration](#)
+      * [Client Testbeds](#)
+    * [Developing custom client side features for integration](#)
+      * [When and where custom client-side development is required](#)
+    * [Common activities of a Red5 pro client application](#)
+      * [Loading configuration](#)
+      * [Generating stream names](#)
+      * [Configuring clients](#)
+      * [Loading configuration](#)      
+      * [Adding Authentication for clients](#)
+      * [Publishing](#)
+      * [Subscribing](#)
+      * [Building coordination between publishers and subscribers](#)
+      * [ABR Subscription](#)
+      * [Muting Audio](#)
+      * [Adding data capabilities - SharedObjects](#)
+      * [Sending messages over the stream](#)
+      * [Handling interruptions](#)
+      * [Capturing snapshot](#)
+      * [Recording the session](#)
+      * [Storing and Viewing VOD Recordings](#)
+* [Use cases](#)
 
 ## Introduction
 
@@ -175,7 +224,7 @@ Here are a few typical use cases that make a good case for a custom plugin:
 
 - For more snippets and understanding on different things that you can do with Red5 pro, check out [the collection sample plugins on GitHub by Rajdeep Rath](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-plugin-examples)
 
-##### RPC and Low Level integrations
+#### RPC and Low Level integrations
 
 There is another type of integration, which is also popular amongst developers. Its called runtime integration. Usually, two different technologies can talk to each other by either loading each other's runtimes to access their classes at a low level or each one talks to the other using an internal RPC mechanism over sockets. Some popular examples of such implementations are:
 
@@ -198,7 +247,7 @@ Server side integrations for autoscale setups is similar to a single server or m
 
 You can also use cloud-based solutions such as Amazon SNS and google Pub-Sub for communication between nodes.
 
-* Prefer to use cloud offerings to externalize and synchronize data between nodes for media storage and sharing.
+> Prefer to use cloud offerings such as aws efs, S3, google filestore etc to externalize and synchronize data between nodes for media storage and sharing.
 
 #### Deploying Red5 pro plugins in autoscaling environments
 
@@ -222,11 +271,9 @@ Make sure the folder structure of the webapp being deployed is correct as per a 
 
 > The `war` file is also an archive. Just rename it to `zip` and extract it.
 
-**Conclusion**
+### Conclusion on server side integration
 
 So with that, we conclude the discussion on server side integrations for Red5 pro. All the points and links shared in the previous sections should be good enough to help you integrate your system with Red5 pro server side without hiccups. If you still have problems and need help, get in touch with me & my peers on [slack](https://red5pro.slack.com).
-
-\pagebreak
 
 ## Client side integration
 
@@ -394,38 +441,6 @@ KeyFrame interval dictates how often should the encoder transmit `keyframes`. Th
 
 If you are using a web-based encoder, you can do a bandwidth test to determine the optimal bandwidth quality settings for the client. We have bandwidth detection examples for each SDK in the respective testbeds. Optionally you may also provide selectable presets of quality settings. Based on the quality settings you can initialize the publisher's camera device for a broadcast.
 
-#### Building coordination between publishers and subscribers
-
-Once you have clients configured, the next step is to work on coordination. This will give rise to some fundamental design questions such as:
-
-- How will the client know about other clients in the system
-- How can we hide certain clients from other clients in the system
-- How do subscribers find publishers
-
-and so on.
-
-Remember that everything in Red5 pro is resources. `Connections`, `streams`, `scopes` and `shared objects` are all nothing but resources. So the problem of finding or not finding clients is actually the problem of being able to control access to these resources at a design level.
-
-For example, if I want to see your stream I need to know the application scope or subscope that you are connected to and the stream name that you are publishing. Thus if you want me to see your stream you should coordinate the application scope/subscope name, path and the stream name that you are publishing.
-
-Resources can be coordinated between the client in different ways:
-
-- `Hardcoded`: When developing applications, sometimes it is simpler to have the resource names embedded in the code for testing. This is the simplest way of coordinating resources. This way is **not** recommended for production use.
-
-- `Polling`: Client polls the database or a remote API endpoint for available resources. When the resource list seems to be populated, the client can pick out the data and access the resource.
-
-**Example**
-
-The publisher publishes a stream to the server application called `live`. A mechanism will detect `publish` event, and register the stream name in the database. Subscriber polls periodically to see if there is a stream name available to subscribe to. When the response contains a stream name entry, the subscriber will connect to the server application `live` and play the stream.
-
-- `Push Data`: Client connects to a remote service or Red5 pro sharedObjects and awaits a push data containing information about resources. Once data is received, the client will access the resource using the data in the `push notification`.
-
-**Example**
-
-Publisher connects to the server application called `live` and acquires a SharedObject called `users`. the publisher then publishes a stream to the server application. On successful publish acknowledgment from the server, the publisher pushes the stream name into the shared object.Subscriber(s) also follow the same initialization sequence and acquires a SharedObject called `users`. As soon as publisher pushes data into the shared object, the server will push it to all connected clients. The subscribers can then read the stream name from the payload and play the stream. Subscribers that connect late will also receive the pushed data, as soon as they connect to the shared object.
-
-> You can also use any other third party push notification system such as Amazon SNS etc to relay the information between clients.
-
 #### Adding Authentication for clients
 
 Next, depending on your requirements it is both important and prudent to secure your system against unauthorized client access.
@@ -468,7 +483,7 @@ In case of multiple camera devices, such as in mobile phones and desktops with m
 
 For  Camera Select and Camera Change examples take a look the following HTML5, Android and IOS testbeds.
 
-*  [HTML5 Camera Swap](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishCameraSwap)
+* [HTML5 Camera Swap](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishCameraSwap)
 * [HTML5 Camera Select](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishCameraSource) 
 * [HTML5 live Camera Swap](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/publishMediaStreamCamera)
 * [Android Camera Swap](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/PublishCameraSwapTest)
@@ -502,7 +517,39 @@ For HTML5 use the [VOD playback](https://github.com/red5pro/streaming-html5/tree
 
 For HLS / Mp4 VOD you can also play your media file from a cloud bucket (S3 or GStorage) in the mobile browser of a webview as a standard HTML5 media.
 
-#### ABR
+#### Building coordination between publishers and subscribers
+
+Once you have clients configured, the next step is to work on coordination. This will give rise to some fundamental design questions such as:
+
+- How will the client know about other clients in the system
+- How can we hide certain clients from other clients in the system
+- How do subscribers find publishers
+
+and so on.
+
+Remember that everything in Red5 pro is resources. `Connections`, `streams`, `scopes` and `shared objects` are all nothing but resources. So the problem of finding or not finding clients is actually the problem of being able to control access to these resources at a design level.
+
+For example, if I want to see your stream I need to know the application scope or subscope that you are connected to and the stream name that you are publishing. Thus if you want me to see your stream you should coordinate the application scope/subscope name, path and the stream name that you are publishing.
+
+Resources can be coordinated between the client in different ways:
+
+- `Hardcoded`: When developing applications, sometimes it is simpler to have the resource names embedded in the code for testing. This is the simplest way of coordinating resources. This way is **not** recommended for production use.
+
+- `Polling`: Client polls the database or a remote API endpoint for available resources. When the resource list seems to be populated, the client can pick out the data and access the resource.
+
+**Example**
+
+The publisher publishes a stream to the server application called `live`. A mechanism will detect `publish` event, and register the stream name in the database. Subscriber polls periodically to see if there is a stream name available to subscribe to. When the response contains a stream name entry, the subscriber will connect to the server application `live` and play the stream.
+
+- `Push Data`: Client connects to a remote service or Red5 pro sharedObjects and awaits a push data containing information about resources. Once data is received, the client will access the resource using the data in the `push notification`.
+
+**Example**
+
+Publisher connects to the server application called `live` and acquires a SharedObject called `users`. the publisher then publishes a stream to the server application. On successful publish acknowledgment from the server, the publisher pushes the stream name into the shared object.Subscriber(s) also follow the same initialization sequence and acquires a SharedObject called `users`. As soon as publisher pushes data into the shared object, the server will push it to all connected clients. The subscribers can then read the stream name from the payload and play the stream. Subscribers that connect late will also receive the pushed data, as soon as they connect to the shared object.
+
+> You can also use any other third party push notification system such as Amazon SNS etc to relay the information between clients.
+
+#### ABR Subscription
 
 The abbreviation ABR stands for adaptive bitrate streaming. This is a feature used to distribute a stream to multiple clients having different bandwidths efficiently by matching an appropriate version (by quality) of the stream with each client.
 
@@ -538,7 +585,7 @@ To implement audio/video mute/unmute for a Android /IOS SDK client, check out th
 - [Adjust the volume](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeSetVolumeTest)
 - [Entirely mute](https://github.com/red5pro/streaming-android/tree/master/app/src/main/java/red5pro/org/testandroidproject/tests/SubscribeMuteTest)
 
-#### Adding data exchange capability
+#### Adding data capabilities - SharedObjects
 
 In a lot of application use cases, there is a need to work with real-time data. Real-time data can be thought of as chat messages, control messages, shared temporary data stores and so on.
 
@@ -665,6 +712,4 @@ As an out of the box solution, we offer [Red5 pro cloud storage plugin](https://
 
 If you wish to serve all types of clients, make sure you have `MP4` version of the recording alongside `FLV` and `HLS`. You can build any custom security around VOD similar to live streams using the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html).
 
-## Use Cases
-
-## Tips and tricks
+## Use cases
