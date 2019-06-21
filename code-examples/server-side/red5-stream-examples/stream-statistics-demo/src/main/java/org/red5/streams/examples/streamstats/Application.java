@@ -38,7 +38,14 @@ public class Application extends MultiThreadedApplicationAdapter {
 	
 	
 	/**
-	 * Fetch stream statistics for a broadcast stream
+	 * Fetch stream statistics for a broadcast stream. 
+	 *
+	 * <p>
+	 * NOTE: If using this example with Red5 pro, make sure to use `IProStream`
+	 * instead of `ClientBroadcastStream`. You can access `IProStream` by including
+	 * <a href="https://github.com/red5pro/red5pro-common">red5pro-common</a> dependency
+	 * in the project.
+	 * </p>
 	 * 
 	 * @param stream
 	 * @return
