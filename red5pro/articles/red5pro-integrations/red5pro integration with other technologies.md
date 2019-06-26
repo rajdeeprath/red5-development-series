@@ -706,7 +706,7 @@ By default, the automatic recording captures FSL ad HLS files. If you do not wan
 
 By default, recordings are stored in the `streams` directory of the webapp in the context. If you want you can move the recordings to a remote server for storage and later serving.
 
-If you write your own custom solution as a webapp or plugin, you can connect with us on slack for development tips on subjects such as detecting when to upload a file, etc.
+If you write your own custom solution as a webapp or plugin, you can connect with us on slack for development tips on subjects on working with VOD files.
 
 As an out of the box solution, we offer [Red5 pro cloud storage plugin](https://red5pro.com/docs/server/cloudstoragevod.html), which can help you move your recordings to AWS or Google bucket automatically. It can also help transcode flv to mp4 before uploading.
 
@@ -718,6 +718,160 @@ Checkout the following testbed examples to get more info on implementing VOD in 
 [Android](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
 [IOS](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
 
-
-
 ## Use cases
+
+### Online astrology consultation system
+
+##### Overview of the system
+
+An online astrology consultation system is centered around a service provider and a service receiever. The service provider in this case is an astrologer (one who provides [astrology](https://en.wikipedia.org/wiki/Astrology) related services) and the service receiver is a client interested is receieving astrology related services.
+
+The nature of the business may be commercial or free (which beyond our scope of discussion), but the princiles on which it is built will remain the same. The client schedules an appointment with the astrologer through the business application.
+
+Once the appointment is booked (accepted by system), the system will send a mail or notification (on mobile apps), when the time arrives. The astrologer will receive intimation prior to the client, since the astrologer is like a `host` of the event.
+
+Astrologer will come online and start publishing. Soon the client joins in and starts publishing own stream and subscribes to the astrologer's stream. A session between the astrologer starts and continues for a period of time. Participants may (optionally) also send text messages to each other.
+
+ The session is terminated by participants or the system as per business requirements.
+
+##### Deciphering the problem and separating concerns
+
+In the stated use case, we have two participants, one of whom is the host and the other is the client. It is important to note that none of them may have too much control over the system. Instead it is the system that connects, coordinates and disconnects them. This is therefore, a typical case of two way communication.
+
+Once the pattern has been identified, the next logical step is to understand and  breakdown the requirements into two parts, - The business application requirements and the media sever requirements. Separation of concerns is necessary for delegation of task as well as proper execution of workflow.
+
+We will not be going deep into `Business application development`, as that isnt our scope for the discussion. However we will be brushing through the overview of the features and funtionality that has to be developed in that domain. Our main focus will be the development on the streaming side and interfacing with the business application.
+
+##### Business application development (Non Red5 pro)
+
+**Business application** integration will involve standard application development procedures such as **registration**, **login** etc. Apart from this there can also be database table(s) to track sessions, stream names, stream states etc. Business application, will also take care of **notifying** participants prior to scheduled event time, **initiating & tracking** the session, **coordinating**  between participants (this funtionality can be shared by the business application and the media server) and finally **terminating** session (log out user etc) when the session is complete / deemed completed.
+
+##### Streaming application development (Red5 pro)
+
+**Streaming application** integration will revolve around developing media server application (if needed) and clients applications that interface with the media server to consume services. Server side application will provide an entry point for clients to connect to the media server and also custom logic as needed for building any communication between clients, realtime coordination etc.
+
+**Server application development**
+
+For the server side application development our requirements are as follows:
+
+* Allow users to connect and stream live
+* Authenticate users
+* Track state of client streams (online/offline)
+* Allow administration of client sessions by the business application
+* Optionally track client session time
+
+Now lets address each of these requirements, using custom development / out-of-the-box options available to us.
+
+1. **Entry point**: Develop a custom Red5 pro web application for the solution, which will be used as a entry point to Red5 pro media server by the participants.A custom webapp will allow the implemtation of custom business logic as and when needed.
+
+> It is important to note that the business application server should assign stream names for each participant in the application and it should be unique across the system.
+
+2. **Authenticate users**: Implement security on the webapp using [Red5 pro simple auth plugin](https://www.red5pro.com/docs/server/authplugin.html)'s [roundtrip validation](https://github.com/red5pro/red5pro-simple-auth-plugin/blob/master/red5proroundtripauthvalidator.md) mechanism.
+
+Both participants will login into the business application and get assigned a session token. They will then connect to the custom webapp using the token. The webapp will use the auth plugin to authenticate participants.
+
+3. **Tracking the state of clients**: When you have a custom webapp you have more control over the behaviour of the application. In this case we will be leverging the Red5 pro [MultiThreadedApplicationAdapter](http://red5.org/javadoc/red5-server/org/red5/server/adapter/MultiThreadedApplicationAdapter.html) callback handlers to add functionality. You can checkout [this documentation](https://www.red5pro.com/docs/serverside-guide/streams.html#2-red5-pro-stream-action-callbacks-in-application-adapter) on the different handlers available to a webapp.
+
+For our use case, we are only interested in two handlers - `streamBroadcastStart` and `streamBroadcastClose`.
+
+**Snippet**
+```java
+
+	@Override
+	public void streamBroadcastStart(IBroadcastStream stream) {
+		log.info("streamBroadcastStart {} ", stream);
+		super.streamBroadcastStart(stream);
+	}
+
+  @Override
+	public void streamBroadcastClose(IBroadcastStream stream) {
+		log.info("streamBroadcastClose {} ", stream);
+		super.streamBroadcastClose(stream);
+	}
+
+```
+
+In the above handlers, you can add custom code just before the `super` calls. Here you can add `HTTP calls` to notify the business application server whenever a stream starts or stops. The business application can use this to track stream state (participant's state) and show a offline/online indicator if needed.
+
+4. **Realtime state tracking**: For proper communicationa and seamless user experience you can also make use of Red5 pro shared objects alongside `HTTP calls`. Shared objects are based on socket connections and wil generally be faster and more responsive than using HTTP to track state.
+
+To use this option you must enable your webapp to be able to work with [Red5 pro server side shared objects](https://www.red5pro.com/docs/serverside-guide/state-management.html). The shared object should be initialized on the server side and entirely managed by the webapp code.The clients will merely subscribe to it. 
+
+> In the `Client application development` section, you will see hwo we can levegare this server side shared object implementation for building coordination between clients.
+
+For an example of using server side shared objects, see [the following code examples](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-sharedobject-examples).
+
+**Designing the server side flow with shared objects**:
+
+* In your custom webapp add mechanism to dynamically **create**, **destroy** and **read** server side shared objects on demand (CRUD). Each shared objects will represent a realtime session between participants.
+
+* Add HTTP api (hooks) to your webapp such that, you can trigger these methods using a HTTP client remotely as an administrator. The simplest way to add HTTP hooks to your webapp is via servlets. Check out [this example](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-misc-examples/http-servlet-demo) of adding HTTP servlets to your webapp.
+
+* When the appointment time arrives, the business application server will use the `create` HTTP hook to request the creation of a server side shared object using a `unique session name`, that identifies the session.
+
+* When participant clients try to connect, they provide a `username/id` and the `session name` in the connection params (along with any other parameters) when connecting to the webapp. 
+
+* In your application adapter's implement (IConnectionListener)(http://red5.org/javadoc/red5-server-common/org/red5/server/api/listeners/class-use/IConnectionListener.html) as shown in [this example](https://github.com/rajdeeprath/red5-development-series/tree/master/code-examples/server-side/red5-connection-examples/connection-listener-demo) to monitor successful connect attempt and store the participant's information (such as username/id etc) into the shared object.
+
+> If shared object by the requested `session name` does not exist reject/close the client's connection.
+
+* When a participant disconnects remove information of that participant from the shared object. Additionally when the business application server wants it can make a `HTTP call`, to request deletion of the shared object and subsequently terminate the connected clients using the [Red5 pro server api](https://www.red5pro.com/docs/server/serverapi.html).
+
+5. **Administration of client sessions**: Administration of the client sessions will be controlled by the business application server. With regards to the streaming subsystem, the main administration tasks may include getting information about a participant session and terminating sessions.
+
+Both these activities can be done using the [Red5 pro server api](https://www.red5pro.com/docs/server/serverapi.html). To be precise, you can use the [client control api](https://www.red5pro.com/docs/server/serverapi.html#client-control-api) and [stream api](https://www.red5pro.com/docs/server/serverapi.html#streams-api) methods to get information about each participant's connection and stream as well as terminate the participant's session as needed.
+
+6. **Tracking session duration**: To track total time spent by a participant on the media server you will need to make use of a few different things.
+
+First of all implement a [IConnectionListener](https://github.com/rajdeeprath/red5-development-series/blob/master/code-examples/server-side/red5-connection-examples/connection-listener-demo/src/main/java/org/red5/connection/examples/connectionlistener/ConnectionMonitor.java) on your webapp's application class. On successful connect event capture the timestamp. Finally when the participant disconnects, capture the timestamp using the `appDisconnect` handler of the MultiThreadedApplicationAdapter.
+
+**Client application development**
+
+Since we know that we are developing a two way communication, it makes sense to use the Red5 pro two way testbed examples (HTM5/Android/IOS) as a starting point for developing the client application.
+
+For the client side application development our requirements are as follows:
+
+* Load configuration
+* Connect to media server application and publish own stream
+* Detect other participant's presence and subscribe to their stream
+* Reconnect and resume in case of interruptions.
+
+1. **Load configuration**: The first step is client initialization. Irrespective of whether it is a mobile or desktop client, you will need a standard way of loading configuration into the client. A commonly accepted flow for this is to have the user login into the system (business application) and then load the configuration data into client.
+
+> When a user logs in into the system, they will also receive a `JWT token` that will be used in conjunction with client authentication through the media server. 
+
+2. **Connecting to media server application**: Once the client application has initialized and is ready to roll, you need to connect to the media server with required connection parameters (such as the authentication token) and publish client's stream. Once the server has successfully authenticated the client it will trigger the `streamBroadcastStart` handler on the webapp. 
+
+3. **Coordinating participants**: Building coordination between participants is the most important part of this system. By coordination we mean each participant being aware of presence and state of the other. Once a participant knows that the other participant is available and publishing, the former can then subscribe to the latter's stream. This coordination can be achieved in two ways:
+
+* `Using the business application server`: As we discussed earlier about capturing stream state through the webapp into the business application, the captured data is helpful in determining whether a stream is online or offline. Which same as saying whether the participant stream is available or not. The business application server can share this data with the other participant through simple HTTP(s) calls made periodically to get the latest data.
+
+* `Using Red5 pro media server`: Another way to share information about the state of participants is to use [Red5 pro shared objects](https://www.red5pro.com/docs/serverside-guide/state-management.html). Shared objects are perfect for realtime information sharing between connected clients.
+
+> This section is applicable only if you have implemented server side shared objects in your webapp as discussed earlier in the `server application development` section.
+
+Once you have implemented server side shared objects in your webapp, the server will take care of creating and destroying shared objects. The client applicatiosn will simply need to subscribe to & communicate using the shared object when they are connected to the application.
+
+**Designing the client side flow with shared objects**:
+
+* Depending on your client platform, checkout the appropriate sdk testbed example for working on shared objects.
+
+* Each participant client should be provided with the unique `session name` required to connect to the server, when the login and load configuration data.
+
+* Client will pass in the `session name` along with `username/id` and any required authentication parameters while connecting to the media server.
+
+* Once successfully connected, the clients will subscribe to the server side shared object  identified by the `session name` and listen for shared object updates. 
+
+* Participants can then use the shared object for communicating their presence as well as their devices, publishing state etc. Whenever an update is made, the shared object will trigger the update listener on the client side. Each client can check againt the `userinfo` data and make sure to only react to changes in other participant's data.
+
+##### The complete system
+
+##### Takeaways
+
+* Developing two way communication applications on Red5 pro are both simple and creative.
+* Server side applications can be hooked up to a remote business application server through the `MultiThreadedApplicationAdapter` callback handlers and simple HTTP(s) calls.
+* Whenever possible use out of the box offerings such as existing administration apis.
+* HTTP servlets are the simplest way to create new apis for your webapp and create hooks to work with the application without caring about Java. 
+* It is best to authenticate clients outside the webapp (ex: roundtrip authentication). Avoid interacting with database directly from within a webapp unless absolutely necessary.
+
+
