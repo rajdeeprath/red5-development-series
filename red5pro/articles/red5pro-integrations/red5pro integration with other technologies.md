@@ -859,7 +859,7 @@ Once you have implemented server side shared objects in your webapp, the server 
 
 * Participants can then use the shared object for communicating their presence as well as their devices, publishing state, etc. Whenever an update is made, the shared object will trigger the update listener on the client side. Each client can check against the `user information` data and make sure to only react to changes in other participant's data.
 
-##### The complete system
+##### System Layers Overview
 
 ![Astrology Consultation System Layers](astrology-consultation-system-layers.png "System Layers")
 
