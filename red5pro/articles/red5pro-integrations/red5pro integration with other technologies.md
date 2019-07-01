@@ -861,6 +861,8 @@ Once you have implemented server side shared objects in your webapp, the server 
 
 ##### The complete system
 
+![Astrology Consultation System Layers](astrology-consultation-system-layers.png "System Layers")
+
 ##### Takeaways
 
 * Developing two-way communication applications on Red5 pro are both simple and creative.
