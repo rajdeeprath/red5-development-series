@@ -73,7 +73,7 @@ For successful system integration, it is necessary to identify the different int
 
 - Consume streaming services through Red5 Pro media server, using appropriate protocol supported by Red5 Pro matching the client's capabilities.
 - Developing any inter-client communication system between multiple clients using the media server
-- Triggering methods/mechanisms on the server from the client side (RPC)
+- Triggering methods/mechanisms on the server from the client-side (RPC)
 
 **Similarly the scope of server stack integration covers (but is not limited to), connecting with Red5 pro to**
 
@@ -114,7 +114,7 @@ This is a simple application with no additional features other than streaming, r
 
 The red5 pro distribution includes some basic plugins that give you a head start in integrating Red5 pro with your own system. Following plugins are provided out of the box for system integration:
 
-- [Simple Authentication Plugin](https://www.red5pro.com/docs/server/authplugin.html): A basic yet high flexible and extensible authentication plugin that can help you achieve almost any kind of authentication (credentials based or anonymous token based) for clients using your own application server or database server.
+- [Simple Authentication Plugin](https://www.red5pro.com/docs/server/authplugin.html): A basic yet high flexible and extensible authentication plugin that can help you achieve almost any kind of authentication (credentials based or anonymous token-based) for clients using your own application server or database server.
 
 The plugin supports standardized JWT based authentication/authorization mechanism for clients **out of the box**. You can then use the [plugin's documentation to implement your own authentication/authorization service & configure the plugin to use it for validating clients](https://www.red5pro.com/docs/server/red5proroundtripauthvalidator.html#red5-pro-round-trip-authentication-validator).
 
@@ -130,11 +130,11 @@ The red5 pro platform provides an [extensive API](https://red5pro.com/docs/serve
 
 For autoscaling systems there is the [Stream Manager API](https://www.red5pro.com/docs/autoscale/streammanagerapi.html), to help manage clusters and autoscaled nodes and other autoscaling resources on the target platform along with different calls for reading statistics. You can use both autoscale and single server API alongside each other to have maximum control over the system.
 
-All API calls return industry standard JSON formatted data and responses. Therefore, you can use any technology to interface with our API calls through a simple API consumer client.
+All API calls return industry-standard JSON formatted data and responses. Therefore, you can use any technology to interface with our API calls through a simple API consumer client.
 
 ### Developing custom features for integration
 
-We have seen the various `out of the box` solutions that the Red5 Pro platform offers. All of these are extremely helpful when you want to integrate Red5 pro with your own system. But there will always be use-cases where these offerings may not suffice. Let us take a quick peek at such use cases:
+We have seen the various `out of the box` solutions that the Red5 Pro platform offers. All of these are extremely helpful when you want to integrate Red5 Pro with your own system. But there will always be use-cases where these offerings may not suffice. Let us take a quick peek at such use cases:
 
 #### When and where custom development is required
 
@@ -165,7 +165,7 @@ Till now we have seen that the two ways to deploy custom server-side logic on Re
 
 ##### Custom webapp development
 
-As I mentioned earlier, webapps are the point of contact for a client on the Red5 pro server. In Red5 terminology, webapps are also called top-level `scopes`. every client that connects to Red5 pro needs a `scope` to do so. You cannot connect to the server at `{protocol}://{host}:{port}` alone. Every service that Red5 pro provides over various protocols such as RTMP, RTSP, RTC, and HLS, is provided through a point of contact - a.k.a `webapp` or `scope`. So to consume services you need to use the following URL pattern - `{protocol}://{host}:{port}/{webapp}`.
+As I mentioned earlier, webapps are the point of contact for a client on the Red5 Pro server. In Red5 terminology, webapps are also called top-level `scopes`. every client that connects to Red5 pro needs a `scope` to do so. You cannot connect to the server at `{protocol}://{host}:{port}` alone. Every service that Red5 pro provides over various protocols such as RTMP, RTSP, RTC, and HLS, is provided through a point of contact - a.k.a `webapp` or `scope`. So to consume services you need to use the following URL pattern - `{protocol}://{host}:{port}/{webapp}`.
 
 It is therefore imperative to develop your own webapp when you need more control over the point of contact. Every custom webapp can do all that the default webapp `live` can do unless explicitly controlled. This is to say that every custom webapp can allow broadcast, playback, recording, SharedObjects, etc over supported protocols by default.
 
@@ -226,11 +226,11 @@ Here are a few typical use cases that make a good case for a custom plugin:
 
 #### RPC and Low Level integrations
 
-Sometimes developers need lower level access to the server side methods for more control and a tighter integration. Commonly there can be two ways for two distinct technologies to communicate with each other at a low level. They can either use the runtime to access their classes directly at a low level or they can use a common interface `RPC bridge` over sockets. 
+Sometimes developers need lower-level access to the server side methods for more control and tighter integration. Commonly there can be two ways for two distinct technologies to communicate with each other at a low level. They can either use the runtime to access their classes directly at a low level or they can use a common interface `RPC bridge` over sockets. 
 
-* **Direct access**: Direct access allows a source language to use the interpreter/runtime of the target language to gain direct access to a method and execute it as if it were native of the source language itself . [Pyjnius](https://pyjnius.readthedocs.io/en/stable/) is such an implementation which allows python to use java runtime as a means to access the java classes and methods directly in python projects. There are similar implementations for other languages/technologies as well. The greatest advantage of such an access is development speed and flexibility. On the other hand, the disadvantage is thet direct access sometimes requires special configurations and dependencies. Sometimes direct access is closely tied to the version of the runtime that it works with. 
+* **Direct access**: Direct access allows a source language to use the interpreter/runtime of the target language to gain direct access to a method and execute it as if it were native of the source language itself. [Pyjnius](https://pyjnius.readthedocs.io/en/stable/) is such an implementation which allows python to use java runtime as a means to access the java classes and methods directly in python projects. There are similar implementations for other languages/technologies as well. The greatest advantage of such access is development speed and flexibility. On the other hand, the disadvantage is that direct access sometimes requires special configurations and dependencies. Sometimes direct access is closely tied to the version of the runtime that it works with. 
 
-* **RPC access**: RPC bridge is a mechanism which is more popular than direct access because its ease of setup. It does not carry specific dependencies for the mechanism to work properly. A RPC bridge uses language/technology independent way of communicating such as XML, JSON etc. In general RPC bridges are prefered over direct access mechanism due to simplicity to setup. Python's [Py4j](https://www.py4j.org/) is such an implementation. It implemements its RPC bridge to use an internal port for communication over socket. RPC bridges translate your method call request into XML/JSON formatted structure and pass it to the target language/technology. The RPC bridge logic on the target decodes the structure to identify the method name, parameters etc to execute the method and send back response to caller.
+* **RPC access**: RPC bridge is a mechanism which is more popular than direct access because of its ease of setup. It does not carry specific dependencies for the mechanism to work properly. An RPC bridge uses language/technology-independent way of communicating such as XML, JSON, etc. In general RPC bridges are preferred over direct access mechanism due to simplicity to set up. Python's [Py4j](https://www.py4j.org/) is such an implementation. It implements its RPC bridge to use an internal port for communication over the socket. RPC bridges translate your method call request into XML/JSON formatted structure and pass it to the target language/technology. The RPC bridge logic on the target decodes the structure to identify the method name, parameters, etc to execute the method and send back a response to the caller.
 
 
 Some popular examples of low level implementations are:
@@ -244,17 +244,17 @@ If you do want to make use of such integrations, I would advise going with RPC s
 
 ### Autoscale specific server side integration factors and considerations
 
-Server side integrations for autoscale setups is similar to a single server or manual cluster setups with a few differences. In this section, I won't be deep diving into autoscaling deployments. Rather we will take a look at the implications that the autoscaling deployment has on server side integrations.
+Server side integrations for autoscale setups is similar to a single server or manual cluster setups with a few differences. In this section, I won't be deep-diving into autoscaling deployments. Rather we will take a look at the implications that the autoscaling deployment has on server side integrations.
 
 #### Design considerations for autoscale oriented server side development
 
 * Never rely on the local file system of the VM to save media or other assets at runtime. VMs are volatile and might get deleted at any time due to scale down, failure, etc.
 
-* Avoid depending on per-node client-server RMI calls and other server side mechanism that cannot be globalized in the cluster. These calls are fine for single server setups only. For global communication over cluster use shared objects. You can design a cross-cluster communication solution using SharedObjects by combining server side and client side shared objects API. You can also take a look at our documentation on [extending the clustering solution](https://www.red5pro.com/docs/server/clusters.html#extending) and working with [server side sharedobjects](https://red5pro.com/docs/serverside-guide/state-management.html) for guidance.
+* Avoid depending on per-node client-server RMI calls and other server side mechanism that cannot be globalized in the cluster. These calls are fine for single-server setups only. For global communication over cluster use shared objects. You can design a cross-cluster communication solution using SharedObjects by combining server side and client side shared objects API. You can also take a look at our documentation on [extending the clustering solution](https://www.red5pro.com/docs/server/clusters.html#extending) and working with [server side sharedobjects](https://red5pro.com/docs/serverside-guide/state-management.html) for guidance.
 
 You can also use cloud-based solutions such as Amazon SNS and google Pub-Sub for communication between nodes.
 
-> Prefer to use cloud offerings such as aws efs, S3, google filestore etc to externalize and synchronize data between nodes for media storage and sharing.
+> Prefer to use cloud offerings such as AWS efs, S3, google filestore, etc to externalize and synchronize data between nodes for media storage and sharing.
 
 #### Deploying Red5 pro plugins in autoscaling environments
 
@@ -286,13 +286,13 @@ So with that, we conclude the discussion on server side integrations for Red5 pr
 
 Client-side integration is required when you need to interface your customers/clients with the streaming system to be able to consume services. Client integrations requirement is usually more common than server integration requirements for most of the simple use cases.
 
-As we discussed earlier, there are lots of out of the box solutions provided by the Red5 pro platform, that can help build your solution around Red5 pro with little or no server integration. Therefore we are left with the client side of things which is the main area of focus for most businesses.
+As we discussed earlier, there are lots of out of the box solutions provided by the Red5 pro platform, that can help build your solution around Red5 pro with little or no server integration. Therefore we are left with the client-side of things which is the main area of focus for most businesses.
 
 ### Elements of Red5 Pro client side
 
 #### Client SDKs
 
-The Red5 pro platform provides you with a [collection of SDKs](https://www.red5pro.com/docs/streaming/) to help you translate your business ideas into streaming interfaces for Android, IOS and Desktop browsers.
+The Red5 Pro platform provides you with a [collection of SDKs](https://www.red5pro.com/docs/streaming/) to help you translate your business ideas into streaming interfaces for Android, IOS and Desktop browsers.
 
 **Android SDK**
 
@@ -312,7 +312,7 @@ So the very first step in client-side integration would be to identify the diffe
 
 ### Autoscale specific client side integration factors and considerations
 
-If you are using an autoscale setup environment, you approach to develop client-side integration solutions will be different than single server solutions.
+If you are using an autoscale setup environment, you approach to develop client-side integration solutions will be different than single-server solutions.
 
 **Always use Stream Manager**
 
@@ -332,7 +332,7 @@ Our [HTML5 SDK testbed has examples](https://github.com/red5pro/streaming-html5/
 
 #### Client Testbeds
 
-To help you with using the SDKs and some out of the box code snippets, we have created something called testbeds. There is a testbed repository on GitHub containing various examples for each of the SDKs that we offer. You can see the testbed as an opportunity to get accustomed to the SDKs and at the same time learn about different things that can be built using the SDKs with Red5 pro. Whenever you need to look up a 'how to' on client-side integration, the testbed is the first place to get started.
+To help you with using the SDKs and some out of the box code snippets, we have created something called testbeds. There is a testbed repository on GitHub containing various examples for each of the SDKs that we offer. You can see the testbed as an opportunity to get accustomed to the SDKs and at the same time learn about different things that can be built using the SDKs with Red5 pro. Whenever you need to look up a 'how-to' on client-side integration, the testbed is the first place to get started.
 
 **Android Testbed**
 
@@ -369,7 +369,7 @@ There could be many more use cases, but these are good enough to help you unders
 Before getting started with client-side development you should ask yourself the same questions that we discussed for server side development :
 
 - What are the requirements for client integration?
-- How will the server side interface with the client side?
+- How will the server side interface with the client-side?
 - Are the testbed examples enough for developing what you need?
 - Do you have a custom webapp or plugin on the server, that your client needs to interface with?
 - What are the platforms you wish to target - HTML5/Android/IOS?
@@ -382,7 +382,7 @@ Having thought this over, you should now be ready to dive into some of the techn
 
 Based on application use cases and development patterns, there are few easily identifiable activities in Red5 pro client applications. Almost every Red5 pro client application will include one or more of these features directly or indirectly.
 
-Red5 Pro features may make up for a small part or a majority of your application functionality. In this section, we will discuss those features and take a look at how they can be included in our own application.
+Red5 Pro features may make up for a small part of a majority of your application functionality. In this section, we will discuss those features and take a look at how they can be included in our own application.
 
 #### Loading configuration
 
@@ -424,7 +424,7 @@ Quality is a subtle combination of an appropriate resolution, framerate, keyfram
 
 **RTMP Publishers**
 
-If you are using a third party RTMP encoder (non-flash), take a look at our [encoder configuration guide](https://www.red5pro.com/docs/server/rtmppublishers.html) on recommended settings. When using third-party encoders, you can take advantage of their industry standard presets for recommended resolution and framerate settings.
+If you are using a third party RTMP encoder (non-flash), take a look at our [encoder configuration guide](https://www.red5pro.com/docs/server/rtmppublishers.html) on recommended settings. When using third-party encoders, you can take advantage of their industry-standard presets for recommended resolution and framerate settings.
 
 **Android/IOS Publishers**
 
@@ -462,7 +462,7 @@ You can authenticate your clients at your own application level using a remote d
 
 **Authorization**
 
-Authorization implies granting role specific permissions. So your authentication can be augmented with authorization on the server level. This means you want to have separate rights for separate clients. In the context of a streaming application associated with Red5 pro, authorization is necessary to separate client behaviour based on the roles they play in the system.
+Authorization implies granting role-specific permissions. So your authentication can be augmented with authorization on the server level. This means you want to have separate rights for separate clients. In the context of a streaming application associated with Red5 pro, authorization is necessary to separate client behaviour based on the roles they play in the system.
 
 Since a lot of this (authorization by role) is related to the server side behaviour, you might need to interface client code with some custom server side code.
 
@@ -556,21 +556,21 @@ Resources can be coordinated between the client in different ways:
 
 The publisher publishes a stream to the server application called `live`. A mechanism will detect `publish` event, and register the stream name in the database. Subscriber polls periodically to see if there is a stream name available to subscribe to. When the response contains a stream name entry, the subscriber will connect to the server application `live` and play the stream.
 
-- `Push Data`: Client connects to a remote service or Red5 pro sharedObjects and awaits a push data containing information about resources. Once data is received, the client will access the resource using the data in the `push notification`.
+- `Push Data`: Client connects to a remote service or Red5 pro shared objects and awaits a push data containing information about resources. Once data is received, the client will access the resource using the data in the `push notification`.
 
 **Example**
 
 Publisher connects to the server application called `live` and acquires a SharedObject called `users`. the publisher then publishes a stream to the server application. On successful publish acknowledgment from the server, the publisher pushes the stream name into the shared object.Subscriber(s) also follow the same initialization sequence and acquires a SharedObject called `users`. As soon as publisher pushes data into the shared object, the server will push it to all connected clients. The subscribers can then read the stream name from the payload and play the stream. Subscribers that connect late will also receive the pushed data, as soon as they connect to the shared object.
 
-> You can also use any other third party push notification system such as Amazon SNS etc to relay the information between clients.
+> You can also use any other third-party push notification system such as Amazon SNS etc to relay the information between clients.
 
 #### ABR Subscription
 
 The abbreviation ABR stands for adaptive bitrate streaming. This is a feature used to distribute a stream to multiple clients having different bandwidths efficiently by matching an appropriate version (by quality) of the stream with each client.
 
-To use ABR, you need to first create a [stream provision using the Stream Manager API](https://red5pro.com/docs/autoscale/smapi-streamprovision). `Provisioning` implies, describing the different stream qualities that you want to generate. Once the original stream is published, the transcoder will accordingly generate ABR. Subsequently when you subscribe to the stream using the [Red5 pro HTML5 SDK](https://github.com/red5pro/streaming-html5), the client will automatically be switched to the appropriate quality based on its bandwidth.
+To use ABR, you need to first create a [stream provision using the Stream Manager API](https://red5pro.com/docs/autoscale/smapi-streamprovision). `Provisioning` implies, describing the different stream qualities that you want to generate. Once the original stream is published, the transcoder will accordingly generate ABR. Subsequently, when you subscribe to the stream using the [Red5 pro HTML5 SDK](https://github.com/red5pro/streaming-html5), the client will automatically be switched to the appropriate quality based on its bandwidth.
 
-ABR is not supported for single server installs or even manual multi-server clusters. If you need ABR, you need to use Red5 pro autoscaling. for more information, I recommend reading through the [ABR guide](https://red5pro.com/docs/streaming/abruserguide.html) and the use of [transcode nodes](https://red5pro.com/docs/autoscale/transcoder.html)
+ABR is not supported for single-server installs or even manual multi-server clusters. If you need ABR, you need to use Red5 pro autoscaling. for more information, I recommend reading through the [ABR guide](https://red5pro.com/docs/streaming/abruserguide.html) and the use of [transcode nodes](https://red5pro.com/docs/autoscale/transcoder.html)
 
 > At the time of writing this, ABR is not supported for RTSP clients. Clients can subscribe to the stream quality of their choice manually.
 
@@ -584,9 +584,9 @@ To implement audio/video mute/unmute for a publisher client, check out the [HTML
 
 **Subscribers**
 
-For subscribers, you can implement audio control in two ways. You can either control the volume to implement mute effect or simply use the mute api.
+For subscribers, you can implement audio control in two ways. You can either control the volume to implement mute effect or simply use the mute API.
 
-HTML5 clients can invoke [<subcriberImplementation>.mute()](https://www.red5pro.com/docs/static/html5-streaming/RTCSubscriber.html#mute). Although this api is for `RTCSubscriber`, `RTMPSubscriber` and `HLSSubscriber` implement it as well. Essentially this causes a mute on the video element of the page. Server does not stop sending audio.
+HTML5 clients can invoke [<subcriberImplementation>.mute()](https://www.red5pro.com/docs/static/html5-streaming/RTCSubscriber.html#mute). Although this API is for `RTCSubscriber`, `RTMPSubscriber` and `HLSSubscriber` implement it as well. Essentially this causes a mute on the video element of the page. The server does not stop sending audio.
 
 Android clients can either [adjust the volume](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeSetVolume) or [entirely mute](https://github.com/red5pro/streaming-ios/tree/master/R5ProTestbed/Tests/SubscribeMuteAudio) the stream.
 
@@ -596,7 +596,7 @@ similarly, IOS clients can either [adjust the volume](https://github.com/red5pro
 
 In a lot of application use cases, there is a need to work with real-time data. Real-time data can be thought of as chat messages, control messages, shared temporary data stores and so on.
 
-Red5 pro has multiple ways of transmitting data in real-time, with each having its own usage scenario.
+Red5 Pro has multiple ways of transmitting data in real-time, with each having its own usage scenario.
 
 - **Sending data over the stream**: Transmitting data over a stream using the `stream.send` API provided in each SDK.
 - **Client to server RPC:** Invoking custom Red5 pro server side methods from the client.
@@ -604,7 +604,7 @@ Red5 pro has multiple ways of transmitting data in real-time, with each having i
 
 In this section, we will be discussing [Red5 pro SharedObjects](https://www.red5pro.com/docs/streaming/sharedobject.html) only. You can read the basics of [Red5 pro SharedObjects](https://www.red5pro.com/docs/streaming/sharedobject.html) in our official documentation.
 
-In the context of a Red5 pro application, you use shared objects, when you need to communicate in real time between clients. Usually shared objects facilitate bidirectional communication, but you can design your application to restrict communication as you see fit.
+In the context of a Red5 pro application, you use shared objects, when you need to communicate in real-time between clients. Usually shared objects facilitate bidirectional communication, but you can design your application to restrict communication as you see fit.
 
 We offer SharedObjects as part of each SDK and also the server side API. Shared objects can be used with or without streams in general. If you need shared objects support in your application takes a look at following testbed examples:
 
@@ -638,7 +638,7 @@ If you are building a game or whiteboard application you can relay/share the sta
 
 You can also use shared objects as a means of sharing arbitrary data in real-time.
 
-Consider that you have a server side application that tracks subscriber count. Now if you want to share that with clients (ex: display active subscriber count on the player), you can have the server side logic push this information into a shared object. On the client side, you can subscribe to this sharedobject to receive real-time updates of changing subscriber count.
+Consider that you have a server side application that tracks subscriber count. Now if you want to share that with clients (ex: display active subscriber count on the player), you can have the server side logic push this information into a shared object. On the client-side, you can subscribe to this sharedobject to receive real-time updates of changing subscriber count.
 
 #### Sending messages over the stream
 
@@ -693,7 +693,7 @@ If you want to capture snapshots on the server side directly, you can use FFmpeg
 
 #### Recording the session
 
-Now irrespective of whether you need a poster image or not, wanting to record the live stream is the most common need for most streaming systems. At the time of writing this guide, Red5 pro allows you to records a stream in `FLV` and `HLS` containers.
+Now irrespective of whether you need a poster image or not, wanting to record the live stream is the most common need for most streaming systems. At the time of writing this guide, Red5 Pro allows you to records a stream in `FLV` and `HLS` containers.
 
 Red5 pro gives you multiple ways to record a stream. You can choose the way that is optimal for your use case. the following options are available to enable recording of a live stream.
 
@@ -719,31 +719,31 @@ As an out of the box solution, we offer [Red5 pro cloud storage plugin](https://
 
 If you wish to serve all types of clients, make sure you have `MP4` version of the recording alongside `FLV` and `HLS`. You can build any custom security around VOD similar to live streams using the [Red5 pro simple auth plugin](https://red5pro.com/docs/server/authplugin.html).
 
-Checkout the following testbed examples to get more info on implementing VOD in your application:
+Check out the following testbed examples to get more info on implementing VOD in your application:
 
 [HTML5 SDK](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
 [Android](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
 [IOS](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
 
+#### Developing desktop solutions
 
-#### Developing custom clients
-
-Going beyond the supported client types, some business have a custom requirement to develop streaming applications for desktop. While we do not have any custom offering desktop solutions separately, it is quite possible to use existing offerings to develop a desktop solution.
+Going beyond the supported client types, some businesses have a custom requirement to develop streaming applications for the desktop. While we do not have any custom offering desktop solutions separately, it is quite possible to use existing offerings to develop a desktop solution.
 
 * **RTMP Support for desktop solutions**: 
 
 You can add RTMP support for your desktop solution using a third party `RTMP SDK` or the []`Flash player` distributable](https://www.adobe.com/products/flashplayer/distribution.html) solution. 
 
-Flash player redistribution allows you to bundle the flash player DLLs along with your application files and access the player in your application normally. For `DOT NET` development flash player can be accessed as a `activex` or `shockwaveflash` component.
-
-For platforms such as Java, python etc, you will need a custom RTMP SDK to enable encoding/decoding of streams.
+Flash player redistribution allows you to bundle the flash player DLLs along with your application files and access the player in your application normally. For `DOT NET` development flash player can be accessed as an `ActiveX` or `shockwave flash object` component. For other platforms such as Java, python, etc, you will need a custom RTMP SDK to enable encoding/decoding of streams.
 
 * **RTC Support for desktop solutions**:
 
-For RTC support in your application the simplest way is to make sure your application can integrate the webkit engine or more accuratly - the chrome engine. That makes development easy as you can leverage the existing HTML5 SDK. You can use [electron](https://electronjs.org/) solution for packaging and distributing your application.
+For RTC support in your application, the simplest way is to make sure your application can integrate the WebKit engine or more accurately - the chrome engine. That makes development easy as you can leverage the existing HTML5 SDK (Javascript). You can use [electron](https://electronjs.org/) solution for packaging and distributing your application.
 
-If your development technology isnt HTML5 supportive or cannot support webkit/chrome then you can also try leveraging 3rd.
+For **Dot Net** you can try open-source [CEFSharp](http://cefsharp.github.io/) module which lets you embed chromium through WinForms.
 
+If your development platform is not HTML5 supportive or cannot support WebKit/Chrome then you can also try leveraging **3rd party RTMP SDKs**. Red5 Pro uses open RTMP specifications. Any library based on standard RTMP specifications should, in theory, work well with Red5 pro.
+
+> We do not take responsibility or provide support for 3rd party SDKs or libraries.
 
 ## Use cases
 
@@ -767,7 +767,7 @@ In the stated use case, we have two participants, one of whom is the host and th
 
 Once the pattern has been identified, the next logical step is to understand and breakdown the requirements into two parts, - The business application requirements and the media server requirements. Separation of concerns is necessary for delegation of the task as well as proper execution of the workflow.
 
-We will not be going deep into `Business application development`, as that is not within our scope of discussion. However, we will be brushing through the overview of the features and functionality that has to be developed in that domain. Our main focus will be the development on the streaming side and interfacing with the business application.
+We will not be going deep into `Business application development`, as that is not within our scope of discussion. However, we will be brushing through the overview of the features and functionality that has to be developed in that domain. Our main focus will be the development of the streaming system and interfacing with the business application.
 
 ##### Business application development (Non Red5 pro)
 
@@ -848,7 +848,7 @@ For an example of using server side shared objects, see [the following code exam
 
 Both these activities can be done using the [Red5 pro server api](https://www.red5pro.com/docs/server/serverapi.html). To be precise, you can use the [client control api](https://www.red5pro.com/docs/server/serverapi.html#client-control-api) and [stream api](https://www.red5pro.com/docs/server/serverapi.html#streams-api) methods to get information about each participant's connection and stream as well as terminate the participant's session as needed.
 
-6. **Tracking session duration**: To track total time spent by a participant on the media server you will need to make use of a few different things.
+6. **Tracking session duration**: To track total time spent by a participant in the media server you will need to make use of a few different things.
 
 First of all, implement a [IConnectionListener](https://github.com/rajdeeprath/red5-development-series/blob/master/code-examples/server-side/red5-connection-examples/connection-listener-demo/src/main/java/org/red5/connection/examples/connectionlistener/ConnectionMonitor.java) in your web application. On successful connect event to capture the timestamp. Finally, when the participant disconnects, capture the timestamp using the `appDisconnect` handler of the MultiThreadedApplicationAdapter.
 
@@ -866,7 +866,7 @@ For the client side application development our requirements are as follows:
 
 3. **Coordinating participants**: Building coordination between participants is the most important part of this system. By coordination we mean each participant being aware of the presence and state of the other. Once a participant knows that the other participant is available and publishing, the former can then subscribe to the latter's stream. This coordination can be achieved in two ways:
 
-* `Using the business application server`: As we discussed earlier about capturing stream state through the webapp into the business application, the captured data is helpful in determining whether a stream is online or offline. Which same as saying whether the participant stream is available or not. The business application server can share this data with the other participant through simple HTTP(s) calls made periodically to get the latest data.
+* `Using the business application server`: As we discussed earlier, about capturing stream state through the webapp into the business application, the captured data is helpful in determining whether a stream is online or offline. Which same as saying whether the participant stream is available or not. The business application server can share this data with the other participant through simple HTTP(s) calls made periodically to get the latest data.
 
 * `Using Red5 pro media server`: Another way to share information about the state of participants is to use [Red5 pro shared objects](https://www.red5pro.com/docs/serverside-guide/state-management.html). Shared objects are perfect for real-time information sharing between connected clients.
 
