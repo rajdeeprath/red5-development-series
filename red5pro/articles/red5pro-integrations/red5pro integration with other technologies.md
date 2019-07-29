@@ -226,7 +226,14 @@ Here are a few typical use cases that make a good case for a custom plugin:
 
 #### RPC and Low Level integrations
 
-There is another type of integration, which is also popular amongst developers. Its called runtime integration. Usually, two different technologies can talk to each other by either loading each other's runtimes to access their classes at a low level or each one talks to the other using an internal RPC mechanism over sockets. Some popular examples of such implementations are:
+Sometimes developers need lower level access to the server side methods for more control and a tighter integration. Commonly there can be two ways for two distinct technologies to communicate with each other at a low level. They can either use the runtime to access their classes directly at a low level or they can use a common interface `RPC bridge` over sockets. 
+
+* **Direct access**: Direct access allows a source language to use the interpreter/runtime of the target language to gain direct access to a method and execute it as if it were native of the source language itself . [Pyjnius](https://pyjnius.readthedocs.io/en/stable/) is such an implementation which allows python to use java runtime as a means to access the java classes and methods directly in python projects. There are similar implementations for other languages/technologies as well. The greatest advantage of such an access is development speed and flexibility. On the other hand, the disadvantage is thet direct access sometimes requires special configurations and dependencies. Sometimes direct access is closely tied to the version of the runtime that it works with. 
+
+* **RPC access**: RPC bridge is a mechanism which is more popular than direct access because its ease of setup. It does not carry specific dependencies for the mechanism to work properly. A RPC bridge uses language/technology independent way of communicating such as XML, JSON etc. In general RPC bridges are prefered over direct access mechanism due to simplicity to setup. Python's [Py4j](https://www.py4j.org/) is such an implementation. It implemements its RPC bridge to use an internal port for communication over socket. RPC bridges translate your method call request into XML/JSON formatted structure and pass it to the target language/technology. The RPC bridge logic on the target decodes the structure to identify the method name, parameters etc to execute the method and send back response to caller.
+
+
+Some popular examples of low level implementations are:
 
 - [Jython](https://www.jython.org/) or [Py4J](https://www.py4j.org/) for java-python integration
 - [Node-Java](https://github.com/joeferner/node-java) for nodejs and Java integration
@@ -717,6 +724,26 @@ Checkout the following testbed examples to get more info on implementing VOD in 
 [HTML5 SDK](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
 [Android](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
 [IOS](https://github.com/red5pro/streaming-html5/tree/master/src/page/test/playbackVOD)
+
+
+#### Developing custom clients
+
+Going beyond the supported client types, some business have a custom requirement to develop streaming applications for desktop. While we do not have any custom offering desktop solutions separately, it is quite possible to use existing offerings to develop a desktop solution.
+
+* **RTMP Support for desktop solutions**: 
+
+You can add RTMP support for your desktop solution using a third party `RTMP SDK` or the []`Flash player` distributable](https://www.adobe.com/products/flashplayer/distribution.html) solution. 
+
+Flash player redistribution allows you to bundle the flash player DLLs along with your application files and access the player in your application normally. For `DOT NET` development flash player can be accessed as a `activex` or `shockwaveflash` component.
+
+For platforms such as Java, python etc, you will need a custom RTMP SDK to enable encoding/decoding of streams.
+
+* **RTC Support for desktop solutions**:
+
+For RTC support in your application the simplest way is to make sure your application can integrate the webkit engine or more accuratly - the chrome engine. That makes development easy as you can leverage the existing HTML5 SDK. You can use [electron](https://electronjs.org/) solution for packaging and distributing your application.
+
+If your development technology isnt HTML5 supportive or cannot support webkit/chrome then you can also try leveraging 3rd.
+
 
 ## Use cases
 
