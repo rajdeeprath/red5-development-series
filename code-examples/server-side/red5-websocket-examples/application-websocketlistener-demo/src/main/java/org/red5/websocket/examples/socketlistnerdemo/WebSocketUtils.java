@@ -18,7 +18,7 @@ public class WebSocketUtils {
 	
     public static void configureApplicationScopeWebSocket(IScope scope) {
 
-        // first get the websocket plugin
+    	// first get the websocket plugin
         WebSocketPlugin wsPlugin = ((WebSocketPlugin) PluginRegistry.getPlugin(WebSocketPlugin.NAME));
         // get the websocket scope manager for the red5 scope
         WebSocketScopeManager manager = wsPlugin.getManager(scope);
@@ -43,6 +43,22 @@ public class WebSocketUtils {
             wsScope = new WebSocketScope(scope);
             // register the ws scope
             wsScope.register();
+        }
+
+        // add the listeners if absent
+        if (!wsScope.hasListener(WebSocketSampleListener.class)) {
+            // create the json handler
+        	WebSocketSampleListener handler = new WebSocketSampleListener();
+            handler.setAppScope(scope);
+            handler.setApplicationContext(scope.getContext().getApplicationContext());
+            try {
+                // set the props (spring override)
+                handler.afterPropertiesSet();
+                // add the handler
+                wsScope.addListener(handler);
+            } catch (Exception e) {
+                log.warn("Websocket listener setup failure", e);
+            }
         }
     }
     

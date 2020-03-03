@@ -186,7 +186,7 @@ input[type="text"].focus {
 		$scope.$wsResponse = "";
 		
 		$scope.$ws = {};		
-		$scope.$ws.endpoint = "ws://"+window.location.hostname+":5080/application-websocketlistener-demo?capabilities=1";
+		$scope.$ws.endpoint = "ws://"+window.location.hostname+":5080/application-websocketlistener-demo/?capabilities=1";
 		$scope.$ws.protocol = "subprotocol";
         $scope.$ws.connected = false;
 		$scope.$ws.parameters =[];
