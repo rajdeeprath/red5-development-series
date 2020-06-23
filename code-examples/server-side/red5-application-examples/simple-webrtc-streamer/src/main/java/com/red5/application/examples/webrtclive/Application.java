@@ -61,4 +61,53 @@ public class Application extends MultiThreadedApplicationAdapter {
 		log.info("Application stopped");
 		super.appStop(app);
 	}
+	
+	
+	@Override
+	public void streamBroadcastStart(IBroadcastStream stream) {
+		log.info("Stream broadcast start {}", stream);
+		super.streamBroadcastClose(stream);
+	}
+	
+	
+
+	@Override
+	public void streamBroadcastClose(IBroadcastStream stream) {
+		log.info("Stream broadcast close {}", stream);
+		super.streamBroadcastClose(stream);
+	}
+
+
+
+	@Override
+	public void streamPublishStart(IBroadcastStream stream) {
+		log.info("Stream publish start {}", stream);
+		super.streamPublishStart(stream);
+	}
+
+
+
+	@Override
+	public void streamRecordStart(IBroadcastStream stream) {
+		log.info("Stream record start {}", stream);
+		super.streamRecordStart(stream);
+	}
+
+	@Override
+	public void streamRecordStop(IBroadcastStream stream) {
+		log.info("Stream record stop {}", stream);
+		super.streamRecordStop(stream);
+	}
+	
+	@Override
+	public void streamSubscriberStart(ISubscriberStream stream) {
+		log.info("Stream subscribe start {}", stream);
+		super.streamSubscriberStart(stream);
+	}
+
+	@Override
+	public void streamSubscriberClose(ISubscriberStream stream) {
+		log.info("Stream subscribe close {}", stream);
+		super.streamSubscriberClose(stream);
+	}
 }
