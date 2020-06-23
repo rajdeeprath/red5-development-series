@@ -7,17 +7,17 @@
   <version>1.0.0</version>
   <name>simple-webrtc-streamer</name>
   <url>http://maven.apache.org</url>
-  <description>Red5 application demonstrating the basic skeleton of a webrtc enabled webapp</description>
+  <description>Red5 Pro application demonstrating the basic skeleton of a webrtc enabled webapp</description>
     <properties>
     	<finalName>simple-webrtc-streamer</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <red5-server.version>1.0.10-M10</red5-server.version>
         <servlet.version>3.1.0</servlet.version>
-        <spring.version>4.3.12.RELEASE</spring.version>
+        <spring.version>4.3.22.RELEASE</spring.version>
         <mina.version>2.0.19</mina.version>
-        <slf4j.version>1.7.18</slf4j.version>
-        <logback.version>1.1.6</logback.version>
-        <tomcatplugin.version>2.0.11</tomcatplugin.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.2.3</logback.version>
+        <tomcatplugin.version>2.0.14</tomcatplugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
