@@ -12,7 +12,7 @@
     	<finalName>connection-messaging-demo</finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <red5-server.version>1.0.10-M10</red5-server.version>
-        <spring.version>4.3.5.RELEASE</spring.version>
+        <spring.version>5.3.0</spring.version>
         <mina.version>[2.0.12, 2.0.16)</mina.version>
         <slf4j.version>1.7.22</slf4j.version>
         <logback.version>1.1.7</logback.version>
