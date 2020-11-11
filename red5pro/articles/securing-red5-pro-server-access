@@ -1,0 +1,47 @@
+Thank you for this. Our security team would prefer disabling any services we do not use at the server instance itself (aka server hardening). Since we do not currently plan to use the Red5 Pro website in production, we are looking for a way to disable/stop/unbind the website hosting service altogether.
+
+If it helps, we are using the following services:
+
+TCP 443, REST APITCP 1935, RTMPTCP 8554, RTSP
+
+We would also like to enable RTMPS on 443 but will open another case for that as we have been unable to do so.
+
+AND
+
+Missed one 
+
+TCP 443, WebRTCUDP 40000-65535, WebRTC
+
+======================================================================================================================
+
+
+Red5 Pro consists of tomcat which does all the standard webserver activities and media server codebase handles streaming. So they are not disjoint in any ways. So to say - `disable/stop/unbind the website hosting service altogether.` is not quite feasible. there are howeveer a few things you do to secure the server to a certain level of satisfaction that ensures that service wont be misutilized.
+
+
+1. Protect the core media server services using simple auth plugin (https://github.com/red5pro/red5pro-simple-auth-plugin). This will ensure that only clients that are supposed to be able to use the services can use them. You will be passing in a token along with username password, that can be validated at a remote server over HTTPS. This will assure a validation of clients connecting over 1935 and 8554. UDP 40000-65535 are not used directly so if at all you need to prevent udp flooding you have to use linux side solutions. the webrtc plugin uses ports randomly in this range. so you cannot lock/unlock a subset of them.
+
+Also see: https://www.red5pro.com/docs/plugins/authplugin/overview/ and https://www.red5pro.com/docs/plugins/round-trip-auth/enabling-security/
+
+
+2. For HTTP service offered over 443, the security approach is not going to be Red5 Pro centric but general java JEE server centric.
+
++ Remove the webapsp that you dont need. This will reduce possible urls that can be reached on the server. Depending on whether you are using autoscaling or not you can get rid of other webapps (see red5 pro documentation https://www.red5pro.com/docs/server/installation/optimizing/).
+
++ For the root webapp and the webapp that you are using, delete unnecessary JSP files. They are just there to render webpages. If you have your own HTML application deployed elsewhere, you wont need these JSP files. Infact tomcat does not enable directory browsing by default. So if you delete the jsp files, tthere isnt much someoen can see visiting your server other than 404 messages.
+
++ Every API in Red5 Pro implemnts simple token based security. You can always extend it by creating your own authentication mechanism in java and adding to the WEB-INF/web.xml of the webapp such that every visit to the API path will trigger your custom code. for an idea of thinsg please see: https://www.javatpoint.com/authentication-filter. Using a custom logic you can implement any kind of security requirements easily.
+
+* Make use of CORS filters properly to ensure that your API is executable from specific domains only. (See red5 pro documentation section)
+
++ HTTP access to the server can also be locked down using simple HTTP basic authentication. However if you are using using WebRTC you should not enable it for the webapp that you are using for WebRTC streaming. you can howevere use it to add double protection to the API when it is a separate webapp than the streaming webapp.For more informatrion on basic authentication,see https://red5pro.zendesk.com/hc/en-us/articles/217073838-How-to-Password-Protect-Red5-Pro-Apps-Using-Simple-HTTP-Basic-Realm-Authentication
+
++ If you wish to experiment with URL rewriting for Red5 Pro URLs, you should use tuckey's URLRewrite filter : https://tuckey.org/urlrewrite/
+
+
+
+
+
+
+
+
+
