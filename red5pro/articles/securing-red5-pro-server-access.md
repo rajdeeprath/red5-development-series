@@ -6,7 +6,7 @@ Red5 Pro consists of two major components - Tomcat web server which does all the
 
 
 ## The media server perspective
-======================================
+---
 
 
 1. Protect the core media server services using simple auth plugin (https://github.com/red5pro/red5pro-simple-auth-plugin). This will ensure that only clients that are supposed to be able to use the services can use them. You will be passing in a token along with username password, that can be validated at a remote server over HTTPS. This will assure a validation of clients connecting over 1935 (RTMP) and 8554 (RTSP). 
@@ -34,7 +34,7 @@ The server will bind to all ports in this port range randomly. A lot of ports ar
 
 
 ## The web server perspective
-======================================
+---
 
 
 For web services offered over 443(HTTPS) or 5080(HTTP), the security approach is not media server centric but more like general java JEE web server centric. Following are some of the common topics/strategies for securing a Java JEE server that are also applicable to Red5 Pro.
@@ -43,7 +43,10 @@ For web services offered over 443(HTTPS) or 5080(HTTP), the security approach is
 1. **Publically accessible endpoints** : Remove the webapps that you dont need. This will reduce the possible urls that can be reached on the server publically. Depending on whether you are using autoscaling or a standalone setup, [you can get rid of the unnecessary webapps](https://www.red5pro.com/docs/server/installation/optimizing/#removing-unnecessary-plugins-and-webapps). For the root webapp and the webapp that you are using (that cannot be removed), delete unnecessary JSP files. They are just there to render web pages. If you have your own HTML application deployed elsewhere, you wont need these JSP files. The best part is tomcat does not enable directory browsing by default. So if you delete the jsp files, there isnt much one can see visiting your server url other than tomcat 404 messages.
 
 
-2. **API Authentication** : All APIs in Red5 Pro (StreamManager API and Red5 Pro server API) implement some sort of basic security, which is usually good enough for normal usage. But you can still extend it by creating your own authentication scheme/mechanism in java and adding to the webapp through the WEB-INF/web.xml of the webapp as a security filter, such that every visit to the API path will trigger your custom authentication code.  Using a custom logic you can implement any kind of security requirement easily. To get a better idea of using servlet filters for security please see: https://www.javatpoint.com/authentication-filter.
+2. **API Authentication** : All APIs in Red5 Pro (StreamManager API and Red5 Pro server API) implement some sort of basic security, which is usually good enough for normal usage. But you can still extend it by creating your own authentication scheme/mechanism in java and adding to the webapp through the WEB-INF/web.xml of the webapp as a security filter, such that every visit to the API path will trigger your custom authentication code.  Using a custom logic you can implement any kind of security requirement easily. To get a better idea of using servlet filters for security please the folowing articles:
+
+ * [Oracle docs on authentication filter](https://docs.oracle.com/cd/E17904_01/web.1111/e13718/servlet.htm#DEVSP519)
+ * [Javatpoint authentication filter tutorial](https://www.javatpoint.com/authentication-filter.)
 
 
 3. **CORS Vunerability** : Cross-origin resource sharing (CORS) is a browser mechanism which enables controlled access to resources located outside of a given domain. By default browsers follow same origin policy, thereby  limiting the ability for a website to interact with resources outside of the source domain. The CORS policy is flexible and can be extended through proper use of browser headers which also makes it a security vunerability. 
