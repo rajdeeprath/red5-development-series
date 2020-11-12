@@ -1,21 +1,4 @@
-Thank you for this. Our security team would prefer disabling any services we do not use at the server instance itself (aka server hardening). Since we do not currently plan to use the Red5 Pro website in production, we are looking for a way to disable/stop/unbind the website hosting service altogether.
-
-If it helps, we are using the following services:
-
-TCP 443, REST APITCP 1935, RTMPTCP 8554, RTSP
-
-We would also like to enable RTMPS on 443 but will open another case for that as we have been unable to do so.
-
-AND
-
-Missed one 
-
-TCP 443, WebRTCUDP 40000-65535, WebRTC
-
-======================================================================================================================
-
-
-Red5 Pro consists of tomcat which does all the standard webserver activities and media server codebase handles streaming. So they are not disjoint in any ways. So to say - `disable/stop/unbind the website hosting service altogether.` is not quite feasible. there are howeveer a few things you do to secure the server to a certain level of satisfaction that ensures that service wont be misutilized.
+Red5 Pro consists of two major components - Tomcat web server which does all the standard webserver activities and media server codebase that enabled streaming. As the server loads, the tomcat webserver cxomponent starts up, loading and activating the media server modules alongside. both componenst are tightly coupled to each other and therefore one or the other cannot be disabled/removed from the system.To secure the system therefore you need to look at it as a composition of the two components and focus on securing each component individually by its scope of operations. 
 
 
 Security from media server perspective
@@ -33,7 +16,18 @@ Also see:
 * https://www.red5pro.com/docs/server/serverside-guides/server-plugin-development/
 
 
-2. Red5 Pro uses UDP for actual transmission
+2. Red5 Pro uses UDP for actual transmission of stream data between a client and a server.As of the latest known version of Red5 Pro, the UDP port range is defined in the {RED5_HOME}/conf/webrtc-plugin.properties:
+
+```
+
+# Port range for UDP and TCP
+port.min=49152
+port.max=65535
+
+```
+
+The server will bind to all ports in this port range randomly. A lot of ports are not reclaimed immediately after a client session ends. Therefore you should not try to limit the range even if you know that you will be receiving relatively low traffic. At the moment there are no other specific instructions available with us on the topic of UDP security
+
 
 
 Security from web server perspective
