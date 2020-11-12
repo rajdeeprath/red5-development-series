@@ -2,7 +2,7 @@
 
 
 
-Red5 Pro consists of two major components - Tomcat web server which does all the standard webserver activities and media server codebase that enabled streaming. As the server loads, the tomcat webserver cxomponent starts up, loading and activating the media server modules alongside. both componenst are tightly coupled to each other and therefore one or the other cannot be disabled/removed from the system.To secure the system therefore you need to look at it as a composition of the two components and focus on securing each component individually by its scope of operations. 
+Red5 Pro consists of two major components - Tomcat web server which does all the standard webserver activities and media server codebase that enables streaming. As the server loads, the tomcat webserver cxomponent starts up, loading and activating the media server modules alongside. both componenst are tightly coupled to each other and therefore one or the other cannot be disabled/removed from the system.To secure the system therefore you need to look at it as a composition of the two components and focus on securing each component individually by its scope of operations. 
 
 
 ## The media server perspective
