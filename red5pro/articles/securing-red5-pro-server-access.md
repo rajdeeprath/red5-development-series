@@ -71,3 +71,6 @@ However if you are using WebRTC streaming in your webapp, you should not enable 
 
 
 5. **URL rewriting** : URL rewriting is an effective way of preventing various types of website attacks such as XSS, URL injection etc.You can also use URLRewrite to dynamically add parameters to URLs, create temprorary urls and so on. The possibilities are endless and this article is by no means a URL Rewriting guide. URL rewriting can definitely provide an extra shield against threats, but always be sure to identify and resolve the underlying root causes. To implement URL rewrite in a tomcat based server you cna make use of tuckey's [URLRewrite filter](https://tuckey.org/urlrewrite/).
+
+
+Apart from the above mentioned points, it is noteworthy that standard linux adminsitration practices for securing webservers can also be very effective in adding another front of defence to your Red5 Pro deployment.
