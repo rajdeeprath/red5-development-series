@@ -16,7 +16,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.test.skip>true</maven.test.skip>
         <red5.version>1.0.9-RELEASE</red5.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <slf4j.version>1.7.21</slf4j.version>
         <logback.version>1.1.6</logback.version>
         <mina.version>[2.0.13,2.0.16)</mina.version>
